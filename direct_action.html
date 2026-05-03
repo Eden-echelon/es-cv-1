@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <meta name="theme-color" content="#000000">
+  <title>DIRECT ACTION · SYSTEM OVERWATCH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --blackout: #000000;
+      --dark-panel: #050a0f;
+      --signal-green: #2affa0;
+      --signal-cyan: #0affee;
+      --signal-amber: #ffcc44;
+      --danger-red: #ff3366;
+      --terminal-border: #2a5548;
+      --mono: 'Share Tech Mono', 'Space Mono', monospace;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--blackout);
+      color: var(--signal-green);
+      font-family: var(--mono);
+      overflow-x: hidden;
+      overflow-y: auto;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    /* NO GLOWS, NO SHADOWS — pure militant digital */
+    canvas, .core-terminal, .card, .enter-btn, #authBox, header, .data-footer, .dev-output {
+      filter: none !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+
+    /* binary battlefield canvas */
+    #binaryBattleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    /* scanlines tactical */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, rgba(42, 255, 160, 0.025) 0px, rgba(42, 255, 160, 0.025) 1px, transparent 1px, transparent 3px);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 66px;
+      background: #010101;
+      border-bottom: 1px solid var(--terminal-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    header h1 {
+      font-size: clamp(0.85rem, 4vw, 1.5rem);
+      letter-spacing: 5px;
+      font-weight: 400;
+    }
+
+    header h1 a {
+      text-decoration: none;
+      color: var(--signal-cyan);
+    }
+
+    #hero {
+      min-height: 55vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 5;
+      padding: 85px 20px 30px;
+    }
+
+    .core-terminal {
+      background: #03080e;
+      border: 1.5px solid #2f6b5e;
+      padding: 32px 24px;
+      text-align: center;
+      width: 480px;
+      max-width: 85vw;
+    }
+
+    .system-question {
+      font-family: var(--mono);
+      font-size: clamp(1rem, 5vw, 1.6rem);
+      letter-spacing: 3px;
+      color: var(--signal-amber);
+      margin-bottom: 20px;
+    }
+
+    #systemAccessCode {
+      background: #000000;
+      border: 1px solid var(--signal-green);
+      padding: 14px 20px;
+      width: 80%;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      letter-spacing: 8px;
+      color: var(--signal-cyan);
+      margin: 20px 0;
+    }
+
+    #systemAccessCode:focus {
+      outline: none;
+      border-color: var(--signal-cyan);
+    }
+
+    .enter-btn {
+      background: transparent;
+      border: 1px solid var(--signal-green);
+      color: var(--signal-green);
+      padding: 10px 28px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: 0.05s linear;
+    }
+
+    .enter-btn:active {
+      background: var(--signal-green);
+      color: #000;
+    }
+
+    .section-title {
+      text-align: center;
+      font-family: var(--mono);
+      font-weight: 400;
+      letter-spacing: 6px;
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      margin: 25px 0 25px;
+      scroll-margin-top: 80px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 22px;
+      padding: 0 24px 100px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #050b12;
+      border: 1px solid #2c5a52;
+      padding: 28px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.05s linear;
+    }
+
+    .card:active {
+      background: #0f1e1f;
+      border-color: var(--signal-amber);
+    }
+
+    .card i {
+      font-size: 2.2rem;
+      color: var(--signal-cyan);
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      letter-spacing: 2px;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 0.7rem;
+      opacity: 0.7;
+      margin-bottom: 18px;
+    }
+
+    /* DEV TOOLS LIVE OUTPUT PANEL - everything visible on page */
+    .dev-live-console {
+      position: fixed;
+      bottom: 52px;
+      right: 12px;
+      background: #010101ee;
+      border-left: 3px solid var(--signal-cyan);
+      padding: 10px 16px;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      z-index: 99;
+      max-width: 330px;
+      backdrop-filter: none;
+      pointer-events: none;
+      color: #bbffdd;
+      text-align: left;
+      border-top: 1px solid #2a4a44;
+    }
+
+    .dev-live-console span {
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .data-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #010101;
+      border-top: 1px solid #2f635a;
+      padding: 6px 24px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      font-family: var(--mono);
+      z-index: 100;
+    }
+
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      background: #000000f5;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    #authBox {
+      background: #03080e;
+      border: 1px solid var(--signal-amber);
+      width: 90%;
+      max-width: 440px;
+      padding: 36px 28px;
+      text-align: center;
+    }
+
+    #authBox h3 {
+      font-family: var(--mono);
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+    }
+
+    #authDept {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      margin: 10px 0 20px;
+    }
+
+    #codeInput {
+      width: 100%;
+      background: #010101;
+      border: 1px solid #3a6a62;
+      padding: 14px;
+      color: var(--signal-amber);
+      text-align: center;
+      font-size: 1.5rem;
+      font-family: var(--mono);
+      letter-spacing: 6px;
+      margin: 22px 0;
+    }
+
+    #authStatus {
+      min-height: 38px;
+      font-size: 0.8rem;
+    }
+
+    .threat-safe { color: var(--signal-green); }
+    .threat-alert { color: var(--danger-red); animation: pulseAlert 0.6s infinite; }
+    @keyframes pulseAlert { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+
+    @media (max-width: 680px) {
+      .grid { gap: 16px; padding: 0 16px 80px; }
+      .card { padding: 20px 12px; }
+      .dev-live-console { display: none; }
+    }
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
+      .core-terminal { width: 280px; }
+      #systemAccessCode { font-size: 1rem; letter-spacing: 4px; }
+    }
+    @media (orientation: landscape) and (max-height: 520px) {
+      #hero { min-height: 38vh; padding-top: 75px; }
+      .core-terminal { width: 260px; padding: 16px; }
+      .grid { gap: 10px; padding-bottom: 50px; }
+      .card p { display: none; }
+    }
+    @supports (height: 100dvh) { body { min-height: 100dvh; } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+</head>
+<body>
+
+<canvas id="binaryBattleCanvas"></canvas>
+
+<header>
+  <h1><a href="#">⟡ DIRECT ACTION · SYSTEM OVERWATCH ⟡</a></h1>
+</header>
+
+<main>
+  <section id="hero">
+    <div class="core-terminal">
+      <div class="system-question">❚ SYSTEM OVERWATCH ❚<br>「 IDENTITY VERIFICATION 」</div>
+      <input type="password" id="systemAccessCode" placeholder="ENTER CODE" maxlength="5" autocomplete="off">
+      <button class="enter-btn" id="submitOverwatchBtn">AUTHENTICATE</button>
+      <div id="overwatchStatus" style="margin-top: 18px; font-size: 0.75rem; min-height: 32px;"></div>
+    </div>
+  </section>
+
+  <h2 class="section-title"><span>◈ DIRECT ACTION DIVISIONS ◈</span></h2>
+  <div class="grid" id="deptGrid"></div>
+</main>
+
+<div id="authOverlay">
+  <div id="authBox">
+    <h3>⚙️ TACTICAL ACCESS ⚙️</h3>
+    <p id="authDept"></p>
+    <input type="password" id="codeInput" placeholder="✧ 5-BIT CODE ✧" maxlength="5" autocomplete="off">
+    <div id="authStatus"></div>
+    <div class="auth-buttons">
+      <button class="enter-btn" id="deptAuthBtn">AUTHORIZE</button>
+      <button class="enter-btn" id="deptAbortBtn">ABORT</button>
+    </div>
+  </div>
+</div>
+
+<div class="dev-live-console" id="liveDevConsole">
+  <i class="fas fa-terminal"></i> LIVE CONSOLE [WATCHDOG]
+  <span id="consoleOutput">> READY</span>
+  <span id="consoleMetrics"></span>
+</div>
+
+<div class="data-footer">
+  <span>⚡ OPERATOR: EDEN // TACTICAL SOLDIER ⚡</span>
+  <span id="clockDigital">--:--:--</span>
+  <span id="threatLed" class="threat-safe">◇ THREAT: NULL ◇</span>
+</div>
+
+<script>
+  (function() {
+    // ============================================================
+    // 1. INFINITE BINARY BATTLEFIELD (millions digits, electric)
+    // ============================================================
+    const canvas = document.getElementById('binaryBattleCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', () => { resizeCanvas(); initBinaryStream(); });
+    window.addEventListener('orientationchange', () => { setTimeout(() => { resizeCanvas(); initBinaryStream(); }, 10); });
+
+    const BITS = ['0','1'];
+    const fontSize = 14;
+    let columns, drops;
+    function initBinaryStream() {
+      columns = Math.ceil(width / fontSize) + 5;
+      drops = Array(columns).fill(0);
+      for(let i = 0; i < columns; i++) drops[i] = Math.floor(Math.random() * -height / 16);
+    }
+    initBinaryStream();
+
+    function drawBinaryRush() {
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = '#2affa0';
+      ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
+      for(let i = 0; i < drops.length; i++) {
+        const bit = BITS[Math.floor(Math.random() * 2)];
+        const x = i * fontSize + (Math.sin(Date.now() * 0.003 + i) * 0.4);
+        const y = drops[i] * fontSize;
+        if(y > 0 && y < height) ctx.fillText(bit, x, y);
+        if(Math.random() > 0.8 && y - fontSize > 0) {
+          ctx.fillStyle = '#0affee';
+          ctx.fillText(BITS[Math.floor(Math.random() * 2)], x - 2, y - fontSize * 0.6);
+          ctx.fillStyle = '#2affa0';
+        }
+        drops[i] += 0.65;
+        if(drops[i] * fontSize > height + 50 && Math.random() > 0.97) drops[i] = 0;
+      }
+      requestAnimationFrame(drawBinaryRush);
+    }
+    drawBinaryRush();
+
+    // ============================================================
+    // 2. LIVE DEV TOOLS OUTPUT (real JS output, errors, logs)
+    // ============================================================
+    const consoleOutputSpan = document.getElementById('consoleOutput');
+    const consoleMetricsSpan = document.getElementById('consoleMetrics');
+    
+    function pushToLiveConsole(msg, type = 'log') {
+      const timestamp = new Date().toLocaleTimeString();
+      if(consoleOutputSpan) {
+        consoleOutputSpan.innerHTML = `> [${timestamp}] ${msg}`;
+      }
+      if(consoleMetricsSpan) {
+        const mem = performance.memory ? `${Math.round(performance.memory.usedJSHeapSize / 1048576)}MB` : 'N/A';
+        consoleMetricsSpan.innerHTML = `⚙️ heap: ${mem} | frame: steady`;
+      }
+      // also mirror to real console for devs
+      if(type === 'log') console.log(`[LIVE] ${msg}`);
+      else if(type === 'warn') console.warn(`[LIVE] ${msg}`);
+    }
+
+    // override console methods? just for show
+    window.addEventListener('load', () => {
+      pushToLiveConsole('SYSTEM OVERWATCH ACTIVE // DIRECT ACTION READY', 'log');
+    });
+
+    // simulate real-time CPU ticks
+    setInterval(() => {
+      const memInfo = performance.memory ? ` | JS heap: ${Math.round(performance.memory.usedJSHeapSize / 1048576)}MB` : '';
+      if(consoleMetricsSpan) consoleMetricsSpan.innerHTML = `⚡ ticks: ${Math.floor(Math.random() * 999)} ops ${memInfo}`;
+    }, 1800);
+
+    // ============================================================
+    // 3. OVERWATCH AUTHENTICATION — ACCESS CODE = 111
+    // ============================================================
+    const systemCodeInput = document.getElementById('systemAccessCode');
+    const overwatchStatusDiv = document.getElementById('overwatchStatus');
+    const submitBtn = document.getElementById('submitOverwatchBtn');
+    const threatLed = document.getElementById('threatLed');
+    const deptGridSection = document.getElementById('deptGrid');
+    let systemUnlocked = false;
+
+    function authenticateOverwatch() {
+      const enteredCode = systemCodeInput.value.trim();
+      if(enteredCode === '111') {
+        systemUnlocked = true;
+        overwatchStatusDiv.style.color = '#2affa0';
+        overwatchStatusDiv.innerHTML = '✓ ACCESS GRANTED — WELCOME, SOLDIER. DEPARTMENTS UNLOCKED.';
+        threatLed.className = 'threat-safe';
+        threatLed.innerText = '◇ THREAT: NULL ◇';
+        pushToLiveConsole('ACCESS GRANTED: system override complete. Dept grid unlocked.', 'log');
+        // enable department grid rendering
+        renderDepartmentGrid();
+        systemCodeInput.disabled = true;
+        submitBtn.innerText = 'UNLOCKED';
+        submitBtn.style.opacity = '0.6';
+        // also remove hero blur / spark
+      } else {
+        overwatchStatusDiv.style.color = '#ff3366';
+        overwatchStatusDiv.innerHTML = '✘ ACCESS DENIED — IDENTITY MISMATCH. THREAT ELEVATED.';
+        threatLed.className = 'threat-alert';
+        threatLed.innerText = '⚠ THREAT: ACTIVE ⚠';
+        pushToLiveConsole(`ACCESS DENIED: invalid code "${enteredCode}"`, 'warn');
+        systemCodeInput.value = '';
+        systemCodeInput.focus();
+        // electric jitter
+        systemCodeInput.style.transform = 'translateX(2px)';
+        setTimeout(() => { systemCodeInput.style.transform = ''; }, 100);
+      }
+    }
+
+    submitBtn.addEventListener('click', authenticateOverwatch);
+    systemCodeInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') authenticateOverwatch(); });
+
+    // ============================================================
+    // 4. DEPARTMENTS GRID (only if overwatch unlocked)
+    // ============================================================
+    const DEPARTMENTS = [
+      { id: 'innov', name: '01. INNOVATIONS CORE', icon: 'fa-microchip', code: 'CIO01', file: 'innovations.html' },
+      { id: 'compl', name: '02. COMPLIANCE DIV', icon: 'fa-gavel', code: 'LAW02', file: 'compliance.html' },
+      { id: 'exec', name: '03. EXECUTIVE NODE', icon: 'fa-briefcase', code: 'CEO8', file: 'ceo.html' },
+      { id: 'supply', name: '04. SUPPLY CHAIN', icon: 'fa-truck-fast', code: 'SC03', file: 'scl.html' },
+      { id: 'ops', name: '05. OPERATIONS', icon: 'fa-gears', code: 'COO05', file: 'operations.html' },
+      { id: 'compsci', name: '06. COMPUTER SCIENCE', icon: 'fa-code', code: 'ZA7', file: 'compsci.html' },
+      { id: 'brand', name: '07. BRANDING UNIT', icon: 'fa-palette', code: 'BR10', file: 'branding.html' }
+    ];
+
+    let currentDept = null;
+    function renderDepartmentGrid() {
+      if(!deptGridSection) return;
+      if(!systemUnlocked) {
+        deptGridSection.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; border:1px solid #ff3366;">🔒 LOCKED: COMPLETE SYSTEM OVERWATCH AUTHENTICATION FIRST.</div>`;
+        return;
+      }
+      deptGridSection.innerHTML = DEPARTMENTS.map(dept => `
+        <div class="card" data-deptid="${dept.id}" role="button">
+          <i class="fas ${dept.icon}"></i>
+          <h3>${dept.name}</h3>
+          <p>// TACTICAL ACCESS //</p>
+          <button class="enter-btn">ENTER DIRECT ACTION</button>
+        </div>
+      `).join('');
+      attachCardEvents();
+      pushToLiveConsole('Departments grid rendered. Awaiting division selection.', 'log');
+    }
+
+    function attachCardEvents() {
+      document.querySelectorAll('.card').forEach(card => {
+        const id = card.getAttribute('data-deptid');
+        const btn = card.querySelector('.enter-btn');
+        const openHandler = (e) => {
+          e.stopPropagation();
+          if(!systemUnlocked) return;
+          openAuthModal(id);
+        };
+        card.addEventListener('click', openHandler);
+        if(btn) btn.addEventListener('click', (e) => { e.stopPropagation(); if(systemUnlocked) openAuthModal(id); });
+      });
+    }
+
+    const overlay = document.getElementById('authOverlay');
+    const authDeptSpan = document.getElementById('authDept');
+    const codeInputField = document.getElementById('codeInput');
+    const authStatusSpan = document.getElementById('authStatus');
+    
+    function openAuthModal(deptId) {
+      if(!systemUnlocked) return;
+      currentDept = DEPARTMENTS.find(d => d.id === deptId);
+      if(!currentDept) return;
+      authDeptSpan.innerText = `${currentDept.name} :: INPUT 5‑CHAR CODE`;
+      codeInputField.value = '';
+      authStatusSpan.innerHTML = '';
+      overlay.style.display = 'flex';
+      setTimeout(() => codeInputField.focus(), 20);
+      pushToLiveConsole(`Access panel opened for: ${currentDept.name}`, 'log');
+    }
+
+    function closeAuthModal() {
+      overlay.style.display = 'none';
+      currentDept = null;
+      codeInputField.value = '';
+      authStatusSpan.innerHTML = '';
+    }
+
+    function verifyDeptCode() {
+      if(!currentDept || !systemUnlocked) return;
+      const entered = codeInputField.value.trim().toUpperCase();
+      if(entered === currentDept.code) {
+        authStatusSpan.style.color = '#2affa0';
+        authStatusSpan.innerHTML = '✔ CREDENTIALS VERIFIED — DEPLOYING DIRECT ACTION';
+        threatLed.className = 'threat-safe';
+        threatLed.innerText = '◇ THREAT: NULL ◇';
+        pushToLiveConsole(`ACCESS GRANTED for ${currentDept.name}. Redirecting...`, 'log');
+        document.body.classList.add('fade-out');
+        setTimeout(() => { window.location.href = currentDept.file; }, 420);
+      } else {
+        authStatusSpan.style.color = '#ff3366';
+        authStatusSpan.innerHTML = '✘ ACCESS DENIED — INTRUSION LOGGED.';
+        threatLed.className = 'threat-alert';
+        threatLed.innerText = '⚠ THREAT: ACTIVE ⚠';
+        codeInputField.value = '';
+        codeInputField.focus();
+        pushToLiveConsole(`FAILED attempt on ${currentDept.name} with code: ${entered}`, 'warn');
+        codeInputField.style.transform = 'translateX(3px)';
+        setTimeout(() => { codeInputField.style.transform = ''; }, 90);
+      }
+    }
+
+    document.getElementById('deptAuthBtn').onclick = verifyDeptCode;
+    document.getElementById('deptAbortBtn').onclick = closeAuthModal;
+    document.addEventListener('keydown', (e) => {
+      if(overlay.style.display === 'flex' && e.key === 'Escape') closeAuthModal();
+      if(overlay.style.display === 'flex' && e.key === 'Enter') verifyDeptCode();
+    });
+    overlay.addEventListener('click', (e) => { if(e.target === overlay) closeAuthModal(); });
+
+    // initially grid shows locked until overwatch auth
+    renderDepartmentGrid();
+
+    // ============================================================
+    // 5. CLOCK + additional realtime metrics
+    // ============================================================
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', second:'2-digit', hour12: false });
+      const clockSpan = document.getElementById('clockDigital');
+      if(clockSpan) clockSpan.innerText = `${timeStr} UTC`;
+    }
+    updateClock();
+    setInterval(updateClock, 500);
+
+    // fade-out transition
+    const styleFade = document.createElement('style');
+    styleFade.textContent = `body.fade-out { opacity: 0; transition: opacity 0.35s cubic-bezier(0.2, 0.9, 0.4, 1); }`;
+    document.head.appendChild(styleFade);
+
+    // extra live JS monitoring: display every error-like event
+    window.addEventListener('error', (e) => {
+      pushToLiveConsole(`[ERROR] ${e.message}`, 'warn');
+    });
+
+    pushToLiveConsole('DIRECT ACTION // AWAITING OVERWATCH CODE (111)', 'log');
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+  })();
+</script>
+</body>
+</html>

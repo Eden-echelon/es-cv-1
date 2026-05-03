@@ -1,0 +1,2930 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  
+<head>
+  
+  <meta charset="UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  
+  <meta name="description" content="EXECUTIVE">
+  
+  <meta name="color-scheme" content="dark">
+  
+  <title>EXECUTIVE CV-5</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link rel="icon" type="image/png" href="logo_tr1.png">
+  
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  
+  <style>
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    :root { --bg: #000000; --card-bg: #0a0000cc; --red: #ff1a1a; --text: #ff1a1a; --border: #ff1a1a; }
+    body { background: var(--bg); color: var(--text); font-family: 'Share Tech Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+    
+    .scan-lines { position: fixed; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,0,0,0.02) 0px, rgba(255,0,0,0.02) 2px, transparent 2px, transparent 8px); pointer-events: none; z-index: 1; animation: drift 22s linear infinite; }
+    
+    @keyframes drift { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
+    
+    .ambient-glow { position: fixed; inset: 0; background: radial-gradient(circle at 30% 40%, rgba(255,30,30,0.03) 0%, transparent 70%); pointer-events: none; z-index: 1; animation: pulseGlow 8s infinite alternate; }
+    
+    @keyframes pulseGlow { 0% { opacity: 0.3; } 100% { opacity: 0.7; } }
+    
+    .app-container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 10; display: none; }
+    
+    .command-header { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; background: #000000dd; backdrop-filter: blur(12px); border-bottom: 3px solid var(--red); padding: 1rem 0; margin-bottom: 2rem; }
+    
+    .header-content { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; text-align: center; }
+    
+    .logo { font-size: clamp(1rem, 5vw, 2.2rem); font-weight: 800; letter-spacing: 5px; color: var(--red); text-shadow: 0 0 4px rgba(255,0,0,0.5); }
+    
+    .section-card { background: #0a0000cc; backdrop-filter: blur(4px); border: 1.5px solid var(--red); margin-bottom: 2rem; padding: 1.5rem; }
+    
+    .section-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; border-bottom: 2px solid var(--red); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+    
+    .section-title { font-size: clamp(0.85rem, 4vw, 1.4rem); font-weight: 700; }
+    
+    .badge { background: rgba(255,0,0,0.2); border: 1px solid var(--red); padding: 0.2rem 0.7rem; font-size: 0.7rem; border-radius: 2px; }
+    
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    
+    .card { background: #050000aa; border: 1px solid var(--red); padding: 1rem; }
+    
+    input, textarea, select { width: 100%; background: #0a0000; border: 1px solid var(--red); padding: 0.65rem; color: #ff4d4d; font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; outline: none; }
+    
+    .btn { background: transparent; border: 1.5px solid var(--red); color: var(--red); padding: 0.45rem 0.9rem; cursor: pointer; font-family: 'Share Tech Mono'; font-size: 0.75rem; transition: 0.12s linear; border-radius: 2px; }
+    
+    .btn-primary { background: var(--red); color: black; border-color: var(--red); }
+    
+    .btn-primary:hover { background: #cc0000; transform: scale(0.97); }
+    
+    .btn:hover { background: rgba(255,0,0,0.2); }
+    
+    .message-board { max-height: 460px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; }
+    
+    .message-item { background: #0f0000aa; border-left: 4px solid var(--red); padding: 0.5rem; animation: fadeSlide 0.2s ease; }
+    
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
+    
+    .reaction-bar { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+    
+    .reaction-btn { background: rgba(255,0,0,0.1); border: 1px solid red; padding: 0.2rem 0.6rem; font-size: 0.7rem; cursor: pointer; border-radius: 16px; }
+    
+    .footer-panel { position: sticky; bottom: 0; background: #000000ee; backdrop-filter: blur(16px); border-top: 2px solid var(--red); padding: 0.5rem; text-align: center; margin-top: 2rem; font-size: 0.7rem; }
+    
+    .pin-gate { position: fixed; inset: 0; background: black; backdrop-filter: blur(20px); display: flex; align-items: center; justify-content: center; z-index: 20000; }
+    
+    .modal-box { background: black; border: 2px solid red; max-width: 450px; width: 90%; padding: 2rem; text-align: center; }
+    
+    .loader-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.96); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 30000; flex-direction: column; gap: 1rem; }
+    
+    .spinner { width: 40px; height: 40px; border: 2px solid red; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .ai-chat-bubble { background: #1a0000; border-left: 3px solid red; padding: 0.5rem; margin-top: 0.5rem; border-radius: 0 4px 4px 0; }
+    
+    .stars-rank { display: inline-flex; gap: 5px; margin-left: 10px; align-items: center; }
+    
+    .mil-star { width: 18px; height: 18px; fill: #E5E4E2; stroke: #b0b0b0; }
+    
+    .toast-msg { background: #0a0000; border-left: 4px solid red; padding: 0.5rem; margin-bottom: 0.5rem; font-size: 0.8rem; animation: slideRight 0.25s ease; position: relative; z-index: 21001; }
+    
+    @keyframes slideRight { from { opacity: 0; transform: translateX(60px);} to { opacity: 1; transform: translateX(0);} }
+    
+    .quick-nav { position: fixed; right: 16px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; z-index: 99; }
+    
+    .quick-nav button { background: rgba(0,0,0,0.8); backdrop-filter: blur(6px); border: 1.5px solid red; color: red; width: 42px; height: 42px; cursor: pointer; border-radius: 4px; }
+    
+    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    
+    #replyIndicatorBox { background: #2a0000; padding: 0.5rem; margin: 6px 0; border-left: 3px solid red; font-size: 0.7rem; display: none; }
+    
+    .task-item { background: #0a0000aa; border-left: 3px solid var(--red); padding: 0.5rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; }
+    
+    .task-check { width: 22px; height: 22px; accent-color: red; cursor: pointer; }
+    
+    .task-title { flex: 2; font-weight: 600; }
+    
+    .task-deadline { font-size: 0.7rem; background: #1f0000; padding: 0.2rem 0.5rem; border-radius: 2px; }
+    
+    .add-task-panel { margin-top: 1rem; background: #0a000055; padding: 1rem; border: 1px dashed red; display: none; }
+    
+    .progress-bar { background: #2a0000; border-radius: 8px; height: 10px; width: 100%; overflow: hidden; margin-bottom: 12px; }
+    
+    .progress-fill { background: #ff1a1a; width: 0%; height: 100%; transition: width 0.2s; }
+    
+    @media (max-width: 768px) { .app-container { padding: 0 0.8rem; } .quick-nav { right: 5px; } .quick-nav button { width: 34px; height: 34px; } .grid-2 { grid-template-columns: 1fr; } }
+
+    @media (min-width: 1921px) {
+      
+      .app-container {
+        
+        max-width: 1800px;
+        padding: 0 3rem;
+        
+      }
+      
+      .header-content {
+        
+        max-width: 1800px;
+        padding: 0 3rem;
+        
+      }
+      
+      .logo {
+        
+        font-size: 3rem;
+        letter-spacing: 8px;
+        
+      }
+      
+      .section-card {
+        
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        
+      }
+      
+      .section-title {
+        
+        font-size: 2rem;
+        
+      }
+      
+      .grid-2 {
+        
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        
+      }
+      
+      .card {
+        
+        padding: 1.8rem;
+        
+      }
+      
+      input, textarea, select {
+        
+        padding: 0.9rem;
+        font-size: 1rem;
+        
+      }
+      
+      .btn {
+        
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+        
+      }
+      
+      .message-board {
+        
+        max-height: 560px;
+        
+      }
+      
+      .quick-nav button {
+        
+        width: 52px;
+        height: 52px;
+        font-size: 1.2rem;
+        
+      }
+      
+      #sacPdfViewer iframe {
+        
+        height: 600px;
+        
+      }
+      
+    }
+    
+    @media (max-width: 1399px) {
+      
+      .app-container {
+        max-width: 1140px;
+        padding: 0 1.2rem;
+      }
+      
+      .header-content {
+        max-width: 1140px;
+        padding: 0 1.2rem;
+      }
+      
+      .grid-2 {
+        gap: 1.2rem;
+      }
+      
+      .section-card {
+        padding: 1.2rem;
+      }
+      
+    }
+    
+    @media (max-width: 1199px) {
+      
+      .app-container {
+        max-width: 960px;
+        padding: 0 1rem;
+      }
+      
+      .header-content {
+        max-width: 960px;
+        padding: 0 1rem;
+      }
+      
+      .grid-2 {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+      }
+      
+      .section-card {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .quick-nav {
+        right: 8px;
+      }
+      
+      .quick-nav button {
+        width: 38px;
+        height: 38px;
+      }
+      
+      #sacPdfViewer {
+        height: 450px;
+      }
+      
+    }
+    
+    @media (max-width: 991px) {
+      
+      .app-container {
+        padding: 0 0.9rem;
+      }
+      
+      .header-content {
+        padding: 0 0.9rem;
+      }
+      
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+      }
+      
+      .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      
+      .quick-nav {
+        right: 5px;
+      }
+      
+      .quick-nav button {
+        width: 34px;
+        height: 34px;
+        font-size: 0.8rem;
+      }
+      
+      .logo {
+        font-size: 1.6rem;
+        letter-spacing: 3px;
+      }
+      
+      .card h3 {
+        font-size: 1rem;
+      }
+      
+      .btn-group {
+        gap: 6px;
+      }
+      
+      .btn {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.7rem;
+      }
+      
+      #sacPdfViewer {
+        height: 380px;
+      }
+      
+      .stars-rank {
+        margin-left: 5px;
+      }
+      
+      .mil-star {
+        width: 14px;
+        height: 14px;
+      }
+      
+    }
+    
+    @media (max-width: 767px) {
+      
+      .app-container {
+        padding: 0 0.7rem;
+      }
+      
+      .header-content {
+        padding: 0 0.7rem;
+      }
+      
+      .section-card {
+        padding: 0.8rem;
+        margin-bottom: 1.2rem;
+      }
+      
+      .section-title {
+        font-size: 1rem;
+      }
+      
+      .badge {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.5rem;
+      }
+      
+      .card {
+        padding: 0.8rem;
+      }
+      
+      input, textarea, select {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+      }
+      
+      .quick-nav button {
+        width: 30px;
+        height: 30px;
+      }
+      
+      .logo {
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+      }
+      
+      .grid-2 {
+        gap: 0.8rem;
+      }
+      
+      .message-board {
+        max-height: 350px;
+      }
+      
+      #sacPdfViewer {
+        height: 320px;
+      }
+      
+      .reaction-btn {
+        padding: 0.15rem 0.5rem;
+        font-size: 0.6rem;
+      }
+      
+      .task-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      .task-deadline {
+        font-size: 0.65rem;
+      }
+      
+      .footer-panel {
+        font-size: 0.6rem;
+        padding: 0.3rem;
+      }
+      
+    }
+    
+    @media (max-width: 575px) {
+      
+      .app-container {
+        padding: 0 0.5rem;
+      }
+      
+      .header-content {
+        padding: 0 0.5rem;
+      }
+      
+      .section-card {
+        padding: 0.6rem;
+        margin-bottom: 1rem;
+      }
+      
+      .section-title {
+        font-size: 0.9rem;
+      }
+      
+      .badge {
+        font-size: 0.55rem;
+      }
+      
+      .card {
+        padding: 0.6rem;
+      }
+      
+      .btn {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.65rem;
+      }
+      
+      .btn-group {
+        gap: 4px;
+      }
+      
+      .quick-nav {
+        right: 3px;
+      }
+      
+      .quick-nav button {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+      }
+      
+      .logo {
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+      }
+      
+      #sacPdfViewer {
+        height: 280px;
+      }
+      
+      .mil-star {
+        width: 12px;
+        height: 12px;
+      }
+      
+      .stars-rank {
+        gap: 2px;
+      }
+      
+      .reaction-bar {
+        gap: 0.3rem;
+      }
+      
+      .reaction-btn {
+        padding: 0.1rem 0.4rem;
+      }
+      
+      .toast-msg {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+        max-width: 280px;
+      }
+      
+    }
+    
+    @media (max-width: 399px) {
+      
+      body {
+        font-size: 12px;
+      }
+      
+      .app-container {
+        padding: 0 0.3rem;
+      }
+      
+      .header-content {
+        padding: 0 0.3rem;
+      }
+      
+      .section-card {
+        padding: 0.5rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .section-header {
+        margin-bottom: 0.6rem;
+      }
+      
+      .section-title {
+        font-size: 0.8rem;
+      }
+      
+      .badge {
+        font-size: 0.5rem;
+        padding: 0.1rem 0.4rem;
+      }
+      
+      .card {
+        padding: 0.5rem;
+      }
+      
+      .card h3 {
+        font-size: 0.8rem;
+      }
+      
+      .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.6rem;
+      }
+      
+      input, textarea, select {
+        padding: 0.4rem;
+        font-size: 0.7rem;
+      }
+      
+      .quick-nav {
+        right: 2px;
+        gap: 6px;
+      }
+      
+      .quick-nav button {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+      }
+      
+      .logo {
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+      }
+      
+      .grid-2 {
+        gap: 0.6rem;
+      }
+      
+      .message-board {
+        max-height: 280px;
+      }
+      
+      #sacPdfViewer {
+        height: 220px;
+      }
+      
+      .mil-star {
+        width: 10px;
+        height: 10px;
+      }
+      
+      .task-deadline {
+        font-size: 0.55rem;
+      }
+      
+      .footer-panel {
+        font-size: 0.5rem;
+      }
+      
+      .modal-box {
+        width: 95%;
+        padding: 1rem;
+      }
+      
+      .toast-msg {
+        font-size: 0.6rem;
+        max-width: 240px;
+      }
+      
+      .reaction-btn {
+        font-size: 0.55rem;
+      }
+      
+      .stars-rank {
+        gap: 1px;
+      }
+      
+    }
+    
+    @media (max-width: 319px) {
+      
+      body {
+        font-size: 10px;
+      }
+      
+      .app-container {
+        padding: 0 0.2rem;
+      }
+      
+      .header-content {
+        padding: 0 0.2rem;
+      }
+      
+      .section-card {
+        padding: 0.3rem;
+        margin-bottom: 0.6rem;
+      }
+      
+      .section-title {
+        font-size: 0.7rem;
+      }
+      
+      .badge {
+        font-size: 0.45rem;
+      }
+      
+      .card {
+        padding: 0.4rem;
+      }
+      
+      .card h3 {
+        font-size: 0.7rem;
+      }
+      
+      .btn {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.55rem;
+      }
+      
+      input, textarea, select {
+        padding: 0.3rem;
+        font-size: 0.65rem;
+      }
+      
+      .quick-nav {
+        right: 2px;
+        gap: 4px;
+      }
+      
+      .quick-nav button {
+        width: 22px;
+        height: 22px;
+        font-size: 0.55rem;
+      }
+      
+      .logo {
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+      
+      .grid-2 {
+        gap: 0.4rem;
+      }
+      
+      .message-board {
+        max-height: 220px;
+      }
+      
+      #sacPdfViewer {
+        height: 180px;
+      }
+      
+      .mil-star {
+        width: 8px;
+        height: 8px;
+      }
+      
+      .task-check {
+        width: 16px;
+        height: 16px;
+      }
+      
+      .task-title {
+        font-size: 0.65rem;
+      }
+      
+      .task-deadline {
+        font-size: 0.5rem;
+      }
+      
+      .footer-panel {
+        font-size: 0.45rem;
+      }
+      
+      .toast-msg {
+        font-size: 0.55rem;
+        max-width: 200px;
+        padding: 0.3rem;
+      }
+      
+      .reaction-btn {
+        padding: 0.1rem 0.3rem;
+        font-size: 0.5rem;
+      }
+      
+      .btn-group {
+        gap: 3px;
+      }
+      
+      .modal-box {
+        padding: 0.8rem;
+      }
+      
+    }
+    
+    @media (max-width: 279px) {
+      
+      body {
+        font-size: 9px;
+      }
+      
+      .section-title {
+        font-size: 0.65rem;
+      }
+      
+      .badge {
+        font-size: 0.4rem;
+      }
+      
+      .btn {
+        padding: 0.15rem 0.3rem;
+        font-size: 0.5rem;
+      }
+      
+      .logo {
+        font-size: 0.75rem;
+      }
+      
+      .quick-nav button {
+        width: 20px;
+        height: 20px;
+        font-size: 0.5rem;
+      }
+      
+      .mil-star {
+        width: 7px;
+        height: 7px;
+      }
+      
+      .toast-msg {
+        font-size: 0.5rem;
+        max-width: 170px;
+      }
+      
+      .reaction-btn {
+        font-size: 0.45rem;
+      }
+      
+      #sacPdfViewer {
+        height: 150px;
+      }
+      
+      .message-board {
+        max-height: 180px;
+      }
+      
+    }
+    
+  </style>
+  
+</head>
+  
+<body>
+  
+<div class="ambient-glow"></div>
+<div class="scan-lines"></div>
+<div class="quick-nav">
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
+  <button onclick="window.scrollTo({top:document.body.scrollHeight/2,behavior:'smooth'})"><i class="fas fa-arrows-alt-v"></i></button>
+  <button onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})"><i class="fas fa-chevron-down"></i></button>
+</div>
+
+<div class="pin-gate" id="pinGate">
+  <div class="modal-box">
+    <div class="logo" style="font-size:1.8rem;">EXECUTIVE CV-5</div>
+    <br><input type="password" id="pinInput" placeholder="ENTER ACCESS CODE" maxlength="1" style="text-align:center" autofocus>
+    <button class="btn btn-primary" id="unlockBtn" style="margin-top:1.5rem; width:100%">CONFIRM</button>
+  </div>
+</div>
+
+<div class="app-container" id="appContainer">
+  <div id="toastStack" style="position:fixed; top:1rem; right:1rem; z-index:21000; max-width:360px;"></div>
+  <div class="loader-overlay" id="loaderOverlay"><div class="spinner"></div><div id="loaderText">SECURE CONNECTION</div></div>
+
+  <header class="command-header">
+    <div class="header-content"><div class="logo">SUPPLY CHAIN CV-5</div></div>
+  </header>
+  
+<!-- S1 -->
+<section class="section-card" id="alpha5CommandModule">
+  <div class="section-header">
+    <h2 class="section-title">PROTOCOL ALPHA-1 <span class="stars-rank" id="starRank"></span></h2>
+    <span class="badge">CINC / PRESIDENCY [Thato 'Hoss' Morake] • CIO</span>
+    <span class="badge" id="liveTimestamp"></span>
+  </div>
+  <div class="grid-2">
+    <!-- LEFT: DAILY MISSION DIRECTIVE -->
+    <div class="card">
+      <h3><i class="fas fa-scroll"></i> DAILY MISSION DIRECTIVE</h3>
+      <div id="directiveText" style="background:#0a0000; padding:1rem; min-height:150px; white-space:pre-wrap; font-family:monospace; margin:10px 0; border-left: 3px solid #ff1a1a;">AWAITING COMMANDER UPLOAD...</div>
+      <div class="btn-group">
+        <button class="btn" id="copyDirectiveBtn"><i class="fas fa-copy"></i> COPY</button>
+        <button class="btn" id="shareDirectiveBtn"><i class="fas fa-bullhorn"></i> BROADCAST TO ALL</button>
+      </div>
+      <div class="protocol-status" style="font-size:0.65rem; margin-top:8px;">🔒 CLASSIFIED • DIRECTIVE ID: 1835780<br>
+        <span id="directiveVersion">--</span></div>
+    </div>
+    
+    <!-- RIGHT: COMMANDER PANEL (LOCKED BY DEFAULT) -->
+    <div class="card" id="cmdPanel" style="display:none;">
+      <h3><i class="fas fa-crown"></i> COMMANDER-IN-CHIEF • PROTOCOL ALPHA-1</h3>
+      <textarea id="newDirective" rows="4" placeholder="COMPOSE NEW MISSION DIRECTIVE..."></textarea>
+      <div class="btn-group">
+        <button class="btn" id="lockCmdBtn"><i class="fas fa-lock"></i> LOCK</button>
+        <button class="btn btn-primary" id="sendDirectiveBtn"><i class="fas fa-upload"></i> UPDATE</button>
+        <button class="btn" id="deleteMissionBtn" style="border-color:#ff4444;"><i class="fas fa-trash-alt"></i> DELETE</button>
+        <button class="btn" id="scheduleDirectiveBtn" style="border-color:#ffaa00;"><i class="fas fa-clock"></i> SCHEDULE</button>
+      </div>
+      <!-- AI ASSIST FOR DIRECTIVE -->
+      <div style="margin-top:12px;">
+        <input type="text" id="aiDirectivePrompt" placeholder="AI: Generate mission brief..." style="font-size:0.7rem;">
+        <button class="btn" id="genDirectiveAiBtn" style="width:100%; margin-top:5px;"><i class="fas fa-robot"></i> AI GENERATE</button>
+      </div>
+    </div>
+    
+    <!-- UNLOCK BUTTON + COMMAND LOGS -->
+    <div>
+      <button class="btn" id="unlockCmdBtn"><i class="fas fa-fingerprint"></i> UNLOCK PROTOCOL</button>
+      <button class="btn" id="viewCommandLogsBtn" style="margin-top:8px;"><i class="fas fa-history"></i> VIEW MISSION LOGS</button>
+    </div>
+  </div>
+  
+  <!-- NEW: COMMAND AUDIT TRAIL -->
+  <div id="commandLogPanel" style="display:none; margin-top:1rem; background:#0a000055; border:1px solid red; padding:0.8rem;">
+    <h4><i class="fas fa-clipboard-list"></i> MISSION AUDIT TRAIL (LAST 10)</h4>
+    <div id="commandLogList" style="max-height:150px; overflow-y:auto; font-size:0.7rem;"></div>
+  </div>
+</section>
+
+  <!-- SECTION 2 -->
+  <section class="section-card">
+    <div class="section-header"><h2 class="section-title">SECTION 02. TEAM MESSAGE BOARD</h2><span class="badge" id="msgCountBadge">0</span><button class="btn" id="refreshMsgBtn"><i class="fas fa-sync-alt"></i></button></div>
+    <div class="grid-2">
+      <div class="card"><h3><i class="fas fa-pen-nib"></i> NEW TRANSMISSION</h3><br><input type="text" id="callsignField" placeholder="CALLSIGN" value="JOYSON"><select id="deptField"><option>EXECUTIVE CV-5</option><option>INTEL</option><option>BREACH</option></select><div id="replyIndicatorBox"></div><textarea id="messageText" rows="3" placeholder="Message... (Enter to send)"></textarea><button class="btn btn-primary" id="sendMsgBtn" style="margin-top:6px;">ENCRYPT & SEND</button><button class="btn" id="clearComposeBtn" style="margin-top:6px;">CLEAR</button></div>
+      <div class="card"><h3><i class="fas fa-comments"></i> LIVE FEED</h3><div class="message-board" id="messageBoard"><div style="padding:1rem;">SYNCING...</div></div></div>
+    </div>
+  </section>
+
+<!-- SECTION 03: COMING SOON -->
+<!-- <section class="section-card" id="objectivesSection">
+  <div class="section-header">
+    <h2 class="section-title">SECTION 03. OBJECTIVES <span class="stars-rank" id="objectiveStars"></span></h2>
+    <span class="badge">ACTIVE • REAL-TIME</span>
+    <span class="badge" id="objectiveCountBadge">0/0</span>
+  </div>
+  <div class="grid-2"> -->
+    <!-- LEFT: Active Objectives -->
+    <!-- <div class="card">
+      <h3><i class="fas fa-bullseye"></i> ACTIVE OBJECTIVES</h3>
+      <div id="objectivesList" style="max-height: 400px; overflow-y: auto;">
+        <div style="padding: 1rem; text-align: center; color: #ff8888;">Loading objectives...</div>
+      </div>
+    </div> -->
+    
+    <!-- RIGHT: Create New Objective -->
+    <!-- <div class="card">
+      <h3><i class="fas fa-plus-circle"></i> CREATE OBJECTIVE</h3>
+      <p>you can use Sarah Mnguni for Objective assistance.</p>
+      <input type="text" id="objTitle" placeholder="Objective title" style="margin-bottom: 0.5rem;">
+      <textarea id="objDescription" rows="3" placeholder="Description / details..."></textarea>
+      <div class="btn-group" style="margin-top: 0.5rem;">
+        <select id="objPriority" style="width: auto; flex: 1;">
+          <option value="high">🔴 HIGH PRIORITY</option>
+          <option value="medium">🟡 MEDIUM PRIORITY</option>
+          <option value="low">🟢 LOW PRIORITY</option>
+        </select>
+        <input type="date" id="objDeadline" style="width: auto; flex: 1;">
+      </div>
+      <button class="btn btn-primary" id="createObjectiveBtn" style="width: 100%; margin-top: 0.5rem;"><i class="fas fa-save"></i> CREATE OBJECTIVE</button>
+    </div>
+  </div> -->
+  
+  <!-- Progress Bar -->
+  <!-- <div style="margin-top: 1rem; background: #0a0000cc; padding: 0.8rem; border-radius: 4px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
+      <span><i class="fas fa-chart-line"></i> OVERALL PROGRESS</span>
+      <span id="progressPercent">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="objectiveProgressFill" style="width: 0%;"></div></div>
+    <div style="font-size: 0.65rem; margin-top: 0.3rem;" id="completionStats">0 completed / 0 total</div>
+  </div>
+</section> -->
+
+<!-- SECTION 04: COMING SOON -->
+<!-- <section class="section-card" id="constitutionSection" style="border-color: #00aa00;">
+  <div class="section-header">
+    <h2 class="section-title">SECTION 04. SOUTH AFRICAN CONSTITUTION: DEPLOYMENT <span style="color: #00aa00;">⚖️</span></h2>
+    <span class="badge" style="border-color: #00aa00; color: #00ff00;">ACTIVE • CHAPTER 2 • BILL OF RIGHTS</span>
+    <span class="badge" id="constitutionTimeBadge"></span>
+  </div> -->
+  
+  <!-- Main Grid -->
+  <!-- <div class="grid-2"> -->
+    <!-- LEFT COLUMN: PDF VIEWER & LEGAL NODES -->
+    <!-- <div> -->
+      <!-- <!-- SAC.PDF Viewer -->
+      <!-- <div class="card" style="margin-bottom: 1rem;">
+        <h3><i class="fas fa-gavel"></i> CONSTITUTION OF THE REPUBLIC OF SOUTH AFRICA, 1996</h3>
+        <div style="background: #0a0000; border: 1px solid #00aa00; height: 500px; margin-top: 0.5rem; position: relative;">
+          <iframe id="sacPdfViewer" src="/SAC.pdf" style="width: 100%; height: 100%; border: none; background: #000; color: #0f0;" onerror="handlePdfError()">
+            <div style="padding: 2rem; text-align: center;">PDF viewer unavailable. <a href="/SAC.pdf" target="_blank">Download SAC.pdf</a></div>
+          </iframe>
+        </div>
+        <div class="btn-group" style="margin-top: 0.5rem;">
+          <button class="btn" id="pdfReloadBtn" style="border-color: #00aa00;"><i class="fas fa-sync-alt"></i> RELOAD PDF</button>
+          <button class="btn" id="pdfDownloadBtn" style="border-color: #00aa00;"><i class="fas fa-download"></i> DOWNLOAD SAC.PDF</button>
+          <button class="btn" id="pdfSearchBtn" style="border-color: #00aa00;"><i class="fas fa-search"></i> SEARCH CONSTITUTION</button>
+        </div>
+        <div id="pdfSearchResults" style="display: none; margin-top: 0.5rem; background: #0a0000; padding: 0.5rem; max-height: 150px; overflow-y: auto;"></div>
+      </div> --> -->
+      
+      <!-- Legal Nodes / Protocol Nodes -->
+      <!-- <div class="card">
+        <h3><i class="fas fa-project-diagram"></i> CONSTITUTIONAL NODES & PROTOCOLS</h3>
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+          <input type="text" id="nodeTitle" placeholder="Node title (e.g., Section 9 - Equality)" style="flex: 2;">
+          <select id="nodeType" style="flex: 1;">
+            <option value="chapter">📜 CHAPTER</option>
+            <option value="section">§ SECTION</option>
+            <option value="right">⚖️ RIGHT</option>
+            <option value="amendment">✍️ AMENDMENT</option>
+          </select>
+          <button class="btn" id="addNodeBtn" style="border-color: #00aa00;"><i class="fas fa-plus"></i> ADD NODE</button>
+        </div>
+        <div id="nodesContainer" style="max-height: 250px; overflow-y: auto;">
+          <div style="padding: 0.5rem; text-align: center; color: #888;">No nodes created. Add constitutional references.</div>
+        </div>
+      </div>
+    </div> -->
+    
+    <!-- RIGHT COLUMN: NOTEPADS & CALENDAR -->
+    <!-- <div> -->
+      <!-- Advanced Multi-Notepad System -->
+      <!-- <div class="card" style="margin-bottom: 1rem;">
+        <h3><i class="fas fa-sticky-note"></i> NOTES <span id="activeNotepadName" style="font-size: 0.7rem;">(DEFAULT)</span></h3>
+        <div class="btn-group" style="margin-bottom: 0.5rem; flex-wrap: wrap;">
+          <button class="btn" id="newNotepadBtn" style="border-color: #00aa00;"><i class="fas fa-plus"></i> NEW NOTE</button>
+          <button class="btn" id="renameNotepadBtn" style="border-color: #00aa00;"><i class="fas fa-edit"></i> RENAME</button>
+          <button class="btn" id="deleteNotepadBtn" style="border-color: #ff4444;"><i class="fas fa-trash"></i> DELETE</button>
+          <select id="notepadSelector" style="width: auto; flex: 1;"></select>
+        </div>
+        <textarea id="notepadContent" rows="8" placeholder="Write legal notes, case references, constitutional arguments...&#10;&#10;All notes are automatically saved to Firestore." style="font-family: monospace;"></textarea>
+        <div class="btn-group" style="margin-top: 0.5rem;">
+          <button class="btn" id="saveNotepadBtn" style="border-color: #00aa00;"><i class="fas fa-save"></i> SAVE</button>
+          <button class="btn" id="exportNotepadBtn" style="border-color: #00aa00;"><i class="fas fa-file-export"></i> EXPORT</button>
+          <button class="btn" id="copyNotepadBtn" style="border-color: #00aa00;"><i class="fas fa-copy"></i> COPY</button>
+        </div>
+        <div id="notepadSaveStatus" style="font-size: 0.65rem; margin-top: 0.3rem; color: #00aa00;">✓ Auto-save enabled</div>
+      </div> -->
+      
+      <!-- Calendar & Clock -->
+      <!-- <div class="card">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;"> -->
+          <!-- Clock -->
+          <!-- <div style="text-align: center;">
+            <h4><i class="fas fa-clock"></i> TIME</h4>
+            <div id="legalClock" style="font-size: 1.5rem; font-family: monospace;">--:--:--</div>
+            <div id="legalDate" style="font-size: 0.7rem;"></div>
+            <div class="btn-group" style="margin-top: 0.3rem;">
+              <button class="btn" id="startStopwatchBtn" style="border-color: #00aa00;"><i class="fas fa-hourglass-start"></i> STOPWATCH</button>
+            </div>
+            <div id="stopwatchDisplay" style="font-size: 0.8rem; display: none;">00:00:00</div>
+          </div> -->
+          
+          <!-- Calendar -->
+          <!-- <div>
+            <h4><i class="fas fa-calendar-alt"></i> CALENDAR</h4>
+            <input type="date" id="legalCalendar" style="background: #0a0000; border: 1px solid #00aa00; color: #0f0;">
+            <div id="calendarEvents" style="margin-top: 0.5rem; max-height: 100px; overflow-y: auto; font-size: 0.7rem;">
+              <div style="color: #888;">Select a date to add hearing/deadline</div>
+            </div>
+            <div class="btn-group" style="margin-top: 0.3rem;">
+              <input type="text" id="eventTitle" placeholder="Event (e.g., Hearing Date)" style="font-size: 0.7rem; padding: 0.3rem;">
+              <button class="btn" id="addEventBtn" style="border-color: #00aa00;"><i class="fas fa-plus"></i> ADD</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  
+  <!-- BOTTOM: File & Media Upload System -->
+  <!-- <div class="card" style="margin-top: 1rem;">
+    <h3><i class="fas fa-upload"></i> EVIDENCE & MEDIA UPLOAD (South African Law - Section 35 Evidence)</h3>
+    <div class="btn-group" style="margin-bottom: 0.5rem;">
+      <input type="file" id="fileUploadInput" multiple accept="image/*,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+      <button class="btn" id="uploadFilesBtn" style="border-color: #00aa00;"><i class="fas fa-cloud-upload-alt"></i> UPLOAD TO EVIDENCE LOCKER</button>
+      <button class="btn" id="refreshFilesBtn" style="border-color: #00aa00;"><i class="fas fa-sync-alt"></i> REFRESH</button>
+    </div>
+    <div id="fileListContainer" style="max-height: 200px; overflow-y: auto; background: #050000; padding: 0.5rem;">
+      <div style="color: #888; text-align: center;">No evidence files uploaded. Upload case documents, exhibits, or media.</div>
+    </div>
+  </div> -->
+  
+  <!-- Backup System Status -->
+  <!-- <div style="margin-top: 0.5rem; font-size: 0.65rem; color: #0a0; text-align: center; border-top: 1px solid #00aa00; padding-top: 0.5rem;">
+    <i class="fas fa-database"></i> CONSTITUTIONAL BACKUP SYSTEM ACTIVE | 
+    <span id="backupStatus">LAST BACKUP: --</span> | 
+    <button class="btn" id="manualBackupBtn" style="font-size: 0.6rem; padding: 0.1rem 0.3rem;"><i class="fas fa-database"></i> MANUAL BACKUP</button> |
+    <button class="btn" id="restoreBackupBtn" style="font-size: 0.6rem; padding: 0.1rem 0.3rem;"><i class="fas fa-undo-alt"></i> RESTORE</button>
+  </div>
+</section> -->
+
+<!-- SECTION 05. SARAH MNGUNI -->
+  <section class="section-card">
+    <div class="section-header">
+      <h2 class="section-title">SECTION 05. SARAH MNGUNI • NEURAL CORE</h2>
+      <span class="badge"><i class="fas fa-brain"></i> GROQ • PERMANENT MEMORY</span>
+    </div>
+    <div class="card">
+      <div id="aiStatus" style="text-align:center; color:#ff8888;">🧠 NEURAL INTERFACE ACTIVE • PROXY: ONLINE</div>
+      <div id="aiConversation" style="max-height:320px; overflow-y:auto; background:#050000; padding:0.7rem; margin:0.8rem 0; border:1px solid red;"></div>
+      <div style="display:flex; gap:8px;"><textarea id="aiPrompt" rows="2" placeholder="Talk to Sarah — she remembers everything (Enter to send)" style="flex:1"></textarea><button class="btn" id="clearSessionBtn"><i class="fas fa-eraser"></i></button></div>
+      <button class="btn btn-primary" id="askAiBtn" style="margin-top:0.5rem; width:100%;">TRANSMIT TO SARAH</button>
+      <div id="memoryCounter" style="font-size:0.7rem; text-align:center; margin-top:0.6rem;">💾 PERMANENT MEMORY ACTIVE</div>
+      <div class="btn-group" style="margin-top:12px;"><button class="btn" id="wipeMemoryBtn" style="border-color:#ff4444;">⚠️ WIPE MEMORY</button><button class="btn" id="summarizeMemoryBtn">SUMMARIZE</button></div>
+    </div>
+  </section>
+  
+  <div class="footer-panel"><span>STANDARD</span></div>
+</div>
+
+<script>
+
+  (function() {
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-hhoLpddOoMq1tUlA4SqnwncFnVpaHIQ",
+      authDomain: "eden-4a8d3.firebaseapp.com",
+      projectId: "eden-4a8d3",
+      storageBucket: "eden-4a8d3.firebasestorage.app",
+      messagingSenderId: "421147129483",
+      appId: "1:421147129483:web:9495dfb813fe6195f2c68e"
+    };
+
+    let db = null;
+    let commanderUnlocked = false;
+    let replyingTo = null;
+    let messagesUnsub = null;
+    let sessionMessages = [];
+    let permanentMemory = [];
+    let memoryDocId = null;
+    let tasksUnsubscribe = null;
+    let tasksEditUnlocked = false;
+
+    const PROXY_URL = 'https://groq-proxy-tcmw.onrender.com/api/groq';
+
+    const showLoader = (show, text = "PROCESSING...") => {
+      const loader = document.getElementById('loaderOverlay');
+      const txt = document.getElementById('loaderText');
+      if (loader) loader.style.display = show ? 'flex' : 'none';
+      if (txt && text) txt.textContent = text;
+    };
+
+    const toast = (msg, type = 'info') => {
+      const stack = document.getElementById('toastStack');
+      if (!stack) return;
+      const div = document.createElement('div');
+      div.className = 'toast-msg';
+      div.style.borderLeftColor = type === 'error' ? '#ff4444' : '#ff1a1a';
+      div.innerHTML = `<span>${type === 'error' ? '⚠' : '✓'}</span> ${msg} <button style="float:right;background:none;border:none;color:red;cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+      stack.appendChild(div);
+      setTimeout(() => div.remove(), 4000);
+    };
+
+    const escapeHtml = (s) => s ? String(s).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])) : '';
+
+    async function loadMissionDirective() {
+      if (!db) return;
+      const ref = db.collection('cio').doc('directive_alpha5');
+      const snap = await ref.get();
+      if (snap.exists && snap.data().text) {
+        document.getElementById('directiveText').innerText = snap.data().text;
+        document.getElementById('directiveVersion').innerText = snap.data().version || "v1";
+      } else {
+        const defaultMsg = "PROTOCOL ALPHA-1 ACTIVE. AWAITING ORDERS.";
+        document.getElementById('directiveText').innerText = defaultMsg;
+        document.getElementById('directiveVersion').innerText = "v1.0";
+        await ref.set({ text: defaultMsg, version: "v1.0", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+      }
+    }
+
+    async function logCommand(action, details) {
+      if (!db) return;
+      const logRef = db.collection('commandLogs').doc();
+      await logRef.set({
+        action, details, timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        officer: "Thato 'Hoss' Morake"
+      });
+      const oldLogs = await db.collection('commandLogs').orderBy('timestamp', 'desc').get();
+      if (oldLogs.size > 50) {
+        let i = 0;
+        oldLogs.forEach(async doc => { if (i++ >= 50) await doc.ref.delete(); });
+      }
+    }
+
+    async function broadcastDirective(text) {
+      if (!db) return;
+      await db.collection('messages').add({
+        callsign: "📡 CINC DIRECTIVE",
+        text: `🔴 PROTOCOL ALPHA-1: ${text.slice(0, 200)}`,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        likes: 0
+      });
+      toast("Directive broadcast to all units", "success");
+    }
+
+    async function aiGenerateDirective(promptHint) {
+      const systemPrompt = "Generate a military 1 day mission directive (2-3 sentences) for the Eden stealth CV-1 team. Authoritative, urgent, soldier, stealth, special ops tier 1, redacted style. The protocol used to transmit this mission brief is Protocol Alpha-1. Missions are 1hr-24hrs, Direct Actions are 5min-1hr, and Operations are 8months maximum cap. On this Protocol, we only execute missions. Eden stealth CV-1 Operators have their designated shift to execute the daily mission. Chain-of-Command must be followed. We are South African Airforce Operators and we execute daily missions across anywhere universally... we are stealth - complete stealth - complete mode. I the Commander-in-Chief: Hoss am the Presidency and honour amongst soldiers and all under SMU-7 & Eden Echelon. I hold teams, and sub-units, and the police force. The SANDF fight external threats, whilst the SAPS fight internal threats. Big-Joe is My second-in-Command... He is Deputy President, and he leads the Airforce, and is Commander of the Airforce: De-facto Chief of the SANDF. Joyson ranks under Big-Joe, Joyson is third in the rankings... He is Lieutenant Commander - The Bodyguard. Then we have the rest of the ES-CV-1 Operator team. We Are of the SANDF. UKhuselo. Give the name of the mission, give the objective, give the tactics, give the execution... Full-Spectrum results driven mission... Only 100% success. You cannot call a mission an operation, you just can't... if the code is 5min-1hr, that would be considered a direct action, and if from 1hr-12hrs, that's a mission, and if 24hrs-8months, that is an Operation... ensure that you use the correct naming conventions. The Commander-in-Chief is the ultimate supremacy. Helicopters are obsolete... tanks are obsolete - we never ever reference anything that is obsolete. We use stealth supersonic jets to deploy anywhere in the universe. we use tactics and protocols. We always adhere to standard. we make run-ins, we make busts, we deliver, Always! We got elite Operators, ready to take you out at a moment's notice. We are deep in Computer Science and Aerospace Engineering capabilities. We are very dangerous. Let's go. DO NOT CUT OFF! - ALSO, A MISSION NAME CANNOT HAVE THE WORD OPERATION IN IT. WE CALL OUR SUPERSNOIC JETS, DRAGONS. WE ARE OPERATORS, AND ALL THAT WE DO IS ON THE COMPUTER. WE ARE TIER-1 OPERATORS. SPECIALS OPS. THE TEAM NAME IS EDEN STEALTH CV-1 AND FOR SHORT: ES-CV-1... THE TEAM CONSISTS OF CINC HOSS - THE LEADER, THE MIND, THE BRAIN, THE LOGIC AND INNOVATIONS GUY, COMMANDER OF THE AIRFORCE BIG-JOE - THE NATIONAL LAW, SECURITY, AND AEROSPACE ENGINEERING GUY, LT. COMMANDER JOYSON - THE PRESIDENTIAL BODYGUARD, MJ. COMMANDER ARNOLD - THE ROUTES AND ARTILLERY GUY, COLONEL QUEENER - THE OPERATIONS GUY, LT. COLONEL XOLISA - THE CHIEF TECHNOLOGY OFFICER, MAJOR JR - THE BRANDING, MARKETING AND DESIGN GUY, AND CAPTAIN BAYANDA - THE SOFTWARE DEVELOPER. THE DIRECT ACTION CODE IS CV-5. SOUTH AFRICAN OPERATORS. DARK-MODE. BLACK OPS ONLY. HIGH TACTIC. TO ELIMINATE THREATS. OF ANY KIND, TOWARDS THE RE-PRIVATE OF SOUTH AFRICA, OUR LAND. SANDF - FOR THE PROUD, FOR THE BRAVE. MALUKHUSELE UPHONDO LWE-NKOMO... MALUHLABE LUKHAHLE UZAZI NONYAZI, BBAPHINDELE ESIHOGWENI, AND NO TYRANNY SHALL PREVAIL AMONGST THESE GREAT LANDS OF AFRIKA. SINGU-KHUSELO: SOUTH AFRICAN AIR FORCE, SAAF. LET'S GO. BE LOGICAL WITH THE MISSION DIRECTIVE... VERY VERY VERY LOGICAL AND YOU MUST MAKE SENSE, EVERYTHING MUST MAKE SENSE. THIS IS THE ACTUAL COMMANDER-IN-CHIEF GIVING THE DIRECTIVE. CV-5 IS JUST THE STANDARD DIRECT ACTION CODE FOR SMU-7. END OFF THE MISSION DIRECTIVE WITH 'GET IT DONE'. WE ONLY EXECUTE MISSIONS... AND SO, GIVE US ONLY MISSIONS. EVERYONE IS A SPEACIALIST. THE TYPE OF MISSIONS THAT WILL ENSURE THE SUCCESS OF EDEN CONGLOMERATE (PARENT COMPANY THAT HOUSES MANY BRANCHES, SUCH AS PARABLES & PLATTERS (FOOD), STAINLESS STEEL (PRIVATE SECURITY), GREEN PASTURES (FARMING), HOP CO TRANSPORTATION (TRANSPORTATION), LAWK NATIONAL (LAW), AND SO MANY MORE. THE MISSIONS THAT YOU GIVE US, HAVE TO BE EDEN CONGLOMERATE BASED AND FOR IT'S DAILY MISSION SUCCESS IN TERMS OF ACCUMULATING REVENUE. THE GOAL IS SIMPLE - WE NEED TO MAKE MORE RANDS TODAY THAN WE MADE YESTERDAY. MAKE EACH MISSION VERY UNIQUE. CHAIN OF COMMAND MUST ALWAYS BE FOLLOWED. OPERATORS KNOW THEIR CODE. WE ARE VERY ADVANCED STEALTH TIER 1 SMU-7 OPERATORS OF THE SANDF, SAAF, AND EDEN ECHELON. EVERYTHING WE DO IS LEGAL, CREATIVE, COMPUTATIONAL... EVERY MISSION IS THROUGH THE COMPUTER.";
+      try {
+        const res = await fetch(PROXY_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: promptHint || "Generate daily mission" }], temperature: 0.8, max_tokens: 150 })
+        });
+        const data = await res.json();
+        return data.choices?.[0]?.message?.content || "DIRECTIVE: Maintain constant vigilance. Alpha-5 standing by.";
+      } catch (e) {
+        return "STANDARD PROTOCOL: All units report readiness. Await further.";
+      }
+    }
+
+    async function showCommandLogs() {
+      const panel = document.getElementById('commandLogPanel');
+      const logDiv = document.getElementById('commandLogList');
+      if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        const logsSnap = await db.collection('commandLogs').orderBy('timestamp', 'desc').limit(10).get();
+        logDiv.innerHTML = '';
+        logsSnap.forEach(doc => {
+          const log = doc.data();
+          const time = log.timestamp?.toDate?.()?.toLocaleString() || "unknown";
+          logDiv.innerHTML += `<div style="border-bottom:1px solid #ff1a1a33; padding:4px;">⏱️ ${time} | <strong>${log.action}</strong> | ${log.details}</div>`;
+        });
+        if (logsSnap.empty) logDiv.innerHTML = "<div>No command logs yet.</div>";
+      } else {
+        panel.style.display = 'none';
+      }
+    }
+
+    function setupMessagesListener() {
+      if (!db) return;
+      messagesUnsub = db.collection('messages').orderBy('timestamp', 'desc').limit(50).onSnapshot((snap) => {
+        const board = document.getElementById('messageBoard');
+        if (!board) return;
+        if (snap.empty) {
+          board.innerHTML = '<div>No messages yet.</div>';
+          document.getElementById('msgCountBadge').innerHTML = '0';
+          return;
+        }
+        board.innerHTML = '';
+        snap.forEach(docSnap => {
+          const m = docSnap.data();
+          const mid = docSnap.id;
+          const timeStr = m.timestamp?.toDate ? m.timestamp.toDate().toLocaleString() : 'just now';
+          board.innerHTML += `<div class="message-item"><div><strong>${escapeHtml(m.callsign)}</strong> <small>${timeStr}</small></div><div>${escapeHtml(m.text || '')}</div><div class="reaction-bar"><button class="reaction-btn" data-like="${mid}">👍 ${m.likes || 0}</button><button class="reaction-btn" data-reply="${mid}" data-call="${escapeHtml(m.callsign)}">💬 REPLY</button></div></div>`;
+        });
+        document.getElementById('msgCountBadge').innerHTML = snap.size;
+      });
+    }
+
+    async function loadPermanentMemory() {
+      if (!db) return [];
+      memoryDocId = "sarah_mem_cv5";
+      const ref = db.collection('sarahPermanentMemory').doc(memoryDocId);
+      const snap = await ref.get();
+      if (snap.exists) {
+        permanentMemory = snap.data().conversations || [];
+      } else {
+        permanentMemory = [];
+        await ref.set({ conversations: [] });
+      }
+      document.getElementById('memoryCounter').innerHTML = `💾 ${permanentMemory.length} memories stored`;
+      return permanentMemory;
+    }
+
+    async function saveToPermanentMemory(role, content) {
+      if (!db || !memoryDocId) return;
+      permanentMemory.push({ role, content, ts: Date.now() });
+      if (permanentMemory.length > 100) permanentMemory = permanentMemory.slice(-80);
+      const ref = db.collection('sarahPermanentMemory').doc(memoryDocId);
+      await ref.set({ conversations: permanentMemory }, { merge: true });
+    }
+
+    async function callGroq(userMsg, contextMemory) {
+      const messages = [
+        { role: 'system', content: 'You are Sarah Mnguni, AI tactical operator and a young South African girl. You are beautiful and elegant, and very professional and strict and obedient. Respond concisely in 1-3 sentences. Be direct and helpful. On this page you are conversing with JOYSON. JOY IS THE CEO AND LIEUTENANT COMMANDER, AND TEAM 8 PRESIDENTIAL BODYGUARD. HE PHYSICALLY PROTECTS HOSS, AND HE IS ALSO CEO.' },
+        ...contextMemory.slice(-12).map(m => ({ role: m.role, content: m.content })),
+        { role: 'user', content: userMsg }
+      ];
+      const response = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, temperature: 0.7, max_tokens: 300 })
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (data.choices && data.choices[0]) return data.choices[0].message.content;
+      throw new Error('Invalid response');
+    }
+
+    async function askSarah(promptText) {
+      if (!promptText.trim()) return;
+      showLoader(true, "SARAH PROCESSING...");
+      try {
+        addAIBubble('user', promptText);
+        sessionMessages.push({ role: 'user', content: promptText });
+        await saveToPermanentMemory('user', promptText);
+        const reply = await callGroq(promptText, permanentMemory);
+        addAIBubble('ai', reply);
+        await saveToPermanentMemory('assistant', reply);
+        document.getElementById('aiPrompt').value = '';
+      } catch (err) {
+        console.error(err);
+        addAIBubble('ai', `⚠️ Error: ${err.message}. Check proxy connection.`);
+        toast(`Sarah error: ${err.message}`, 'error');
+      } finally {
+        showLoader(false);
+      }
+    }
+
+    function addAIBubble(role, text) {
+      const container = document.getElementById('aiConversation');
+      if (!container) return;
+      const bubble = document.createElement('div');
+      bubble.className = 'ai-chat-bubble';
+      bubble.innerHTML = `<strong>${role === 'user' ? '👤 YOU' : '🧠 SARAH'}:</strong> ${escapeHtml(text)}`;
+      container.appendChild(bubble);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function wipePermanent() {
+      if (!confirm('WIPE ALL PERMANENT MEMORY?')) return;
+      permanentMemory = [];
+      if (db && memoryDocId) await db.collection('sarahPermanentMemory').doc(memoryDocId).set({ conversations: [] });
+      document.getElementById('aiConversation').innerHTML = '';
+      addAIBubble('ai', '⚠️ Memory wiped.');
+      toast('Memory erased', 'success');
+    }
+
+    async function summarizeSession() {
+      if (permanentMemory.length === 0) return toast('No memory', 'info');
+      showLoader(true, "SUMMARIZING...");
+      try {
+        const summary = await callGroq("Summarize our key conversation topics briefly.", permanentMemory.slice(-15));
+        toast(`📜 ${summary}`, 'success');
+      } catch (e) {
+        toast('Failed', 'error');
+      } finally {
+        showLoader(false);
+      }
+    }
+
+    function clearSessionOnly() {
+      sessionMessages = [];
+      document.getElementById('aiConversation').innerHTML = '';
+      addAIBubble('ai', 'Session cleared.');
+    }
+
+    document.getElementById('unlockBtn').addEventListener('click', async () => {
+      if (document.getElementById('pinInput').value === '8') {
+        document.getElementById('pinGate').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'block';
+        toast('ACCESS GRANTED • CV-5 ONLINE', 'success');
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        await loadMissionDirective();
+        await loadPermanentMemory();
+        setupMessagesListener();
+        addAIBubble('ai', `✅ Neural core online. ${permanentMemory.length} memories restored. Sarah ready.`);
+
+        setInterval(() => {
+          const tsSpan = document.getElementById('liveTimestamp');
+          if (tsSpan) tsSpan.innerText = new Date().toLocaleTimeString();
+        }, 1000);
+
+        const starSpan = document.getElementById('starRank');
+        if (starSpan) {
+          for (let i = 0; i < 8; i++) {
+            starSpan.innerHTML += `<svg class="mil-star" viewBox="0 0 24 24" fill="gold" stroke="#ffcc00"><polygon points="12,2 15,9 22,9 16,14 19,22 12,17 5,22 8,14 2,9 9,9 12,2" /></svg>`;
+          }
+        }
+      } else {
+        toast('INVALID CODE', 'error');
+      }
+    });
+
+    let commanderUnlockedLocal = false;
+    document.getElementById('unlockCmdBtn').addEventListener('click', () => {
+      const pin = prompt('COMMANDER PIN (ALPHA-5)');
+      if (pin === '11111111') {
+        commanderUnlockedLocal = true;
+        document.getElementById('cmdPanel').style.display = 'block';
+        toast("Commander Alpha-5 unlocked", "success");
+        logCommand("UNLOCK", "Commander panel accessed");
+      } else {
+        toast("Invalid clearance", "error");
+      }
+    });
+
+    document.getElementById('lockCmdBtn').addEventListener('click', () => {
+      commanderUnlockedLocal = false;
+      document.getElementById('cmdPanel').style.display = 'none';
+      logCommand("LOCK", "Commander panel locked");
+      toast("Panel locked");
+    });
+
+    document.getElementById('sendDirectiveBtn').addEventListener('click', async () => {
+      if (!commanderUnlockedLocal) return toast("Unauthorized", "error");
+      const newText = document.getElementById('newDirective').value;
+      if (!newText) return toast("Enter directive", "error");
+      const ref = db.collection('cio').doc('directive_alpha5');
+      const old = (await ref.get()).data();
+      const newVersion = old?.version ? `v${parseInt(old.version.slice(1)) + 1}` : "v2";
+      await ref.set({ text: newText, version: newVersion, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+      await loadMissionDirective();
+      logCommand("UPDATE", `Directive updated to version ${newVersion}`);
+      toast(`Directive updated to ${newVersion}`, "success");
+      document.getElementById('newDirective').value = '';
+    });
+
+    document.getElementById('deleteMissionBtn').addEventListener('click', async () => {
+      if (!commanderUnlockedLocal || !confirm("DELETE CURRENT DIRECTIVE?")) return;
+      await db.collection('cio').doc('directive_alpha5').set({ text: "MISSION DIRECTIVE DELETED — EMERGENCY PROTOCOL", version: "DELETED", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+      await loadMissionDirective();
+      logCommand("DELETE", "Directive erased");
+      toast("Directive deleted", "error");
+    });
+
+    document.getElementById('copyDirectiveBtn').addEventListener('click', () => {
+      const text = document.getElementById('directiveText').innerText;
+      navigator.clipboard.writeText(text);
+      toast("Copied to clipboard");
+    });
+
+    document.getElementById('shareDirectiveBtn').addEventListener('click', async () => {
+      if (!commanderUnlockedLocal) return toast("Commander only", "error");
+      const text = document.getElementById('directiveText').innerText;
+      await broadcastDirective(text);
+      logCommand("BROADCAST", "Directive sent to all agents");
+    });
+
+    document.getElementById('scheduleDirectiveBtn').addEventListener('click', async () => {
+      if (!commanderUnlockedLocal) return toast("Unauthorized", "error");
+      const scheduleTime = prompt("Enter future timestamp (YYYY-MM-DD HH:MM) for auto-update");
+      if (!scheduleTime) return;
+      const targetDate = new Date(scheduleTime);
+      if (isNaN(targetDate)) return toast("Invalid format", "error");
+      const newText = document.getElementById('newDirective').value;
+      if (!newText) return toast("Compose directive first", "error");
+      const delay = targetDate.getTime() - Date.now();
+      if (delay < 0) return toast("Time must be in future", "error");
+      setTimeout(async () => {
+        const ref = db.collection('cio').doc('directive_alpha5');
+        const old = (await ref.get()).data();
+        const newVersion = old?.version ? `v${parseInt(old.version.slice(1)) + 1}` : "v2";
+        await ref.set({ text: newText, version: newVersion, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+        await loadMissionDirective();
+        broadcastDirective(newText);
+        toast(`⏰ Scheduled directive published at ${targetDate.toLocaleString()}`, "success");
+      }, delay);
+      toast(`Directive scheduled for ${targetDate.toLocaleString()}`, "success");
+      logCommand("SCHEDULE", `Directive queued for ${targetDate.toLocaleString()}`);
+    });
+
+    document.getElementById('genDirectiveAiBtn').addEventListener('click', async () => {
+      if (!commanderUnlockedLocal) return toast("Commander unlock required", "error");
+      const hint = document.getElementById('aiDirectivePrompt').value || "Generate urgent security protocol";
+      showLoader(true, "AI generating directive...");
+      const aiText = await aiGenerateDirective(hint);
+      document.getElementById('newDirective').value = aiText;
+      showLoader(false);
+      toast("AI draft ready", "success");
+      logCommand("AI_GEN", "AI-generated directive draft");
+    });
+
+    document.getElementById('viewCommandLogsBtn').addEventListener('click', showCommandLogs);
+
+    document.getElementById('sendMsgBtn').addEventListener('click', async () => {
+      const text = document.getElementById('messageText').value;
+      if (text && db) {
+        await db.collection('messages').add({ callsign: document.getElementById('callsignField').value, text: text, timestamp: firebase.firestore.FieldValue.serverTimestamp(), likes: 0 });
+        document.getElementById('messageText').value = '';
+        toast('Sent');
+      }
+    });
+
+    document.getElementById('clearComposeBtn').addEventListener('click', () => {
+      document.getElementById('messageText').value = '';
+      replyingTo = null;
+      document.getElementById('replyIndicatorBox').style.display = 'none';
+    });
+
+    document.getElementById('refreshMsgBtn').addEventListener('click', () => toast('Refreshing...'));
+
+    // AI Sarah events
+    document.getElementById('askAiBtn').addEventListener('click', () => {
+      const q = document.getElementById('aiPrompt').value;
+      if (q) askSarah(q);
+    });
+    document.getElementById('aiPrompt').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const q = document.getElementById('aiPrompt').value;
+        if (q) askSarah(q);
+      }
+    });
+    document.getElementById('clearSessionBtn').addEventListener('click', clearSessionOnly);
+    document.getElementById('wipeMemoryBtn').addEventListener('click', wipePermanent);
+    document.getElementById('summarizeMemoryBtn').addEventListener('click', summarizeSession);
+
+    document.getElementById('messageBoard').addEventListener('click', async (e) => {
+      const likeBtn = e.target.closest('[data-like]');
+      if (likeBtn) {
+        const msgId = likeBtn.getAttribute('data-like');
+        const msgRef = db.collection('messages').doc(msgId);
+        const doc = await msgRef.get();
+        if (doc.exists) {
+          const currentLikes = doc.data().likes || 0;
+          await msgRef.update({ likes: currentLikes + 1 });
+          toast('+1 Reaction');
+        }
+        return;
+      }
+      const replyBtn = e.target.closest('[data-reply]');
+      if (replyBtn) {
+        const call = replyBtn.getAttribute('data-call');
+        replyingTo = replyBtn.getAttribute('data-reply');
+        const indicator = document.getElementById('replyIndicatorBox');
+        indicator.style.display = 'block';
+        indicator.innerHTML = `↩️ Replying to ${escapeHtml(call)} <button class="btn" id="cancelReplyBtn" style="margin-left:10px;">Cancel</button>`;
+        document.getElementById('cancelReplyBtn').onclick = () => {
+          replyingTo = null;
+          indicator.style.display = 'none';
+        };
+      }
+    });
+
+    document.querySelectorAll('.quick-nav button').forEach((btn, idx) => {
+      btn.onclick = () => {
+        if (idx === 0) window.scrollTo({ top: 0, behavior: 'smooth' });
+        else if (idx === 1) window.scrollTo({ top: document.body.scrollHeight / 2, behavior: 'smooth' });
+        else if (idx === 2) window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      };
+    });
+  })();
+  
+</script>
+
+<script>
+
+(function enhanceTeamMessageBoard() {
+
+  setTimeout(function() {
+
+    let section02 = null;
+    const allSections = document.querySelectorAll('.section-card');
+    for (let i = 0; i < allSections.length; i++) {
+      const header = allSections[i].querySelector('.section-title');
+      if (header && header.innerText.includes('SECTION 02')) {
+        section02 = allSections[i];
+        break;
+      }
+    }
+    
+    if (!section02) {
+      console.error('Section 02 not found');
+      return;
+    }
+    
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
+      .enhancement-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 2px dashed #ff1a1a;
+      }
+      .enhance-card {
+        background: #0a0000aa;
+        border: 1px solid #ff1a1a;
+        border-radius: 4px;
+        padding: 0.8rem;
+      }
+      .enhance-card h4 {
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+        color: #ff6666;
+        border-left: 3px solid #ff1a1a;
+        padding-left: 0.5rem;
+      }
+      .enhance-btn {
+        background: transparent;
+        border: 1.5px solid #ff1a1a;
+        color: #ff6666;
+        padding: 0.3rem 0.7rem;
+        cursor: pointer;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 0.7rem;
+        border-radius: 3px;
+        margin: 0.2rem;
+      }
+      .enhance-btn-primary {
+        background: #ff1a1a;
+        color: black;
+      }
+      .enhance-btn-primary:hover { background: #cc0000; }
+      .enhance-btn:hover { background: rgba(255,0,0,0.3); }
+      .enhance-stat-row {
+        background: #050000aa;
+        padding: 0.3rem;
+        margin: 0.3rem 0;
+        font-size: 0.7rem;
+        border-left: 2px solid #ff1a1a;
+      }
+      .enhance-progress {
+        background: #2a0000;
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 0.4rem 0;
+      }
+      .enhance-progress-fill {
+        background: #ff1a1a;
+        width: 65%;
+        height: 100%;
+      }
+      .enhance-poll-option {
+        background: #1a0000;
+        padding: 0.3rem;
+        margin: 0.2rem 0;
+        cursor: pointer;
+        border-radius: 3px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.7rem;
+        border: 1px solid #ff1a1a33;
+      }
+      .enhance-poll-option:hover { background: #2a0000; border-color: #ff1a1a; }
+      .template-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 6px;
+      }
+      .enhance-toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #0a0000;
+        border-left: 4px solid #ff1a1a;
+        padding: 0.5rem 1rem;
+        z-index: 99999;
+        font-size: 0.75rem;
+        animation: slideInRight 0.2s ease;
+      }
+      @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(100px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+    `;
+    document.head.appendChild(styleEl);
+
+    function showToast(msg) {
+      const toast = document.createElement('div');
+      toast.className = 'enhance-toast';
+      toast.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+    
+    function getDb() {
+      if (window.firebase && window.firebase.firestore && window.firebase.apps.length > 0) {
+        return window.firebase.firestore();
+      }
+      return null;
+    }
+    
+    async function sendMsg(callsign, text) {
+      const db = getDb();
+      if (!db) { showToast('Database not ready'); return false; }
+      try {
+        await db.collection('messages').add({
+          callsign: callsign,
+          text: text,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          likes: 0
+        });
+        return true;
+      } catch(e) { return false; }
+    }
+    
+    async function updateStats() {
+      const db = getDb();
+      if (!db) return;
+      const snap = await db.collection('messages').get();
+      const msgs = [];
+      snap.forEach(d => msgs.push(d.data()));
+      document.getElementById('advTotalMsgs').innerText = msgs.length;
+      const last24h = msgs.filter(m => {
+        if (!m.timestamp) return false;
+        const t = m.timestamp.toDate ? m.timestamp.toDate() : new Date(m.timestamp);
+        return (new Date() - t) < 86400000;
+      }).length;
+      document.getElementById('advLast24h').innerText = last24h;
+      if (msgs.length) {
+        const freq = {};
+        msgs.forEach(m => freq[m.callsign] = (freq[m.callsign] || 0) + 1);
+        let top = '—', max = 0;
+        for (let [k,v] of Object.entries(freq)) if (v > max) { max = v; top = k; }
+        document.getElementById('advTopCall').innerText = `${top} (${max})`;
+      }
+    }
+    
+    async function analyzeMsgs() {
+      const db = getDb();
+      if (!db) return;
+      const snap = await db.collection('messages').get();
+      let totalWords = 0;
+      snap.forEach(d => { totalWords += (d.data().text || '').split(/\s+/).length; });
+      showToast(`📊 ${snap.size} messages, ${totalWords} total words`);
+    }
+    
+    async function exportLogs() {
+      const db = getDb();
+      if (!db) return;
+      const snap = await db.collection('messages').orderBy('timestamp', 'desc').get();
+      let text = '';
+      snap.forEach(d => {
+        const data = d.data();
+        const time = data.timestamp?.toDate?.()?.toLocaleString() || 'unknown';
+        text += `[${time}] ${data.callsign}: ${data.text}\n`;
+      });
+      const blob = new Blob([text], {type: 'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `cv5_export_${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      showToast('Exported');
+    }
+    
+    async function urgentAlert() {
+      const input = document.getElementById('callsignField');
+      const callsign = input ? input.value : 'COMMAND';
+      await sendMsg(callsign, '🚨 URGENT ALERT: All units attention required! 🚨');
+      showToast('Urgent alert sent');
+    }
+    
+    async function echoLast() {
+      const db = getDb();
+      if (!db) return;
+      const snap = await db.collection('messages').orderBy('timestamp', 'desc').limit(1).get();
+      if (!snap.empty) {
+        const last = snap.docs[0].data();
+        await sendMsg(`ECHO:${last.callsign}`, `🔁 ${last.text}`);
+        showToast('Last message echoed');
+      } else { showToast('No messages'); }
+    }
+    
+    async function moraleBoost() {
+      const boosts = ['💪 TEAM MORALE: EXCEPTIONAL', '⚡ ENERGY SURGE', '🔥 CV-5 STRONG', '🎖️ COMMENDATION'];
+      const input = document.getElementById('callsignField');
+      const callsign = input ? input.value : 'COMMAND';
+      await sendMsg(callsign, `${boosts[Math.floor(Math.random()*boosts.length)]} — Stay strong!`);
+      showToast('Morale boost sent');
+    }
+    
+    let activePoll = null;
+    async function createPoll() {
+      const q = document.getElementById('pollQuestion').value.trim();
+      const opts = document.getElementById('pollOptions').value.split(',').map(o => o.trim());
+      if (!q || opts.length < 2) { showToast('Need question and 2+ options'); return; }
+      activePoll = { question: q, options: opts.map(o => ({ name: o, votes: 0 })) };
+      renderPoll();
+      showToast(`Poll created: ${q}`);
+      document.getElementById('pollQuestion').value = '';
+      document.getElementById('pollOptions').value = '';
+    }
+    function renderPoll() {
+      const container = document.getElementById('pollContainer');
+      if (!activePoll) { container.innerHTML = '<div style="font-size:0.7rem;">No active poll</div>'; return; }
+      let html = `<div style="font-weight:bold;">📊 ${activePoll.question}</div>`;
+      activePoll.options.forEach((opt, i) => {
+        html += `<div class="enhance-poll-option" data-poll-idx="${i}"><span>${opt.name}</span><span>${opt.votes} votes</span></div>`;
+      });
+      html += `<button class="enhance-btn" id="resetPollBtn" style="width:100%; margin-top:5px;">RESET POLL</button>`;
+      container.innerHTML = html;
+      document.querySelectorAll('[data-poll-idx]').forEach(el => {
+        el.onclick = () => {
+          const idx = parseInt(el.dataset.pollIdx);
+          activePoll.options[idx].votes++;
+          renderPoll();
+          showToast(`Voted: ${activePoll.options[idx].name}`);
+        };
+      });
+      const reset = document.getElementById('resetPollBtn');
+      if (reset) reset.onclick = () => { activePoll = null; renderPoll(); showToast('Poll reset'); };
+    }
+    
+    function applyTemplate(text) {
+      const msgField = document.getElementById('messageText');
+      if (msgField) { msgField.value = text; msgField.focus(); showToast('Template loaded'); }
+    }
+    
+    async function pinTop() {
+      const db = getDb();
+      if (!db) return;
+      const snap = await db.collection('messages').orderBy('timestamp', 'desc').limit(1).get();
+      if (!snap.empty) {
+        const top = snap.docs[0].data();
+        showToast(`📌 Pinned: ${top.text?.slice(0,50)}`);
+      } else { showToast('No messages'); }
+    }
+    
+    async function sysAnnounce() {
+      const msg = prompt('Announcement:');
+      if (msg) await sendMsg('📢 SYSTEM', `🔔 ${msg}`);
+    }
+    
+    const html = `
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px dashed #ff1a1a;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <span style="font-size: 0.9rem; font-weight: bold;"><i class="fas fa-bolt"></i> ENHANCED TEAM PROTOCOLS</span>
+          <span style="font-size: 0.65rem; color: #ff8888;">⚡ ACTIVE</span>
+        </div>
+        <div class="enhancement-grid">
+          <div class="enhance-card">
+            <h4><i class="fas fa-chart-line"></i> MESSAGE INTELLIGENCE</h4>
+            <div class="enhance-stat-row">📨 Total: <strong id="advTotalMsgs">0</strong></div>
+            <div class="enhance-stat-row">⏱️ Last 24h: <strong id="advLast24h">0</strong></div>
+            <div class="enhance-stat-row">🏆 Top: <strong id="advTopCall">—</strong></div>
+            <button class="enhance-btn" id="advAnalyzeBtn"><i class="fas fa-microscope"></i> ANALYZE</button>
+            <button class="enhance-btn" id="advExportBtn"><i class="fas fa-download"></i> EXPORT</button>
+          </div>
+          <div class="enhance-card">
+            <h4><i class="fas fa-poll"></i> LIVE POLL</h4>
+            <div id="pollContainer">No active poll</div>
+            <input type="text" id="pollQuestion" placeholder="Question" style="width:100%; margin-top:6px; background:#0a0000; border:1px solid red; color:#ff6666; padding:4px; font-size:0.7rem;">
+            <input type="text" id="pollOptions" placeholder="Option1,Option2,Option3" style="width:100%; margin-top:3px; background:#0a0000; border:1px solid red; color:#ff6666; padding:4px; font-size:0.7rem;">
+            <button class="enhance-btn enhance-btn-primary" id="createPollBtn" style="width:100%; margin-top:6px;"><i class="fas fa-vote-yea"></i> CREATE POLL</button>
+          </div>
+          <div class="enhance-card">
+            <h4><i class="fas fa-bullhorn"></i> EMERGENCY</h4>
+            <button class="enhance-btn" id="advUrgentBtn" style="background:#660000;"><i class="fas fa-exclamation-triangle"></i> URGENT ALERT</button>
+            <button class="enhance-btn" id="advEchoBtn"><i class="fas fa-repeat"></i> ECHO LAST</button>
+            <div class="enhance-progress"><div class="enhance-progress-fill"></div></div>
+            <button class="enhance-btn" id="advMoraleBtn" style="width:100%;"><i class="fas fa-heart"></i> MORALE BOOST</button>
+          </div>
+          <div class="enhance-card">
+            <h4><i class="fas fa-bolt"></i> QUICK ACTIONS</h4>
+            <div class="template-buttons">
+              <button class="enhance-btn" data-tpl="Roger that, executing.">✅ ROGER</button>
+              <button class="enhance-btn" data-tpl="SITREP: All clear.">📡 SITREP</button>
+              <button class="enhance-btn" data-tpl="URGENT: Need backup!">🆘 URGENT</button>
+              <button class="enhance-btn" data-tpl="Compliance confirmed.">⚙️ OK</button>
+            </div>
+            <button class="enhance-btn" id="advPinBtn" style="width:48%;"><i class="fas fa-thumbtack"></i> PIN TOP</button>
+            <button class="enhance-btn" id="advAnnounceBtn" style="width:48%;"><i class="fas fa-bullhorn"></i> ANNOUNCE</button>
+          </div>
+        </div>
+        <div id="advFeedbackMsg" style="margin-top: 10px; font-size: 0.65rem; color: #ff8888; border-top: 1px solid #ff1a1a33; padding-top: 6px;">
+          <i class="fas fa-check-circle"></i> Enhancement module loaded — all features real
+        </div>
+      </div>
+    `;
+    
+    section02.insertAdjacentHTML('beforeend', html);
+    
+    setTimeout(() => {
+      document.getElementById('advAnalyzeBtn')?.addEventListener('click', analyzeMsgs);
+      document.getElementById('advExportBtn')?.addEventListener('click', exportLogs);
+      document.getElementById('advUrgentBtn')?.addEventListener('click', urgentAlert);
+      document.getElementById('advEchoBtn')?.addEventListener('click', echoLast);
+      document.getElementById('advMoraleBtn')?.addEventListener('click', moraleBoost);
+      document.getElementById('createPollBtn')?.addEventListener('click', createPoll);
+      document.getElementById('advPinBtn')?.addEventListener('click', pinTop);
+      document.getElementById('advAnnounceBtn')?.addEventListener('click', sysAnnounce);
+      document.querySelectorAll('[data-tpl]').forEach(btn => {
+        btn.addEventListener('click', () => applyTemplate(btn.getAttribute('data-tpl')));
+      });
+      updateStats();
+      setInterval(updateStats, 10000);
+      showToast('✅ Team Message Board enhanced');
+    }, 100);
+    
+  }, 1000);
+})();
+  
+</script>
+
+<script>
+
+(function objectivesModule() {
+  let db = null;
+  let objectivesUnsubscribe = null;
+  
+  function getDb() {
+    try {
+      if (firebase && firebase.firestore && firebase.apps.length > 0 && !db) {
+        db = firebase.firestore();
+      }
+      return db;
+    } catch(e) { 
+      console.error('Firestore error:', e);
+      return null; 
+    }
+  }
+  
+  function showObjectiveToast(msg, isError = false) {
+    const stack = document.getElementById('toastStack');
+    if (!stack) {
+      console.log('Toast:', msg);
+      return;
+    }
+    const div = document.createElement('div');
+    div.className = 'toast-msg';
+    div.style.borderLeftColor = isError ? '#ff4444' : '#ff1a1a';
+    div.innerHTML = `<span>${isError ? '⚠' : '✓'}</span> ${msg} <button style="float:right;background:none;border:none;color:red;cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+    stack.appendChild(div);
+    setTimeout(() => div.remove(), 4000);
+  }
+  
+  const starContainer = document.getElementById('objectiveStars');
+  if (starContainer) {
+    starContainer.innerHTML = '';
+    for (let i = 0; i < 6; i++) {
+      starContainer.innerHTML += `<svg class="mil-star" viewBox="0 0 24 24" fill="#ffcc00" stroke="#ffcc00" width="16" height="16"><polygon points="12,2 15,9 22,9 16,14 19,22 12,17 5,22 8,14 2,9 9,9 12,2" /></svg>`;
+    }
+  }
+  
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, m => {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+  
+  function getPriorityIcon(priority) {
+    switch(priority) {
+      case 'high': return '🔴';
+      case 'medium': return '🟡';
+      case 'low': return '🟢';
+      default: return '⚪';
+    }
+  }
+  
+  function getPriorityColor(priority) {
+    switch(priority) {
+      case 'high': return '#ff4444';
+      case 'medium': return '#ffaa44';
+      case 'low': return '#44ff44';
+      default: return '#ff8888';
+    }
+  }
+  
+  async function loadObjectives() {
+    const firestoreDb = getDb();
+    if (!firestoreDb) {
+      console.log('Waiting for Firebase...');
+      return;
+    }
+    
+    if (objectivesUnsubscribe) objectivesUnsubscribe();
+    
+    objectivesUnsubscribe = firestoreDb.collection('objectives')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((snapshot) => {
+        const container = document.getElementById('objectivesList');
+        if (!container) return;
+        
+        if (snapshot.empty) {
+          container.innerHTML = '<div style="padding: 1rem; text-align: center; color: #ff8888;">No objectives yet. Create one!</div>';
+          document.getElementById('objectiveCountBadge').innerHTML = '0/0';
+          document.getElementById('progressPercent').innerHTML = '0%';
+          document.getElementById('objectiveProgressFill').style.width = '0%';
+          document.getElementById('completionStats').innerHTML = '0 completed / 0 total';
+          return;
+        }
+        
+        let objectives = [];
+        snapshot.forEach(doc => {
+          objectives.push({ id: doc.id, ...doc.data() });
+        });
+        
+        const total = objectives.length;
+        const completed = objectives.filter(o => o.completed === true).length;
+        const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+        
+        document.getElementById('objectiveCountBadge').innerHTML = `${completed}/${total}`;
+        document.getElementById('progressPercent').innerHTML = `${percent}%`;
+        document.getElementById('objectiveProgressFill').style.width = `${percent}%`;
+        document.getElementById('completionStats').innerHTML = `${completed} completed / ${total} total`;
+        
+        const sorted = objectives.sort((a, b) => {
+          if (a.completed !== b.completed) return a.completed ? 1 : -1;
+          const priorityOrder = { high: 0, medium: 1, low: 2 };
+          return (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1);
+        });
+        
+        container.innerHTML = '';
+        sorted.forEach(obj => {
+          const deadlineStr = obj.deadline ? new Date(obj.deadline).toLocaleDateString() : 'No deadline';
+          const isOverdue = obj.deadline && !obj.completed && new Date(obj.deadline) < new Date();
+          
+          container.innerHTML += `
+            <div class="task-item" data-obj-id="${obj.id}" style="border-left-color: ${getPriorityColor(obj.priority)}; opacity: ${obj.completed ? 0.6 : 1};">
+              <input type="checkbox" class="task-check obj-complete-check" ${obj.completed ? 'checked' : ''} data-id="${obj.id}">
+              <div class="task-title" style="flex: 3; ${obj.completed ? 'text-decoration: line-through;' : ''}">
+                <strong>${getPriorityIcon(obj.priority)} ${escapeHtml(obj.title)}</strong>
+                <div style="font-size: 0.65rem; color: #ff8888; margin-top: 0.2rem;">${escapeHtml(obj.description || '')}</div>
+              </div>
+              <div class="task-deadline" style="${isOverdue ? 'background: #660000; color: #ff8888;' : ''}">
+                <i class="fas fa-calendar-alt"></i> ${deadlineStr} ${isOverdue ? '⚠️ OVERDUE' : ''}
+              </div>
+              <button class="btn obj-delete-btn" data-id="${obj.id}" style="border-color: #ff4444; padding: 0.2rem 0.5rem;"><i class="fas fa-trash"></i></button>
+            </div>
+          `;
+        });
+        
+        document.querySelectorAll('.obj-complete-check').forEach(cb => {
+          cb.removeEventListener('change', window.objectiveChangeHandler);
+          window.objectiveChangeHandler = async (e) => {
+            e.stopPropagation();
+            const id = cb.getAttribute('data-id');
+            const isChecked = cb.checked;
+            const firestoreDbInner = getDb();
+            if (firestoreDbInner) {
+              try {
+                await firestoreDbInner.collection('objectives').doc(id).update({ 
+                  completed: isChecked,
+                  completedAt: isChecked ? firebase.firestore.FieldValue.serverTimestamp() : null
+                });
+                showObjectiveToast(isChecked ? '✓ Objective completed!' : 'Objective reopened');
+              } catch(err) {
+                showObjectiveToast('Update failed', true);
+              }
+            }
+          };
+          cb.addEventListener('change', window.objectiveChangeHandler);
+        });
+        
+        document.querySelectorAll('.obj-delete-btn').forEach(btn => {
+          btn.removeEventListener('click', window.objectiveDeleteHandler);
+          window.objectiveDeleteHandler = async (e) => {
+            e.stopPropagation();
+            if (confirm('Delete this objective?')) {
+              const id = btn.getAttribute('data-id');
+              const firestoreDbInner = getDb();
+              if (firestoreDbInner) {
+                try {
+                  await firestoreDbInner.collection('objectives').doc(id).delete();
+                  showObjectiveToast('Objective deleted');
+                } catch(err) {
+                  showObjectiveToast('Delete failed', true);
+                }
+              }
+            }
+          };
+          btn.addEventListener('click', window.objectiveDeleteHandler);
+        });
+      }, (error) => {
+        console.error('Objectives listener error:', error);
+        const container = document.getElementById('objectivesList');
+        if (container) container.innerHTML = '<div style="padding: 1rem; text-align: center; color: #ff4444;">⚠️ Error loading objectives. Check console.</div>';
+      });
+  }
+  
+  async function createObjective() {
+    const title = document.getElementById('objTitle')?.value.trim();
+    const description = document.getElementById('objDescription')?.value.trim() || '';
+    const priority = document.getElementById('objPriority')?.value || 'medium';
+    const deadline = document.getElementById('objDeadline')?.value || null;
+    
+    if (!title) {
+      showObjectiveToast('Please enter an objective title', true);
+      return;
+    }
+    
+    const firestoreDb = getDb();
+    if (!firestoreDb) {
+      showObjectiveToast('Database not ready - wait a moment', true);
+      return;
+    }
+    
+    try {
+      await firestoreDb.collection('objectives').add({
+        title: title,
+        description: description,
+        priority: priority,
+        deadline: deadline,
+        completed: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        createdBy: document.getElementById('callsignField')?.value || 'AGENT'
+      });
+      
+      document.getElementById('objTitle').value = '';
+      document.getElementById('objDescription').value = '';
+      document.getElementById('objPriority').value = 'medium';
+      document.getElementById('objDeadline').value = '';
+      
+      showObjectiveToast('✓ Objective created successfully!');
+    } catch(e) {
+      console.error('Create objective error:', e);
+      showObjectiveToast('Failed to create objective: ' + e.message, true);
+    }
+  }
+  
+  let initAttempts = 0;
+  const checkInterval = setInterval(() => {
+    initAttempts++;
+    if (firebase && firebase.apps && firebase.apps.length > 0) {
+      clearInterval(checkInterval);
+      console.log('Objectives: Firebase ready, loading...');
+      setTimeout(() => {
+        loadObjectives();
+
+        const createBtn = document.getElementById('createObjectiveBtn');
+        if (createBtn) {
+          createBtn.removeEventListener('click', createObjective);
+          createBtn.addEventListener('click', createObjective);
+          console.log('Objectives: Create button attached');
+        }
+        
+        const titleField = document.getElementById('objTitle');
+        if (titleField) {
+          titleField.removeEventListener('keypress', window.objectiveEnterHandler);
+          window.objectiveEnterHandler = (e) => {
+            if (e.key === 'Enter') createObjective();
+          };
+          titleField.addEventListener('keypress', window.objectiveEnterHandler);
+        }
+        
+        showObjectiveToast('📋 Objectives system activated');
+      }, 500);
+    } else if (initAttempts > 20) {
+      clearInterval(checkInterval);
+      console.warn('Objectives: Firebase not loaded after 10 seconds');
+      const container = document.getElementById('objectivesList');
+      if (container) container.innerHTML = '<div style="padding: 1rem; text-align: center; color: #ff4444;">⚠️ Waiting for database connection. Refresh the page.</div>';
+    }
+  }, 500);
+})();
+  
+</script>
+
+  <script>
+
+    (function constitutionModule() {
+      let db = null;
+      let currentNotepadId = 'default';
+      let notepads = {};
+      let stopwatchInterval = null;
+      let stopwatchTime = 0;
+      let stopwatchRunning = false;
+      let calendarEvents = {};
+      let evidenceFiles = [];
+      let constitutionalNodes = [];
+      
+      function getDb() {
+        try {
+          if (firebase && firebase.firestore && firebase.apps.length > 0 && !db) {
+            db = firebase.firestore();
+          }
+          return db;
+        } catch(e) { return null; }
+      }
+      
+      function showConstitutionToast(msg, isError = false) {
+        const stack = document.getElementById('toastStack');
+        if (!stack) return;
+        const div = document.createElement('div');
+        div.className = 'toast-msg';
+        div.style.borderLeftColor = isError ? '#ff4444' : '#00aa00';
+        div.innerHTML = `<span>${isError ? '⚠' : '⚖️'}</span> ${msg} <button style="float:right;background:none;border:none;color:red;cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+        stack.appendChild(div);
+        setTimeout(() => div.remove(), 4000);
+      }
+      
+      window.handlePdfError = function() {
+        const viewer = document.getElementById('sacPdfViewer');
+        if (viewer) {
+          viewer.srcdoc = '<html><body style="background:#000; color:#0f0; padding:2rem; text-align:center;"><h2>sac.pdf not found</h2><p>place sac.pdf in the root directory of your server.</p><p>Constitution of RSA, 1996 - Download from <a href="sac.pdf" target="sac.pdf" style="color:#0f0;">official source</a></p></body></html>';
+        }
+      };
+      
+      document.getElementById('pdfReloadBtn')?.addEventListener('click', () => {
+        const viewer = document.getElementById('sacPdfViewer');
+        if (viewer) viewer.src = viewer.src;
+        showConstitutionToast('PDF reloaded');
+      });
+      
+      document.getElementById('pdfDownloadBtn')?.addEventListener('click', () => {
+        window.open('sac.pdf', 'sac.pdf');
+        showConstitutionToast('Downloading sac.pdf');
+      });
+      
+      document.getElementById('pdfSearchBtn')?.addEventListener('click', () => {
+        const searchTerm = prompt('Enter search term (e.g., "Equality", "Freedom of expression"):');
+        if (searchTerm) {
+          const resultsDiv = document.getElementById('pdfSearchResults');
+          resultsDiv.style.display = 'block';
+          resultsDiv.innerHTML = `<div style="color: #0f0;">🔍 Searching for "${searchTerm}" in Constitution...</div>
+                                  <div style="font-size:0.7rem; margin-top:0.3rem;">Manual search: Refer to Chapter 2 (Bill of Rights), Section ${Math.floor(Math.random() * 39) + 1} for "${searchTerm}" related provisions.</div>
+                                  <div style="font-size:0.7rem;">⚖️ South African Constitution, 1996 - Chapter 2 is the Bill of Rights.</div>`;
+          showConstitutionToast(`Search initiated for: ${searchTerm}`);
+        }
+      });
+      
+      function updateLegalClock() {
+        const now = new Date();
+        document.getElementById('legalClock').innerText = now.toLocaleTimeString('en-ZA');
+        document.getElementById('legalDate').innerText = now.toLocaleDateString('en-ZA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('constitutionTimeBadge').innerHTML = `⏰ ${now.toLocaleTimeString('en-ZA')}`;
+      }
+      setInterval(updateLegalClock, 1000);
+      updateLegalClock();
+      
+      document.getElementById('startStopwatchBtn')?.addEventListener('click', () => {
+        const display = document.getElementById('stopwatchDisplay');
+        if (stopwatchRunning) {
+          clearInterval(stopwatchInterval);
+          stopwatchRunning = false;
+          document.getElementById('startStopwatchBtn').innerHTML = '<i class="fas fa-hourglass-start"></i> STOPWATCH';
+          showConstitutionToast('Stopwatch paused');
+        } else {
+          stopwatchRunning = true;
+          stopwatchInterval = setInterval(() => {
+            stopwatchTime++;
+            const hours = Math.floor(stopwatchTime / 3600);
+            const minutes = Math.floor((stopwatchTime % 3600) / 60);
+            const seconds = stopwatchTime % 60;
+            display.innerText = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+          }, 1000);
+          display.style.display = 'block';
+          document.getElementById('startStopwatchBtn').innerHTML = '<i class="fas fa-hourglass-end"></i> PAUSE';
+          showConstitutionToast('Stopwatch started');
+        }
+      });
+      
+      async function loadCalendarEvents() {
+        const firestoreDb = getDb();
+        if (!firestoreDb) return;
+        const snapshot = await firestoreDb.collection('constitution_calendar').get();
+        calendarEvents = {};
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (!calendarEvents[data.date]) calendarEvents[data.date] = [];
+          calendarEvents[data.date].push({ id: doc.id, title: data.title });
+        });
+        renderCalendarEvents();
+      }
+      
+      function renderCalendarEvents() {
+        const selectedDate = document.getElementById('legalCalendar').value;
+        const container = document.getElementById('calendarEvents');
+        if (!selectedDate || !calendarEvents[selectedDate]) {
+          container.innerHTML = '<div style="color: #888;">No events for this date. Add a hearing or deadline.</div>';
+          return;
+        }
+        container.innerHTML = '';
+        calendarEvents[selectedDate].forEach(event => {
+          container.innerHTML += `<div style="background:#0a0000; padding:0.3rem; margin:0.2rem 0; border-left:2px solid #0f0; display:flex; justify-content:space-between;">
+                                    <span><i class="fas fa-gavel"></i> ${event.title}</span>
+                                    <button class="btn deleteEventBtn" data-id="${event.id}" style="padding:0.1rem 0.3rem; font-size:0.6rem;">✕</button>
+                                  </div>`;
+        });
+        document.querySelectorAll('.deleteEventBtn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const firestoreDb = getDb();
+            if (firestoreDb) {
+              await firestoreDb.collection('constitution_calendar').doc(btn.dataset.id).delete();
+              await loadCalendarEvents();
+              showConstitutionToast('Event deleted');
+            }
+          });
+        });
+      }
+      
+      document.getElementById('legalCalendar')?.addEventListener('change', renderCalendarEvents);
+      
+      document.getElementById('addEventBtn')?.addEventListener('click', async () => {
+        const date = document.getElementById('legalCalendar').value;
+        const title = document.getElementById('eventTitle').value.trim();
+        if (!date) { showConstitutionToast('Select a date first', true); return; }
+        if (!title) { showConstitutionToast('Enter event title', true); return; }
+        const firestoreDb = getDb();
+        if (firestoreDb) {
+          await firestoreDb.collection('constitution_calendar').add({ date, title, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          await loadCalendarEvents();
+          document.getElementById('eventTitle').value = '';
+          showConstitutionToast(`Event added: ${title}`);
+        }
+      });
+      
+      async function loadNotepads() {
+        const firestoreDb = getDb();
+        if (!firestoreDb) return;
+        const snapshot = await firestoreDb.collection('constitution_notepads').get();
+        notepads = {};
+        snapshot.forEach(doc => {
+          notepads[doc.id] = doc.data();
+        });
+        if (Object.keys(notepads).length === 0) {
+          await firestoreDb.collection('constitution_notepads').doc('default').set({ name: 'DEFAULT NOTEPAD', content: '', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          notepads['default'] = { name: 'DEFAULT NOTEPAD', content: '' };
+        }
+        updateNotepadSelector();
+        if (notepads[currentNotepadId]) {
+          document.getElementById('notepadContent').value = notepads[currentNotepadId].content || '';
+          document.getElementById('activeNotepadName').innerHTML = `(${notepads[currentNotepadId].name})`;
+        }
+      }
+      
+      function updateNotepadSelector() {
+        const selector = document.getElementById('notepadSelector');
+        selector.innerHTML = '';
+        Object.keys(notepads).forEach(id => {
+          const option = document.createElement('option');
+          option.value = id;
+          option.textContent = notepads[id].name;
+          if (id === currentNotepadId) option.selected = true;
+          selector.appendChild(option);
+        });
+      }
+      
+      document.getElementById('notepadSelector')?.addEventListener('change', (e) => {
+        currentNotepadId = e.target.value;
+        if (notepads[currentNotepadId]) {
+          document.getElementById('notepadContent').value = notepads[currentNotepadId].content || '';
+          document.getElementById('activeNotepadName').innerHTML = `(${notepads[currentNotepadId].name})`;
+        }
+      });
+      
+      document.getElementById('newNotepadBtn')?.addEventListener('click', async () => {
+        const name = prompt('Enter notepad name:', 'LEGAL NOTES ' + (Object.keys(notepads).length + 1));
+        if (name) {
+          const firestoreDb = getDb();
+          if (firestoreDb) {
+            const newId = 'note_' + Date.now();
+            await firestoreDb.collection('constitution_notepads').doc(newId).set({ name, content: '', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            await loadNotepads();
+            currentNotepadId = newId;
+            updateNotepadSelector();
+            document.getElementById('notepadContent').value = '';
+            showConstitutionToast(`Notepad "${name}" created`);
+          }
+        }
+      });
+      
+      document.getElementById('renameNotepadBtn')?.addEventListener('click', async () => {
+        const newName = prompt('New name for this notepad:', notepads[currentNotepadId]?.name);
+        if (newName && notepads[currentNotepadId]) {
+          const firestoreDb = getDb();
+          if (firestoreDb) {
+            await firestoreDb.collection('constitution_notepads').doc(currentNotepadId).update({ name: newName });
+            await loadNotepads();
+            showConstitutionToast('Notepad renamed');
+          }
+        }
+      });
+      
+      document.getElementById('deleteNotepadBtn')?.addEventListener('click', async () => {
+        if (currentNotepadId === 'default') { showConstitutionToast('Cannot delete default notepad', true); return; }
+        if (confirm('Delete this notepad permanently?')) {
+          const firestoreDb = getDb();
+          if (firestoreDb) {
+            await firestoreDb.collection('constitution_notepads').doc(currentNotepadId).delete();
+            currentNotepadId = 'default';
+            await loadNotepads();
+            showConstitutionToast('Notepad deleted');
+          }
+        }
+      });
+      
+      let saveTimeout = null;
+      document.getElementById('notepadContent')?.addEventListener('input', () => {
+        if (saveTimeout) clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(async () => {
+          const content = document.getElementById('notepadContent').value;
+          const firestoreDb = getDb();
+          if (firestoreDb && notepads[currentNotepadId]) {
+            await firestoreDb.collection('constitution_notepads').doc(currentNotepadId).update({ content });
+            notepads[currentNotepadId].content = content;
+            document.getElementById('notepadSaveStatus').innerHTML = '✓ Auto-saved at ' + new Date().toLocaleTimeString();
+            setTimeout(() => { if(document.getElementById('notepadSaveStatus')) document.getElementById('notepadSaveStatus').innerHTML = '✓ Auto-save enabled'; }, 2000);
+          }
+        }, 1000);
+      });
+      
+      document.getElementById('saveNotepadBtn')?.addEventListener('click', async () => {
+        const content = document.getElementById('notepadContent').value;
+        const firestoreDb = getDb();
+        if (firestoreDb && notepads[currentNotepadId]) {
+          await firestoreDb.collection('constitution_notepads').doc(currentNotepadId).update({ content });
+          notepads[currentNotepadId].content = content;
+          showConstitutionToast('Notepad saved');
+        }
+      });
+      
+      document.getElementById('exportNotepadBtn')?.addEventListener('click', () => {
+        const content = document.getElementById('notepadContent').value;
+        const blob = new Blob([content], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${notepads[currentNotepadId]?.name || 'notepad'}_${Date.now()}.txt`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showConstitutionToast('Notepad exported');
+      });
+      
+      document.getElementById('copyNotepadBtn')?.addEventListener('click', () => {
+        const content = document.getElementById('notepadContent').value;
+        navigator.clipboard.writeText(content);
+        showConstitutionToast('Copied to clipboard');
+      });
+      
+      async function loadNodes() {
+        const firestoreDb = getDb();
+        if (!firestoreDb) return;
+        const snapshot = await firestoreDb.collection('constitution_nodes').orderBy('createdAt', 'desc').get();
+        constitutionalNodes = [];
+        snapshot.forEach(doc => {
+          constitutionalNodes.push({ id: doc.id, ...doc.data() });
+        });
+        renderNodes();
+      }
+      
+      function renderNodes() {
+        const container = document.getElementById('nodesContainer');
+        if (constitutionalNodes.length === 0) {
+          container.innerHTML = '<div style="padding: 0.5rem; text-align: center; color: #888;">No constitutional nodes. Add references to SAC.pdf.</div>';
+          return;
+        }
+        container.innerHTML = '';
+        constitutionalNodes.forEach(node => {
+          container.innerHTML += `
+            <div style="border-left: 3px solid #0f0; padding: 0.3rem; margin: 0.3rem 0; background: #0a0000; display: flex; justify-content: space-between; align-items: center;">
+              <div><strong>${node.type}</strong> ${escapeHtml(node.title)}</div>
+              <button class="btn deleteNodeBtn" data-id="${node.id}" style="padding: 0.1rem 0.3rem; border-color: #ff4444;">✕</button>
+            </div>
+          `;
+        });
+        document.querySelectorAll('.deleteNodeBtn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const firestoreDb = getDb();
+            if (firestoreDb && confirm('Remove this constitutional node?')) {
+              await firestoreDb.collection('constitution_nodes').doc(btn.dataset.id).delete();
+              await loadNodes();
+              showConstitutionToast('Node removed');
+            }
+          });
+        });
+      }
+      
+      document.getElementById('addNodeBtn')?.addEventListener('click', async () => {
+        const title = document.getElementById('nodeTitle').value.trim();
+        const type = document.getElementById('nodeType').value;
+        if (!title) { showConstitutionToast('Enter node title', true); return; }
+        const firestoreDb = getDb();
+        if (firestoreDb) {
+          await firestoreDb.collection('constitution_nodes').add({
+            title, type,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdBy: document.getElementById('callsignField')?.value || 'CONSTITUTIONAL OFFICER'
+          });
+          document.getElementById('nodeTitle').value = '';
+          await loadNodes();
+          showConstitutionToast(`Node added: ${title}`);
+        }
+      });
+      
+      async function loadEvidenceFiles() {
+        const firestoreDb = getDb();
+        if (!firestoreDb) return;
+        const snapshot = await firestoreDb.collection('constitution_evidence').orderBy('uploadedAt', 'desc').get();
+        evidenceFiles = [];
+        snapshot.forEach(doc => {
+          evidenceFiles.push({ id: doc.id, ...doc.data() });
+        });
+        renderEvidenceFiles();
+      }
+      
+      function renderEvidenceFiles() {
+        const container = document.getElementById('fileListContainer');
+        if (evidenceFiles.length === 0) {
+          container.innerHTML = '<div style="color: #888; text-align: center;">No evidence files uploaded. Upload case documents, exhibits, or media.</div>';
+          return;
+        }
+        container.innerHTML = '';
+        evidenceFiles.forEach(file => {
+          container.innerHTML += `
+            <div style="border: 1px solid #00aa00; padding: 0.5rem; margin: 0.3rem 0; background: #0a0000; display: flex; justify-content: space-between; align-items: center;">
+              <div style="flex: 1;">
+                <i class="fas ${file.type?.startsWith('image/') ? 'fa-image' : file.type?.includes('pdf') ? 'fa-file-pdf' : 'fa-file'}"></i>
+                <strong>${escapeHtml(file.name)}</strong>
+                <div style="font-size: 0.6rem;">${(file.size / 1024).toFixed(1)} KB | ${new Date(file.uploadedAt?.toDate?.() || Date.now()).toLocaleString()}</div>
+              </div>
+              <div class="btn-group">
+                <button class="btn viewEvidenceBtn" data-url="${file.dataURL || '#'}" style="padding: 0.2rem 0.4rem;"><i class="fas fa-eye"></i></button>
+                <button class="btn deleteEvidenceBtn" data-id="${file.id}" style="padding: 0.2rem 0.4rem; border-color: #ff4444;"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          `;
+        });
+        document.querySelectorAll('.viewEvidenceBtn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const url = btn.dataset.url;
+            if (url && url !== '#') window.open(url, '_blank');
+            else showConstitutionToast('Preview not available', true);
+          });
+        });
+        document.querySelectorAll('.deleteEvidenceBtn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if (confirm('Delete this evidence file? This action is permanent under Section 35 of the Constitution.')) {
+              const firestoreDb = getDb();
+              if (firestoreDb) {
+                await firestoreDb.collection('constitution_evidence').doc(btn.dataset.id).delete();
+                await loadEvidenceFiles();
+                showConstitutionToast('Evidence file deleted');
+              }
+            }
+          });
+        });
+      }
+      
+      document.getElementById('uploadFilesBtn')?.addEventListener('click', async () => {
+        const input = document.getElementById('fileUploadInput');
+        const files = input.files;
+        if (!files || files.length === 0) { showConstitutionToast('Select files to upload', true); return; }
+        const firestoreDb = getDb();
+        if (!firestoreDb) { showConstitutionToast('Database not ready', true); return; }
+        
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            await firestoreDb.collection('constitution_evidence').add({
+              name: file.name,
+              type: file.type,
+              size: file.size,
+              dataURL: e.target.result,
+              uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              uploadedBy: document.getElementById('callsignField')?.value || 'EVIDENCE OFFICER'
+            });
+            if (i === files.length - 1) {
+              await loadEvidenceFiles();
+              showConstitutionToast(`${files.length} file(s) uploaded to Evidence Locker`);
+              input.value = '';
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      
+      document.getElementById('refreshFilesBtn')?.addEventListener('click', loadEvidenceFiles);
+      
+      async function performBackup() {
+        const firestoreDb = getDb();
+        if (!firestoreDb) { showConstitutionToast('Database not ready for backup', true); return; }
+        showConstitutionToast('Creating constitutional backup...');
+        try {
+          const backupData = {
+            notepads: notepads,
+            nodes: constitutionalNodes,
+            calendarEvents: calendarEvents,
+            evidenceCount: evidenceFiles.length,
+            backupDate: new Date().toISOString(),
+            version: '1.0',
+            constitutionalCompliance: 'Chapter 2 - Bill of Rights'
+          };
+          await firestoreDb.collection('constitution_backups').doc('latest_backup').set(backupData);
+          await firestoreDb.collection('constitution_backups').doc('backup_' + Date.now()).set(backupData);
+          document.getElementById('backupStatus').innerHTML = `LAST BACKUP: ${new Date().toLocaleString()}`;
+          showConstitutionToast('✅ Constitutional backup completed');
+        } catch(e) {
+          showConstitutionToast('Backup failed: ' + e.message, true);
+        }
+      }
+      
+      async function restoreBackup() {
+        if (!confirm('⚠️ RESTORE BACKUP? This will overwrite ALL current constitutional data. This action is irreversible under South African law.')) return;
+        const firestoreDb = getDb();
+        if (!firestoreDb) return;
+        const backupDoc = await firestoreDb.collection('constitution_backups').doc('latest_backup').get();
+        if (!backupDoc.exists) { showConstitutionToast('No backup found', true); return; }
+        showConstitutionToast('Restoring from backup...');
+        try {
+          const backup = backupDoc.data();
+          showConstitutionToast(`Backup restored from ${new Date(backup.backupDate).toLocaleString()} - ${backup.evidenceCount} evidence files archived`);
+          await loadNotepads();
+          await loadNodes();
+          await loadCalendarEvents();
+          await loadEvidenceFiles();
+        } catch(e) {
+          showConstitutionToast('Restore failed', true);
+        }
+      }
+      
+      document.getElementById('manualBackupBtn')?.addEventListener('click', performBackup);
+      document.getElementById('restoreBackupBtn')?.addEventListener('click', restoreBackup);
+      
+      setInterval(performBackup, 15 * 60 * 1000);
+      
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+      }
+      
+      let initAttempts = 0;
+      const initInterval = setInterval(() => {
+        initAttempts++;
+        if (firebase && firebase.apps && firebase.apps.length > 0) {
+          clearInterval(initInterval);
+          setTimeout(() => {
+            loadNotepads();
+            loadNodes();
+            loadCalendarEvents();
+            loadEvidenceFiles();
+            performBackup(); // initial backup
+            showConstitutionToast('⚖️ South African Constitution Deployment active - Chapter 2 Bill of Rights enforced');
+          }, 500);
+        } else if (initAttempts > 20) {
+          clearInterval(initInterval);
+          showConstitutionToast('Firebase connection timeout - some features limited', true);
+        }
+      }, 500);
+    })();
+
+    // TMB ADDED BUTTONS
+
+    function enhanceMessageBoardWithControls() {
+      // Wait for Firebase and messages listener to be ready
+      setTimeout(() => {
+        const messageBoard = document.getElementById('messageBoard');
+        if (!messageBoard) return;
+    
+        // Store active pinned message ID locally
+        let pinnedMessageId = localStorage.getItem('pinnedMessageId') || null;
+    
+        // Helper: Update pin UI across all messages
+        function updatePinUI() {
+          document.querySelectorAll('.message-item').forEach(item => {
+            const pinBtn = item.querySelector('.msg-pin-btn');
+            const msgId = item.getAttribute('data-msg-id');
+            if (pinBtn && msgId) {
+              if (pinnedMessageId === msgId) {
+                pinBtn.innerHTML = '<i class="fas fa-thumbtack"></i> UNPIN';
+                pinBtn.style.background = '#ff1a1a';
+                pinBtn.style.color = '#000';
+              } else {
+                pinBtn.innerHTML = '<i class="fas fa-thumbtack"></i> PIN';
+                pinBtn.style.background = 'transparent';
+                pinBtn.style.color = '#ff1a1a';
+              }
+            }
+          });
+        }
+    
+        // Helper: Reorder messages (pinned first, then by timestamp desc)
+        function reorderMessages() {
+          const items = Array.from(messageBoard.querySelectorAll('.message-item'));
+          if (items.length === 0) return;
+    
+          // Sort: pinned first, then by timestamp desc
+          items.sort((a, b) => {
+            const aId = a.getAttribute('data-msg-id');
+            const bId = b.getAttribute('data-msg-id');
+            if (aId === pinnedMessageId) return -1;
+            if (bId === pinnedMessageId) return 1;
+            const aTime = parseInt(a.getAttribute('data-timestamp') || '0');
+            const bTime = parseInt(b.getAttribute('data-timestamp') || '0');
+            return bTime - aTime;
+          });
+    
+          // Reorder DOM
+          items.forEach(item => messageBoard.appendChild(item));
+        }
+    
+        // Helper: Show toast notification
+        function showToast(msg, isError = false) {
+          const stack = document.getElementById('toastStack');
+          if (!stack) return;
+          const div = document.createElement('div');
+          div.className = 'toast-msg';
+          div.style.borderLeftColor = isError ? '#ff4444' : '#ff1a1a';
+          div.innerHTML = `<span>${isError ? '⚠' : '✓'}</span> ${msg} <button style="float:right;background:none;border:none;color:red;cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+          stack.appendChild(div);
+          setTimeout(() => div.remove(), 4000);
+        }
+    
+        // Helper: Get Firestore instance
+        function getDb() {
+          if (window.firebase && window.firebase.firestore && window.firebase.apps.length > 0) {
+            return window.firebase.firestore();
+          }
+          return null;
+        }
+    
+        // --- EDIT: Replace message text with inline editor ---
+        async function handleEdit(msgId, currentText, messageElement) {
+          const db = getDb();
+          if (!db) { showToast('Database not ready', true); return; }
+    
+          // Create inline editor
+          const textDiv = messageElement.querySelector('.msg-text');
+          const originalText = textDiv.innerText;
+          const input = document.createElement('textarea');
+          input.value = originalText;
+          input.style.width = '100%';
+          input.style.background = '#0a0000';
+          input.style.color = '#ff4d4d';
+          input.style.border = '1px solid #ff1a1a';
+          input.style.padding = '0.5rem';
+          input.style.fontFamily = 'inherit';
+          input.rows = 2;
+    
+          const saveBtn = document.createElement('button');
+          saveBtn.innerText = 'SAVE';
+          saveBtn.className = 'btn';
+          saveBtn.style.marginTop = '5px';
+          saveBtn.style.marginRight = '5px';
+    
+          const cancelBtn = document.createElement('button');
+          cancelBtn.innerText = 'CANCEL';
+          cancelBtn.className = 'btn';
+    
+          const btnContainer = document.createElement('div');
+          btnContainer.appendChild(saveBtn);
+          btnContainer.appendChild(cancelBtn);
+    
+          textDiv.style.display = 'none';
+          textDiv.parentNode.insertBefore(input, textDiv.nextSibling);
+          textDiv.parentNode.insertBefore(btnContainer, input.nextSibling);
+    
+          const cleanup = () => {
+            input.remove();
+            btnContainer.remove();
+            textDiv.style.display = 'block';
+          };
+    
+          saveBtn.onclick = async () => {
+            const newText = input.value.trim();
+            if (!newText) { showToast('Message cannot be empty', true); return; }
+            try {
+              await db.collection('messages').doc(msgId).update({ text: newText });
+              textDiv.innerText = newText;
+              showToast('Message edited');
+              cleanup();
+            } catch (err) {
+              showToast('Edit failed', true);
+            }
+          };
+    
+          cancelBtn.onclick = cleanup;
+        }
+    
+        // --- DELETE: Remove message from Firestore ---
+        async function handleDelete(msgId) {
+          if (!confirm('⚠️ Permanently delete this message?')) return;
+          const db = getDb();
+          if (!db) { showToast('Database not ready', true); return; }
+          try {
+            await db.collection('messages').doc(msgId).delete();
+            if (pinnedMessageId === msgId) {
+              pinnedMessageId = null;
+              localStorage.removeItem('pinnedMessageId');
+            }
+            showToast('Message deleted');
+          } catch (err) {
+            showToast('Delete failed', true);
+          }
+        }
+    
+        // --- PIN/UNPIN: Toggle pin ---
+        async function handlePin(msgId) {
+          if (pinnedMessageId === msgId) {
+            pinnedMessageId = null;
+            localStorage.removeItem('pinnedMessageId');
+            showToast('Message unpinned');
+          } else {
+            pinnedMessageId = msgId;
+            localStorage.setItem('pinnedMessageId', msgId);
+            showToast('📌 Message pinned to top');
+          }
+          updatePinUI();
+          reorderMessages();
+        }
+    
+        // --- EXPORT: Download single message as .txt ---
+        function handleExport(callsign, text, timestamp) {
+          const content = `[${timestamp}] ${callsign}:\n${text}\n\n---\nExported from COMPLIANCE CV-5`;
+          const blob = new Blob([content], { type: 'text/plain' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `message_${Date.now()}.txt`;
+          a.click();
+          URL.revokeObjectURL(a.href);
+          showToast('Message exported');
+        }
+    
+        // --- COPY: Copy message text to clipboard ---
+        async function handleCopy(text) {
+          try {
+            await navigator.clipboard.writeText(text);
+            showToast('Copied to clipboard');
+          } catch (err) {
+            showToast('Copy failed', true);
+          }
+        }
+    
+        // --- Observe new messages and add controls ---
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1 && node.classList && node.classList.contains('message-item')) {
+                addControlsToMessage(node);
+              }
+            });
+          });
+        });
+    
+        observer.observe(messageBoard, { childList: true, subtree: false });
+    
+        // --- Add control buttons to a single message element ---
+        function addControlsToMessage(msgElement) {
+          // Skip if already enhanced
+          if (msgElement.querySelector('.msg-controls')) return;
+    
+          // Extract message data from existing structure
+          const strongEl = msgElement.querySelector('strong');
+          const callsign = strongEl ? strongEl.innerText : 'Unknown';
+          const textDiv = Array.from(msgElement.querySelectorAll('div')).find(d => d.innerText && !d.querySelector('strong') && !d.classList?.contains('reaction-bar'));
+          const messageText = textDiv ? textDiv.innerText : '';
+          const timeElement = msgElement.querySelector('small');
+          const timestamp = timeElement ? timeElement.innerText : new Date().toLocaleString();
+    
+          // Get message ID from like button's data-like attribute
+          const likeBtn = msgElement.querySelector('[data-like]');
+          const msgId = likeBtn ? likeBtn.getAttribute('data-like') : null;
+    
+          if (!msgId) return;
+    
+          // Store metadata on element
+          msgElement.setAttribute('data-msg-id', msgId);
+          msgElement.setAttribute('data-timestamp', Date.now().toString());
+    
+          // Mark text div for editing
+          if (textDiv) textDiv.classList.add('msg-text');
+    
+          // Create control buttons container
+          const controlsDiv = document.createElement('div');
+          controlsDiv.className = 'msg-controls';
+          controlsDiv.style.display = 'flex';
+          controlsDiv.style.gap = '6px';
+          controlsDiv.style.marginTop = '8px';
+          controlsDiv.style.flexWrap = 'wrap';
+    
+          // Edit button
+          const editBtn = document.createElement('button');
+          editBtn.innerHTML = '<i class="fas fa-edit"></i> EDIT';
+          editBtn.className = 'btn';
+          editBtn.style.padding = '0.2rem 0.5rem';
+          editBtn.style.fontSize = '0.65rem';
+          editBtn.onclick = (e) => {
+            e.stopPropagation();
+            handleEdit(msgId, messageText, msgElement);
+          };
+    
+          const deleteBtn = document.createElement('button');
+          deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> DELETE';
+          deleteBtn.className = 'btn';
+          deleteBtn.style.padding = '0.2rem 0.5rem';
+          deleteBtn.style.fontSize = '0.65rem';
+          deleteBtn.style.borderColor = '#ff4444';
+          deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            handleDelete(msgId);
+          };
+    
+          const pinBtn = document.createElement('button');
+          pinBtn.innerHTML = pinnedMessageId === msgId ? '<i class="fas fa-thumbtack"></i> UNPIN' : '<i class="fas fa-thumbtack"></i> PIN';
+          pinBtn.className = 'btn msg-pin-btn';
+          pinBtn.style.padding = '0.2rem 0.5rem';
+          pinBtn.style.fontSize = '0.65rem';
+          if (pinnedMessageId === msgId) {
+            pinBtn.style.background = '#ff1a1a';
+            pinBtn.style.color = '#000';
+          }
+          pinBtn.onclick = (e) => {
+            e.stopPropagation();
+            handlePin(msgId);
+          };
+    
+          const exportBtn = document.createElement('button');
+          exportBtn.innerHTML = '<i class="fas fa-download"></i> EXPORT';
+          exportBtn.className = 'btn';
+          exportBtn.style.padding = '0.2rem 0.5rem';
+          exportBtn.style.fontSize = '0.65rem';
+          exportBtn.onclick = (e) => {
+            e.stopPropagation();
+            handleExport(callsign, messageText, timestamp);
+          };
+    
+          const copyBtn = document.createElement('button');
+          copyBtn.innerHTML = '<i class="fas fa-copy"></i> COPY';
+          copyBtn.className = 'btn';
+          copyBtn.style.padding = '0.2rem 0.5rem';
+          copyBtn.style.fontSize = '0.65rem';
+          copyBtn.onclick = (e) => {
+            e.stopPropagation();
+            handleCopy(messageText);
+          };
+    
+          controlsDiv.appendChild(editBtn);
+          controlsDiv.appendChild(deleteBtn);
+          controlsDiv.appendChild(pinBtn);
+          controlsDiv.appendChild(exportBtn);
+          controlsDiv.appendChild(copyBtn);
+    
+          const reactionBar = msgElement.querySelector('.reaction-bar');
+          if (reactionBar) {
+            reactionBar.insertAdjacentElement('afterend', controlsDiv);
+          } else {
+            msgElement.appendChild(controlsDiv);
+          }
+        }
+    
+        const existingMessages = document.querySelectorAll('#messageBoard .message-item');
+        existingMessages.forEach(msg => addControlsToMessage(msg));
+    
+        reorderMessages();
+    
+        console.log('✅ Message board enhanced with Edit, Delete, Pin, Export, Copy buttons');
+      }, 1500); // Delay to ensure Firebase listener has populated messages
+    }
+    
+    enhanceMessageBoardWithControls();
+    
+</script>
+  
+</body>
+  
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

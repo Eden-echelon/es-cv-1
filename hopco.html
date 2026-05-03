@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  
+<head>
+  
+  <meta charset="UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>HopCo transportation</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link rel="icon" type="image/png" href="logo_tr">
+  
+  <style>
+    
+    * {
+      
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      
+    }
+
+    body {
+      
+      background: #0b0e14;
+      font-family: 'Inter', sans-serif;
+      color: #eef4ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      
+    }
+
+    .glass-card {
+      
+      background: rgba(12, 20, 35, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 15, 30, 0.8), 0 0 0 1px rgba(0, 240, 255, 0.1) inset;
+      
+    }
+
+    .hopco-app {
+      
+      max-width: 560px;
+      width: 100%;
+      margin: 0 auto;
+      
+    }
+
+    .hopco-header {
+      
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 1.2rem 1.8rem;
+      border-bottom: 1px solid #1e2a44;
+      background: rgba(0, 8, 20, 0.7);
+      border-radius: 2rem 2rem 0 0;
+      
+    }
+
+    .eden-logo {
+      
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      background: linear-gradient(130deg, #ffffff, #a0e7ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 15px #00f0ff40;
+      
+    }
+
+    .hopco-tag {
+      
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      color: #7f9fcc;
+      background: #001a33;
+      padding: 0.35rem 1rem;
+      border-radius: 60px;
+      border: 1px solid #2a3f60;
+      letter-spacing: 0.3px;
+      
+    }
+
+    .content {
+      
+      padding: 2rem 1.8rem 2.2rem;
+      background: rgba(6, 14, 26, 0.6);
+      border-radius: 0 0 2rem 2rem;
+      
+    }
+
+    .step-indicator {
+      
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      
+    }
+
+    .step {
+      
+      flex: 1;
+      height: 5px;
+      background: #1f314f;
+      border-radius: 10px;
+      transition: all 0.2s;
+      
+    }
+
+    .step.active {
+      
+      background: #00f0ff;
+      box-shadow: 0 0 12px #00f0ffaa;
+      
+    }
+
+    .panel {
+      
+      display: none;
+      animation: fadeUp 0.3s ease;
+      
+    }
+
+    .panel.active-panel {
+      
+      display: block;
+      
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0.4; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    label {
+      
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #9bb5e0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      
+    }
+
+    label i {
+      
+      width: 18px;
+      color: #00f0ff;
+      
+    }
+
+    .input-field {
+      
+      width: 100%;
+      background: #0a1427;
+      border: 1px solid #253b5c;
+      border-radius: 18px;
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+      color: white;
+      outline: none;
+      transition: 0.2s;
+      margin-bottom: 1.3rem;
+      
+    }
+
+    .input-field:focus {
+      
+      border-color: #00f0ff;
+      box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.15);
+      background: #0e1b32;
+      
+    }
+
+    .ride-grid {
+      
+      display: flex;
+      gap: 0.8rem;
+      margin: 1.5rem 0 2rem;
+      
+    }
+
+    .ride-option {
+      
+      background: #0e1a2b;
+      border: 1px solid #263e60;
+      border-radius: 1.5rem;
+      padding: 1rem 0;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+      
+    }
+
+    .ride-option i {
+      
+      font-size: 1.8rem;
+      color: #5f85bb;
+      margin-bottom: 6px;
+      
+    }
+
+    .ride-option .ride-name {
+      
+      font-weight: 600;
+      font-size: 1rem;
+      
+    }
+
+    .ride-option .ride-price {
+      
+      font-size: 0.75rem;
+      color: #88b4ff;
+      
+    }
+
+    .ride-option.selected {
+      
+      background: #10233f;
+      border-color: #00f0ff;
+      box-shadow: 0 0 15px #00f0ff40;
+      
+    }
+
+    .ride-option.selected i {
+      
+      color: #00f0ff;
+      
+    }
+
+    .driver-preview {
+      
+      background: #0b1a30;
+      border-radius: 2rem;
+      padding: 1.5rem;
+      margin: 1.8rem 0;
+      border: 1px solid #2a4570;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      
+    }
+
+    .driver-avatar {
+      
+      background: linear-gradient(145deg, #004466, #001c33);
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      border: 2px solid #00f0ff;
+      box-shadow: 0 0 0 3px #0f2640;
+      
+    }
+
+    .driver-info h3 {
+      
+      font-size: 1.2rem;
+      font-weight: 600;
+      
+    }
+
+    .driver-info p {
+      
+      color: #9cb9f0;
+      font-size: 0.9rem;
+      
+    }
+
+    .price-badge {
+      
+      margin-left: auto;
+      background: #0b421a;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #b4ffc8;
+      border: 1px solid #40ff91;
+      
+    }
+
+    .eta-tag {
+      
+      display: inline-block;
+      background: #001f3f;
+      border-radius: 60px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.9rem;
+      border: 1px solid #3a5f8f;
+      
+    }
+
+    .button-row {
+      
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.8rem;
+      
+    }
+
+    .btn {
+      
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      background: #13263e;
+      color: white;
+      border: 1px solid #2b4870;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      
+    }
+
+    .btn-primary {
+      
+      background: #00f0ff;
+      color: #0b1a2f;
+      border: none;
+      font-weight: 700;
+      box-shadow: 0 8px 18px -6px #00f0ff80;
+      
+    }
+
+    .btn-primary:hover {
+      
+      background: #6af5ff;
+      transform: scale(1.02);
+      
+    }
+
+    .btn-secondary:hover {
+      
+      background: #1e3452;
+      
+    }
+
+    .final-status {
+      
+      margin-top: 1.8rem;
+      background: #0f1e31;
+      border-radius: 1.8rem;
+      padding: 1.5rem;
+      border: 1px solid #00f0ff30;
+      
+    }
+
+    .detail-line {
+      
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px dashed #2a4070;
+      
+    }
+
+    .detail-line:last-child {
+      
+      border: none;
+      
+    }
+
+    .accent {
+      
+      color: #00f0ff;
+      font-weight: 600;
+      
+    }
+
+    .price-lg {
+      
+      font-size: 2rem;
+      font-weight: 700;
+      color: #8cffb4;
+      text-align: right;
+      
+    }
+
+    .helper-text {
+      
+      font-size: 0.8rem;
+      color: #6e8fc0;
+      margin-top: 0.3rem;
+      
+    }
+
+    i {
+      
+      color: #9bb9ff;
+      
+    }
+
+    .hidden {
+      
+      display: none;
+      
+    }
+    
+  </style>
+  
+</head>
+  
+<body>
+  
+  <div class="hopco-app glass-card">
+
+    <div class="hopco-header">
+      <span class="hopco-tag"><i class="fas fa-shuttle-van" style="margin-right:6px;"></i> HopCo Transportation</span>
+    </div>
+
+    <div class="content" id="appContent">
+
+      <div id="step1" class="panel active-panel">
+        <div class="step-indicator">
+          <div class="step active"></div>
+          <div class="step"></div>
+          <div class="step"></div>
+        </div>
+
+        <label><i class="fas fa-map-pin"></i> Pickup location</label>
+        <input type="text" class="input-field" id="pickup" placeholder="e.g. Grand Central, Gate 4" value="Eden Hotel, Main St">
+
+        <label><i class="fas fa-flag-checkered"></i> Destination</label>
+        <input type="text" class="input-field" id="dropoff" placeholder="e.g. Airport, Riverside" value="HOPCO Hub, North Road">
+
+        <label><i class="fas fa-user"></i> Full name</label>
+        <input type="text" class="input-field" id="name" placeholder="Your name" value="Alex Rivera">
+
+        <label><i class="fas fa-mobile-alt"></i> Phone</label>
+        <input type="tel" class="input-field" id="phone" placeholder="+27 12 345 6789" value="+27 81 234 5678">
+
+        <div class="button-row">
+          <button class="btn btn-primary" id="goToStep2"><i class="fas fa-arrow-right"></i> Continue</button>
+        </div>
+        <div class="helper-text"><i class="fas fa-shield-alt"></i> EDEN encrypted · HOPCO dispatch ready</div>
+      </div>
+
+      <div id="step2" class="panel">
+        <div class="step-indicator">
+          <div class="step"></div>
+          <div class="step active"></div>
+          <div class="step"></div>
+        </div>
+
+        <label><i class="fas fa-car-side"></i> Select ride type</label>
+        <div class="ride-grid">
+          <div class="ride-option selected" id="rideEco" data-index="0">
+            <i class="fas fa-leaf"></i>
+            <div class="ride-name">HOPCO Eco</div>
+            <div class="ride-price">from R45</div>
+          </div>
+          <div class="ride-option" id="rideComfort" data-index="1">
+            <i class="fas fa-star"></i>
+            <div class="ride-name">HOPCO Comfort</div>
+            <div class="ride-price">from R75</div>
+          </div>
+          <div class="ride-option" id="rideXL" data-index="2">
+            <i class="fas fa-users"></i>
+            <div class="ride-name">HOPCO XL</div>
+            <div class="ride-price">from R110</div>
+          </div>
+        </div>
+
+        <div style="background:#0e2038; border-radius:24px; padding:1rem; margin:1rem 0;">
+          <div style="display:flex; gap:12px; align-items:center;">
+            <i class="fas fa-car" style="font-size:1.8rem;"></i>
+            <span id="fleetExample">EDEN‑01 · VW Polo (4 seats)</span>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button class="btn btn-secondary" id="backToStep1"><i class="fas fa-chevron-left"></i> Back</button>
+          <button class="btn btn-primary" id="goToStep3">Choose driver <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <div id="step3" class="panel">
+        <div class="step-indicator">
+          <div class="step"></div>
+          <div class="step"></div>
+          <div class="step active"></div>
+        </div>
+
+        <div id="driverCardContainer"></div>
+
+        <div class="button-row">
+          <button class="btn btn-secondary" id="backToStep2"><i class="fas fa-chevron-left"></i> Edit ride</button>
+          <button class="btn btn-primary" id="confirmRideBtn"><i class="fas fa-check-circle"></i> Confirm EDEN ride</button>
+        </div>
+
+        <div id="finalStatusContainer" class="final-status" style="display: none;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <i class="fas fa-check-circle" style="color:#00f0ff; font-size:1.8rem;"></i>
+            <span style="font-weight:600; font-size:1.3rem;">HOPCO dispatched</span>
+          </div>
+          <div class="detail-line"><span>Driver</span> <span class="accent" id="finalDriver">EDEN-01</span></div>
+          <div class="detail-line"><span>Vehicle</span> <span id="finalVehicle">VW Polo</span></div>
+          <div class="detail-line"><span>ETA</span> <span id="finalEta">4 min</span></div>
+          <div class="detail-line"><span>Fare</span> <span class="price-lg" id="finalPrice">R62</span></div>
+          <div style="margin-top:12px;"><i class="fas fa-map-marker-alt"></i> <span id="finalPickup">Eden Hotel</span> → <span id="finalDropoff">HOPCO Hub</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    
+    (function() {
+      // ---------- DATA ----------
+      const EDEN_HOPCO_DRIVERS = [
+        { name: "EDEN-01", vehicle: "VW Polo", type: "eco" },
+        { name: "EDEN-02", vehicle: "Toyota Starlet", type: "eco" },
+        { name: "EDEN-03", vehicle: "Hyundai Grand i10", type: "comfort" },
+        { name: "EDEN-04", vehicle: "Suzuki Swift", type: "comfort" },
+        { name: "EDEN-05", vehicle: "Toyota Corolla", type: "comfort" },
+        { name: "EDEN-06", vehicle: "Honda BR-V", type: "xl" },
+        { name: "EDEN-07", vehicle: "Mitsubishi Xpander", type: "xl" }
+      ];
+
+      const fareBase = { eco: 48, comfort: 72, xl: 105 };
+
+      // ---------- STATE ----------
+      let currentStep = 1;                // 1,2,3
+      let selectedRideType = 'eco';       // default from UI (Eco selected)
+      let matchedDriver = null;
+      let etaMinutes = 0;
+      let finalFare = 0;
+
+      const step1Panel = document.getElementById('step1');
+      const step2Panel = document.getElementById('step2');
+      const step3Panel = document.getElementById('step3');
+      const stepIndicators = document.querySelectorAll('.step');
+
+      const pickupInp = document.getElementById('pickup');
+      const dropoffInp = document.getElementById('dropoff');
+      const nameInp = document.getElementById('name');
+      const phoneInp = document.getElementById('phone');
+
+      const rideEco = document.getElementById('rideEco');
+      const rideComfort = document.getElementById('rideComfort');
+      const rideXL = document.getElementById('rideXL');
+      const fleetExample = document.getElementById('fleetExample');
+
+      const driverCardContainer = document.getElementById('driverCardContainer');
+      const finalStatusDiv = document.getElementById('finalStatusContainer');
+      const finalDriver = document.getElementById('finalDriver');
+      const finalVehicle = document.getElementById('finalVehicle');
+      const finalEta = document.getElementById('finalEta');
+      const finalPrice = document.getElementById('finalPrice');
+      const finalPickup = document.getElementById('finalPickup');
+      const finalDropoff = document.getElementById('finalDropoff');
+
+      const goToStep2Btn = document.getElementById('goToStep2');
+      const backToStep1 = document.getElementById('backToStep1');
+      const goToStep3 = document.getElementById('goToStep3');
+      const backToStep2 = document.getElementById('backToStep2');
+      const confirmRideBtn = document.getElementById('confirmRideBtn');
+
+      function validateStep1() {
+        if (!pickupInp.value.trim() || !dropoffInp.value.trim() || !nameInp.value.trim() || !phoneInp.value.trim()) {
+          alert('✱ Complete all fields before continuing');
+          return false;
+        }
+        return true;
+      }
+
+      function setStep(step) {
+        currentStep = step;
+        step1Panel.classList.remove('active-panel');
+        step2Panel.classList.remove('active-panel');
+        step3Panel.classList.remove('active-panel');
+        if (step === 1) step1Panel.classList.add('active-panel');
+        if (step === 2) step2Panel.classList.add('active-panel');
+        if (step === 3) step3Panel.classList.add('active-panel');
+
+        stepIndicators.forEach((el, idx) => {
+          if (idx < step) el.classList.add('active');
+          else el.classList.remove('active');
+        });
+
+        if (step === 3) {
+          generateDriverPreview();
+        }
+      }
+
+      function generateDriverPreview() {
+
+        const candidates = EDEN_HOPCO_DRIVERS.filter(d => d.type === selectedRideType);
+        if (candidates.length === 0) {
+
+          matchedDriver = EDEN_HOPCO_DRIVERS[Math.floor(Math.random() * EDEN_HOPCO_DRIVERS.length)];
+        } else {
+          matchedDriver = candidates[Math.floor(Math.random() * candidates.length)];
+        }
+
+        etaMinutes = Math.floor(Math.random() * 8) + 2;   // 2–9 min
+        const base = fareBase[selectedRideType] || 55;
+        // random variation
+        finalFare = base + Math.floor(Math.random() * 25) - 5;   // approx base ±
+        if (finalFare < 40) finalFare = 42;
+
+        renderDriverCard();
+      }
+
+      function renderDriverCard() {
+        if (!matchedDriver) return;
+        const avatarLetter = matchedDriver.name.charAt(matchedDriver.name.length-1) || 'D';
+        const cardHtml = `
+          <div class="driver-preview">
+            <div class="driver-avatar"><i class="fas fa-user-tie" style="font-size:2.2rem; color:#9ac7ff;"></i></div>
+            <div class="driver-info">
+              <h3>${matchedDriver.name} <span style="font-weight:400; color:#b0d0ff;">· ${matchedDriver.vehicle}</span></h3>
+              <p><i class="fas fa-star" style="color:gold;"></i> 4.96 · 2.4k trips</p>
+              <div class="eta-tag"><i class="far fa-clock"></i> ETA ${etaMinutes} min</div>
+            </div>
+            <div class="price-badge">R${finalFare}</div>
+          </div>
+        `;
+        driverCardContainer.innerHTML = cardHtml;
+      }
+
+      function initRideSelection() {
+        function setActive(selectedId, type) {
+          [rideEco, rideComfort, rideXL].forEach(opt => opt.classList.remove('selected'));
+          document.getElementById(selectedId).classList.add('selected');
+          selectedRideType = type;
+
+          const ex = EDEN_HOPCO_DRIVERS.find(d => d.type === type) || EDEN_HOPCO_DRIVERS[0];
+          if (ex) fleetExample.innerText = `${ex.name} · ${ex.vehicle} (${type})`;
+        }
+
+        rideEco.addEventListener('click', () => setActive('rideEco', 'eco'));
+        rideComfort.addEventListener('click', () => setActive('rideComfort', 'comfort'));
+        rideXL.addEventListener('click', () => setActive('rideXL', 'xl'));
+      }
+
+      function confirmBooking() {
+        // check step1 data again (just in case)
+        if (!pickupInp.value.trim() || !dropoffInp.value.trim() || !nameInp.value.trim() || !phoneInp.value.trim()) {
+          alert('Missing info — please go back to step 1');
+          setStep(1);
+          return;
+        }
+        if (!matchedDriver) generateDriverPreview(); // safety
+
+        finalDriver.innerText = matchedDriver.name;
+        finalVehicle.innerText = matchedDriver.vehicle;
+        finalEta.innerText = etaMinutes + ' min';
+        finalPrice.innerText = 'R' + finalFare;
+        finalPickup.innerText = pickupInp.value.split(',')[0];
+        finalDropoff.innerText = dropoffInp.value.split(',')[0];
+
+        finalStatusDiv.style.display = 'block';
+
+        document.querySelector('#step3 .button-row').style.display = 'none';
+
+        const driverCard = document.querySelector('#driverCardContainer .driver-preview');
+        if (driverCard) driverCard.style.display = 'none';
+
+        const rideRecord = {
+          division: 'HopCo Transportation',
+          pickup: pickupInp.value,
+          dropoff: dropoffInp.value,
+          name: nameInp.value,
+          phone: phoneInp.value,
+          driver: matchedDriver.name,
+          vehicle: matchedDriver.vehicle,
+          fare: finalFare,
+          eta: etaMinutes,
+          rideType: selectedRideType
+        };
+        console.log('✅E:', rideRecord);
+      }
+
+      goToStep2Btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (validateStep1()) setStep(2);
+      });
+
+      backToStep1.addEventListener('click', (e) => {
+        e.preventDefault();
+        setStep(1);
+
+        finalStatusDiv.style.display = 'none';
+        document.querySelector('#step3 .button-row').style.display = 'flex';
+      });
+
+      goToStep3.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        setStep(3);  // this calls generateDriverPreview
+
+        finalStatusDiv.style.display = 'none';
+        document.querySelector('#step3 .button-row').style.display = 'flex';
+
+        const driverCard = document.querySelector('#driverCardContainer .driver-preview');
+        if (driverCard) driverCard.style.display = 'flex';
+      });
+
+      backToStep2.addEventListener('click', (e) => {
+        e.preventDefault();
+        setStep(2);
+      });
+
+      confirmRideBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        confirmBooking();
+      });
+
+      initRideSelection();
+
+      setActive = (id, type) => {}; 
+
+      const defaultEx = EDEN_HOPCO_DRIVERS.find(d => d.type === 'eco') || EDEN_HOPCO_DRIVERS[0];
+      fleetExample.innerText = `${defaultEx.name} · ${defaultEx.vehicle} (eco)`;
+
+    })();
+    
+  </script>
+  
+</body>
+  
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

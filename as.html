@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>PROTOCOL-7 · RADIO + SURVEILLANCE · INDEXEDDB VAULT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --bg-deep: #000000; --bg-surface: #050805; --bg-card: #0a100a;
+            --fg-neon: #00ff41; --fg-dim: #00cc33; --fg-muted: #2a8a3a;
+            --border-primary: #00ff41; --border-subtle: #1a3a1a;
+            --alert-red: #ff3333; --alert-yellow: #ffcc00; --recording-red: #ff0044;
+            --font-mono: 'Share Tech Mono', monospace; --font-body: 'Inter', system-ui, sans-serif;
+        }
+        body { background: var(--bg-deep); color: var(--fg-neon); font-family: var(--font-body); padding: 0.8rem; min-height: 100vh; }
+        .recording-banner {
+            position: fixed; top: 0; left: 0; right: 0; background: #1a0505;
+            border-bottom: 3px solid var(--recording-red); padding: 0.5rem; text-align: center;
+            z-index: 999; font-family: var(--font-mono); font-weight: bold; font-size: 0.8rem;
+            display: flex; justify-content: center; align-items: center; gap: 1rem;
+            backdrop-filter: blur(8px); flex-wrap: wrap;
+        }
+        .rec-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,0,68,0.2); padding: 0.3rem 1rem; border-radius: 40px; }
+        .pulse-red { width: 14px; height: 14px; background: var(--recording-red); border-radius: 50%; animation: pulseRedBlink 0.8s step-end infinite; box-shadow: 0 0 8px #ff0044; }
+        @keyframes pulseRedBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+        .scroll-nav {
+            position: fixed; right: 1.5rem; top: 80px; display: flex; flex-direction: column; gap: 0.8rem;
+            z-index: 1000; background: rgba(0, 0, 0, 0.9); border: 1px solid var(--border-primary);
+            border-radius: 32px; padding: 0.8rem 0.5rem;
+        }
+        .scroll-btn {
+            background: #000; border: 1px solid var(--fg-neon); color: var(--fg-neon);
+            width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; font-size: 1.4rem; transition: 0.1s;
+        }
+        .scroll-btn:hover { background: var(--fg-neon); color: black; }
+        .protocol-grid { max-width: 1600px; margin: 60px auto 0 auto; background: var(--bg-surface); border: 1px solid var(--border-primary); }
+        .stats-dashboard {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem;
+            padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-subtle); background: var(--bg-card);
+        }
+        .stat-tile { border: 1px solid var(--border-subtle); padding: 0.7rem; text-align: center; }
+        .stat-number-big { font-size: 1.8rem; font-weight: 900; font-family: var(--font-mono); }
+        .dual-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; padding: 1.5rem; }
+        .panel { background: var(--bg-card); border: 1px solid var(--border-primary); padding: 1rem; }
+        .panel-title { font-family: var(--font-mono); border-bottom: 1px solid var(--border-primary); padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        .ptt-giant {
+            width: 100%; background: #0a1a0a; border: 2px solid var(--border-primary); padding: 1.5rem;
+            font-family: var(--font-mono); font-size: 1.5rem; font-weight: bold; color: var(--fg-neon);
+            cursor: pointer; transition: 0.05s linear; border-radius: 8px;
+        }
+        .ptt-giant:active { transform: scale(0.98); background: #1a3a1a; }
+        .ptt-giant.tx-active { background: #330000; border-color: var(--alert-red); color: var(--alert-red); box-shadow: 0 0 20px red; }
+        .button-fleet { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0; }
+        .tact-btn {
+            background: var(--bg-surface); border: 1px solid var(--border-primary); padding: 0.6rem 1rem;
+            color: var(--fg-neon); font-family: var(--font-mono); font-size: 0.75rem; cursor: pointer; transition: 0.1s;
+        }
+        .tact-btn:hover { background: #1a3a1a; }
+        .danger-btn { border-color: var(--alert-red); color: var(--alert-red); }
+        .channel-row { display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
+        .channel-input { background: black; border: 1px solid var(--border-primary); padding: 0.5rem; color: var(--fg-neon); font-family: monospace; }
+        .vault-master { margin: 0 1.5rem 1.5rem 1.5rem; background: var(--bg-card); border: 2px solid var(--border-primary); }
+        .vault-toolbar { padding: 1rem; border-bottom: 1px solid var(--border-primary); display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: space-between; align-items: center; }
+        .recordings-grid-vault {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 0.8rem;
+            padding: 1rem; max-height: 550px; overflow-y: auto;
+        }
+        .recording-item { background: #050a05; border: 1px solid var(--border-subtle); padding: 0.8rem; }
+        .rec-meta-row { font-size: 0.7rem; color: var(--fg-muted); margin: 5px 0; }
+        .rec-actions-buttons { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+        .mini-control { background: black; border: 1px solid var(--border-primary); padding: 0.3rem 0.6rem; font-size: 0.65rem; cursor: pointer; }
+        .peer-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+        .peer-badge { background: #0a2a1a; border: 1px solid var(--fg-neon); padding: 0.3rem 0.8rem; font-size: 0.7rem; border-radius: 20px; }
+        .console-log { margin: 1rem 1.5rem; background: #010501; border: 1px solid var(--border-primary); padding: 0.8rem; height: 150px; overflow-y: auto; font-family: var(--font-mono); font-size: 0.65rem; }
+        footer { background: var(--bg-card); border-top: 1px solid var(--border-subtle); padding: 0.8rem; text-align: center; font-size: 0.6rem; }
+        @media (max-width: 800px) { .dual-panel { grid-template-columns: 1fr; } .scroll-nav { right: 0.5rem; top: 70px; } .recording-banner { font-size: 0.65rem; gap: 0.3rem; } }
+        .storage-warning { position: fixed; bottom: 10px; right: 10px; background: #1a1a00; border-left: 4px solid #ffcc00; padding: 6px 12px; font-size: 0.7rem; z-index: 1000; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+<div class="recording-banner">
+    <div class="rec-badge"><div class="pulse-red"></div><span>🟢 PROTOCOL-7 · INDEXEDDB VAULT</span></div>
+    <span>⚠️ REAL WebRTC RADIO · PERPETUAL RECORDING</span>
+    <div class="rec-badge"><i class="fas fa-database"></i><span>INDEXEDDB · UNLIMITED STORAGE</span></div>
+</div>
+<div class="scroll-nav"><div class="scroll-btn" id="scrollTopBtn">▲</div><div class="scroll-btn" id="scrollMidBtn">◉</div><div class="scroll-btn" id="scrollDownBtn">▼</div></div>
+<div class="protocol-grid">
+    <div class="stats-dashboard">
+        <div class="stat-tile"><div class="stat-number-big" id="totalRecs">0</div><div>TOTAL RECS</div></div>
+        <div class="stat-tile"><div class="stat-number-big" id="localCount">0</div><div>INDEXEDDB</div></div>
+        <div class="stat-tile"><div class="stat-number-big" id="cloudCount">0</div><div>CLOUD SYNCED</div></div>
+        <div class="stat-tile"><div class="stat-number-big" id="sessionMins">0</div><div>MINUTES ACTIVE</div></div>
+        <div class="stat-tile"><div class="stat-number-big" id="txEvents">0</div><div>PTT EVENTS</div></div>
+        <div class="stat-tile"><div class="stat-number-big" id="peerCount">0</div><div>PEERS ONLINE</div></div>
+    </div>
+    <div class="dual-panel">
+        <div class="panel">
+            <div class="panel-title"><i class="fas fa-broadcast-tower"></i> TACTICAL RADIO · SHARED FREQ</div>
+            <button class="ptt-giant" id="pttBtn"><i class="fas fa-microphone-alt"></i> HOLD TO TRANSMIT</button>
+            <div id="txStatus" style="font-size:0.7rem; margin-top:8px; color:#ff8888;">⚪ STANDBY</div>
+            <div class="button-fleet">
+                <button id="muteMicBtn" class="tact-btn"><i class="fas fa-microphone-slash"></i> MUTE</button>
+                <button id="unmuteMicBtn" class="tact-btn"><i class="fas fa-microphone"></i> UNMUTE</button>
+                <button id="forceSaveSegmentBtn" class="tact-btn"><i class="fas fa-save"></i> FORCE SAVE</button>
+            </div>
+            <div class="channel-row"><span>CHANNEL:</span><input type="text" id="channelInput" class="channel-input" value="4625625" maxlength="20"><button id="setChannelBtn" class="tact-btn">SET FREQ</button></div>
+            <div class="peer-list" id="peerListDiv"><span>🔄 No peers</span></div>
+        </div>
+        <div class="panel">
+            <div class="panel-title"><i class="fas fa-sliders-h"></i> AUDIO CONTROL · MASTER</div>
+            <div><i class="fas fa-volume-up"></i> MASTER VOLUME <input type="range" id="masterVol" min="0" max="100" value="75" style="width:140px;"></div>
+            <div class="button-fleet">
+                <button id="playAllBtn" class="tact-btn"><i class="fas fa-play"></i> PLAY ALL (latest 5)</button>
+                <button id="stopAllAudioBtn" class="tact-btn"><i class="fas fa-stop"></i> STOP ALL</button>
+                <button id="exportAllZipBtn" class="tact-btn"><i class="fas fa-file-archive"></i> EXPORT ZIP</button>
+                <button id="cloudBackupAllBtn" class="tact-btn"><i class="fas fa-cloud-upload-alt"></i> BACKUP ALL</button>
+            </div>
+            <div style="margin-top:8px;"><i class="fas fa-headphones"></i> EARPHONE BUTTON = PTT <span id="mediaSessionStatus">✅ ACTIVE</span></div>
+        </div>
+    </div>
+    <div class="vault-master" id="vaultAnchor">
+        <div class="vault-toolbar"><span><i class="fas fa-database"></i> SURVEILLANCE VAULT · INDEXEDDB</span>
+            <div><input type="text" id="searchVault" placeholder="🔍 FILTER..."><select id="filterVault"><option value="all">ALL</option><option value="tx">PTT TX ONLY</option><option value="auto">AUTO SEGMENTS</option><option value="snap">SNAPSHOTS</option><option value="video">VIDEOS</option></select><button id="refreshVault" class="tact-btn">REFRESH</button></div>
+        </div>
+        <div id="recordingsGrid" class="recordings-grid-vault"><div style="text-align:center; padding:2rem;">⏳ LOADING VAULT...</div></div>
+    </div>
+    <div class="console-log" id="consoleLog"><i class="fas fa-terminal"></i> [PROTOCOL-7] BOOTING | INDEXEDDB + RING BUFFER<br></div>
+    <footer>🔒 INDEXEDDB VAULT · RING BUFFER CHUNKS · CLOUD BACKUP · WebRTC RADIO</footer>
+</div>
+<div id="storageWarning" class="storage-warning" style="display:none;"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script>
+    // ==================== INDEXEDDB MANAGER ====================
+    class RecordingVaultDB {
+        constructor() { this.dbName = 'Protocol7Vault'; this.storeName = 'recordings'; this.dbVersion = 2; this.db = null; this.maxRecordings = 2000; }
+        async init() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(this.dbName, this.dbVersion);
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => { this.db = request.result; resolve(); };
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(this.storeName)) {
+                        const store = db.createObjectStore(this.storeName, { keyPath: 'id', autoIncrement: false });
+                        store.createIndex('timestamp', 'timestamp', { unique: false });
+                        store.createIndex('isTxEvent', 'isTxEvent', { unique: false });
+                        store.createIndex('isSnapshot', 'isSnapshot', { unique: false });
+                        store.createIndex('isVideo', 'isVideo', { unique: false });
+                        store.createIndex('timestamp_desc', 'timestamp', { unique: false });
+                    }
+                };
+            });
+        }
+        async saveRecording(record) {
+            if (!this.db) throw new Error('DB not init');
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction([this.storeName], 'readwrite');
+                const store = tx.objectStore(this.storeName);
+                const req = store.put(record);
+                req.onsuccess = () => { this.enforceMaxLimit().catch(e=>addLog(`Limit error: ${e.message}`,true)); resolve(); };
+                req.onerror = () => reject(req.error);
+            });
+        }
+        async getRecording(id) {
+            if (!this.db) return null;
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction([this.storeName], 'readonly');
+                const req = tx.objectStore(this.storeName).get(id);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+        async getAllRecordings(filters = {}) {
+            if (!this.db) return [];
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction([this.storeName], 'readonly');
+                const index = tx.objectStore(this.storeName).index('timestamp_desc');
+                const cursor = index.openCursor(null, 'prev');
+                const results = [];
+                cursor.onsuccess = (e) => {
+                    const c = e.target.result;
+                    if (c) {
+                        let rec = c.value;
+                        let include = true;
+                        if (filters.isTxEvent !== undefined && rec.isTxEvent !== filters.isTxEvent) include = false;
+                        if (filters.isSnapshot !== undefined && rec.isSnapshot !== filters.isSnapshot) include = false;
+                        if (filters.isVideo !== undefined && rec.isVideo !== filters.isVideo) include = false;
+                        if (include) results.push(rec);
+                        c.continue();
+                    } else resolve(results);
+                };
+                cursor.onerror = () => reject(cursor.error);
+            });
+        }
+        async deleteRecording(id) {
+            if (!this.db) return;
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction([this.storeName], 'readwrite');
+                const req = tx.objectStore(this.storeName).delete(id);
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+        }
+        async enforceMaxLimit() {
+            const all = await this.getAllRecordings();
+            if (all.length > this.maxRecordings) {
+                const toDelete = all.slice(this.maxRecordings);
+                for (let rec of toDelete) await this.deleteRecording(rec.id);
+                addLog(`🧹 Auto-clean: removed ${toDelete.length} oldest recordings`, false);
+            }
+        }
+        async clearAll() {
+            if (!this.db) return;
+            return new Promise((resolve, reject) => {
+                const tx = this.db.transaction([this.storeName], 'readwrite');
+                const req = tx.objectStore(this.storeName).clear();
+                req.onsuccess = () => resolve();
+                req.onerror = () => reject(req.error);
+            });
+        }
+        async getStorageEstimate() {
+            if ('storage' in navigator && 'estimate' in navigator.storage) {
+                const est = await navigator.storage.estimate();
+                return { usage: est.usage, quota: est.quota, percent: ((est.usage/est.quota)*100).toFixed(1) };
+            }
+            return null;
+        }
+    }
+
+    // ==================== RING BUFFER CHUNK MANAGER ====================
+    class RingBufferChunkManager {
+        constructor(maxSeconds = 120) {
+            this.chunks = [];          // each chunk: { blob, timestamp, duration }
+            this.maxDuration = maxSeconds;
+            this.totalDuration = 0;
+        }
+        addChunk(blob, durationSec = 1) {
+            this.chunks.push({ blob, timestamp: Date.now(), duration: durationSec });
+            this.totalDuration += durationSec;
+            while (this.totalDuration > this.maxDuration && this.chunks.length > 0) {
+                const removed = this.chunks.shift();
+                this.totalDuration -= removed.duration;
+            }
+        }
+        getLatestBlob(durationSec = 30) {
+            if (this.chunks.length === 0) return null;
+            let accumulated = 0;
+            const selected = [];
+            for (let i = this.chunks.length-1; i >= 0; i--) {
+                if (accumulated >= durationSec) break;
+                selected.unshift(this.chunks[i]);
+                accumulated += this.chunks[i].duration;
+            }
+            if (selected.length === 0) return null;
+            return new Blob(selected.map(c => c.blob), { type: 'audio/webm' });
+        }
+        getAllBlob() {
+            if (this.chunks.length === 0) return null;
+            return new Blob(this.chunks.map(c => c.blob), { type: 'audio/webm' });
+        }
+        clear() { this.chunks = []; this.totalDuration = 0; }
+    }
+
+    // ==================== GLOBALS ====================
+    let vaultDB = null;
+    let mediaStream = null, mediaRecorder = null;
+    let ringBuffer = new RingBufferChunkManager(120);  // keep last 120 seconds
+    let recordingsLibrary = [];      // mirror for UI (metadata)
+    let sessionStart = Date.now();
+    let isPTTActive = false, isMuted = false;
+    let txEventCounter = 0;
+    let deviceId = 'P7-' + Math.random().toString(36).substr(2, 10).toUpperCase();
+    let db = null;
+    let activeAudios = [];
+    let gainNode = null, audioContext = null;
+    let autoSaveInterval = null;
+    let currentChannel = '4625625', displayChannel = '462.5625';
+    let peerConnection = null, remoteAudio = null;
+    let activePeers = new Map();
+    let currentTransmitter = null;
+    let presenceUnsub = null, lockUnsub = null, signalUnsub = null;
+    let heartbeatInterval = null;
+    const ICE_SERVERS = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] };
+    const FIREBASE_CONFIG = { apiKey: "AIzaSyD-hhoLpddOoMq1tUlA4SqnwncFnVpaHIQ", authDomain: "eden-4a8d3.firebaseapp.com", projectId: "eden-4a8d3", storageBucket: "eden-4a8d3.firebasestorage.app", messagingSenderId: "421147129483", appId: "1:421147129483:web:9495dfb813fe6195f2c68e" };
+
+    function addLog(msg, isError = false) {
+        const div = document.createElement('div');
+        div.innerHTML = `<span style="color:#00ff41;">[${new Date().toLocaleTimeString()}]</span> ${msg}`;
+        div.style.color = isError ? '#ff8888' : '#aaffaa';
+        div.style.fontSize = '0.65rem';
+        div.style.marginBottom = '4px';
+        consoleLog.appendChild(div);
+        consoleLog.scrollTop = consoleLog.scrollHeight;
+        while(consoleLog.children.length > 200) consoleLog.removeChild(consoleLog.firstChild);
+    }
+
+    async function updateStorageWarning() {
+        if (vaultDB) {
+            const est = await vaultDB.getStorageEstimate();
+            if (est && est.percent > 80) {
+                const warn = document.getElementById('storageWarning');
+                warn.style.display = 'block';
+                warn.innerHTML = `⚠️ STORAGE: ${est.percent}% used (${(est.usage/1024/1024).toFixed(1)}MB / ${(est.quota/1024/1024).toFixed(0)}MB)`;
+                warn.style.background = '#330000';
+            } else if (est) {
+                const warn = document.getElementById('storageWarning');
+                warn.style.display = 'block';
+                warn.innerHTML = `💾 STORAGE: ${(est.usage/1024/1024).toFixed(1)}MB / ${(est.quota/1024/1024).toFixed(0)}MB`;
+                warn.style.background = '#1a1a00';
+                setTimeout(() => { if(warn) warn.style.display = 'none'; }, 3000);
+            }
+        }
+    }
+
+    async function saveRecordingToVault(blob, customName, isTxEvent = false, type = 'audio/webm') {
+        if (!blob || blob.size === 0) { addLog("⚠️ empty blob, skip save", true); return; }
+        try {
+            const id = Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+            const sizeKB = (blob.size / 1024).toFixed(1);
+            const name = customName || `${isTxEvent ? 'TX' : 'AUTO'}_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.${type.includes('webm')?'webm':type.split('/')[1]||'bin'}`;
+            const reader = new FileReader();
+            const base64Promise = new Promise((resolve) => {
+                reader.onloadend = () => { resolve(reader.result.split(',')[1]); };
+                reader.readAsDataURL(blob);
+            });
+            const base64 = await base64Promise;
+            const record = { id, name, timestamp: Date.now(), sizeKB, base64, isTxEvent, cloudId: null, type, isSnapshot: false, isVideo: false };
+            if (type.startsWith('image')) record.isSnapshot = true;
+            if (type.startsWith('video')) record.isVideo = true;
+            await vaultDB.saveRecording(record);
+            recordingsLibrary.unshift(record);
+            if (recordingsLibrary.length > 2000) recordingsLibrary.pop();
+            renderVault();
+            updateStatsUI();
+            addLog(`✅ SAVED: ${name} (${sizeKB}KB) - ${isTxEvent ? 'TX EVENT' : 'AUTO'}`);
+            if (db) {
+                try {
+                    const docRef = await db.collection('p7_recordings').add({ name, sizeKB, timestamp: Date.now(), isTxEvent, deviceId, base64, channel: currentChannel, type });
+                    record.cloudId = docRef.id;
+                    await vaultDB.saveRecording(record);
+                    addLog(`☁️ Cloud synced: ${name}`);
+                    renderVault();
+                } catch(e) { addLog(`⚠️ Cloud offline: ${e.message}`, true); }
+            }
+            updateStorageWarning();
+        } catch(e) { addLog(`❌ Save failed: ${e.message}`, true); }
+    }
+
+    async function renderVault() {
+        if (!vaultDB) return;
+        let filtered = [...recordingsLibrary];
+        const query = searchInput.value.toLowerCase();
+        const filterVal = filterSelect.value;
+        if (filterVal === 'tx') filtered = filtered.filter(r => r.isTxEvent === true);
+        if (filterVal === 'auto') filtered = filtered.filter(r => !r.isTxEvent && !r.isSnapshot && !r.isVideo);
+        if (filterVal === 'snap') filtered = filtered.filter(r => r.isSnapshot === true);
+        if (filterVal === 'video') filtered = filtered.filter(r => r.isVideo === true);
+        if (query) filtered = filtered.filter(r => r.name.toLowerCase().includes(query));
+        if (filtered.length === 0) { recordingsGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">📭 NO RECORDINGS</div>'; return; }
+        recordingsGrid.innerHTML = filtered.map(rec => `
+            <div class="recording-item" data-id="${rec.id}">
+                <div><i class="fas ${rec.isTxEvent ? 'fa-broadcast-tower' : (rec.isSnapshot ? 'fa-camera' : (rec.isVideo ? 'fa-video' : 'fa-microphone-alt'))}"></i> <strong>${rec.name.length > 45 ? rec.name.slice(0,42)+'...' : rec.name}</strong></div>
+                <div class="rec-meta-row">📁 ${rec.sizeKB} KB · 📅 ${new Date(rec.timestamp).toLocaleString()} ${rec.cloudId ? '☁️ CLOUD' : '💾 LOCAL'}</div>
+                <div class="rec-actions-buttons">
+                    <button class="mini-control play-single" data-id="${rec.id}"><i class="fas fa-play"></i> PLAY</button>
+                    <button class="mini-control dl-single" data-id="${rec.id}"><i class="fas fa-download"></i> DL</button>
+                    <button class="mini-control cloud-single" data-id="${rec.id}"><i class="fas fa-cloud-upload-alt"></i> SYNC</button>
+                    <button class="mini-control delete-single" data-id="${rec.id}"><i class="fas fa-trash"></i> DEL</button>
+                    <span style="font-size:0.6rem;">🔊 <input type="range" class="rec-vol" data-id="${rec.id}" min="0" max="100" value="70" style="width:60px;"></span>
+                </div>
+            </div>
+        `).join('');
+        document.querySelectorAll('.play-single').forEach(btn => btn.addEventListener('click', () => playById(btn.dataset.id)));
+        document.querySelectorAll('.dl-single').forEach(btn => btn.addEventListener('click', () => downloadById(btn.dataset.id)));
+        document.querySelectorAll('.cloud-single').forEach(btn => btn.addEventListener('click', async () => await cloudSyncSingle(btn.dataset.id)));
+        document.querySelectorAll('.delete-single').forEach(btn => btn.addEventListener('click', async () => await deleteById(btn.dataset.id)));
+        document.querySelectorAll('.rec-vol').forEach(slider => slider.addEventListener('input', (e) => { const a = activeAudios.find(a => a.recId === slider.dataset.id); if(a) a.volume = e.target.value/100; }));
+    }
+
+    async function playById(id) {
+        const rec = recordingsLibrary.find(r => r.id === id);
+        if (!rec || !rec.base64) return;
+        try {
+            const binary = atob(rec.base64);
+            const arr = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
+            const url = URL.createObjectURL(new Blob([arr], { type: rec.type || 'audio/webm' }));
+            const audio = new Audio();
+            audio.src = url;
+            audio.volume = masterVolSlider.value / 100;
+            audio.recId = id;
+            audio.play();
+            activeAudios.push(audio);
+            audio.onended = () => { URL.revokeObjectURL(url); activeAudios = activeAudios.filter(a => a !== audio); };
+            addLog(`▶️ Playing: ${rec.name}`);
+        } catch(e) { addLog(`Play error: ${e.message}`, true); }
+    }
+    function stopAllAudios() { activeAudios.forEach(a => { a.pause(); a.currentTime = 0; if(a.src) URL.revokeObjectURL(a.src); }); activeAudios = []; addLog(`⏹️ All stopped`); }
+    function downloadById(id) { const rec = recordingsLibrary.find(r => r.id === id); if(!rec||!rec.base64) return; const bin=atob(rec.base64), arr=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([arr],{type:rec.type||'audio/webm'})); a.download=rec.name; a.click(); addLog(`⬇️ Downloaded ${rec.name}`); }
+    async function cloudSyncSingle(id) { const rec=recordingsLibrary.find(r=>r.id===id); if(!rec||!rec.base64||!db) return; try { await db.collection('p7_recordings').add({name:rec.name,sizeKB:rec.sizeKB,timestamp:rec.timestamp,isTxEvent:rec.isTxEvent,deviceId,base64:rec.base64,type:rec.type}); rec.cloudId='synced'; await vaultDB.saveRecording(rec); renderVault(); addLog(`☁️ Synced: ${rec.name}`); } catch(e){ addLog(`Sync fail: ${e.message}`,true); } }
+    async function deleteById(id) { recordingsLibrary = recordingsLibrary.filter(r=>r.id!==id); await vaultDB.deleteRecording(id); renderVault(); updateStatsUI(); addLog(`🗑️ Deleted recording`); }
+    async function loadLocalVault() { if(vaultDB){ const recs = await vaultDB.getAllRecordings(); recordingsLibrary = recs; renderVault(); updateStatsUI(); addLog(`📀 Loaded ${recordingsLibrary.length} recordings from IndexedDB`); } }
+    function updateStatsUI() { totalRecsSpan.innerText = recordingsLibrary.length; localCountSpan.innerText = recordingsLibrary.filter(r => !r.cloudId).length; cloudCountSpan.innerText = recordingsLibrary.filter(r => r.cloudId).length; txEventsSpan.innerText = txEventCounter; sessionMinsSpan.innerText = Math.floor((Date.now()-sessionStart)/60000); peerCountSpan.innerText = activePeers.size; }
+
+    async function initPerpetualRecorder() {
+        try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const source = audioContext.createMediaStreamSource(mediaStream);
+            gainNode = audioContext.createGain();
+            gainNode.gain.value = 1.0;
+            source.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            mediaRecorder = new MediaRecorder(mediaStream);
+            mediaRecorder.ondataavailable = (e) => { if(e.data.size>0) { ringBuffer.addChunk(e.data, 1); } };
+            mediaRecorder.start(1000);
+            addLog("🔴 PERPETUAL RECORDING ACTIVE (ring buffer 120s)");
+            autoSaveInterval = setInterval(async () => {
+                const recentBlob = ringBuffer.getLatestBlob(60);
+                if (recentBlob) await saveRecordingToVault(recentBlob, `AUTO_${Date.now()}.webm`, false);
+                else addLog("⚠️ No chunks to auto-save", true);
+            }, 60000);
+            setInterval(() => updateStatsUI(), 5000);
+            return true;
+        } catch(e) { addLog(`❌ MIC FAIL: ${e.message}`, true); return false; }
+    }
+
+    function sanitizeChannel(ch) { return ch.replace(/[\.#\$\[\]/]/g, '_'); }
+    async function requestTxLock() { if(!db) return false; if(currentTransmitter === deviceId) return true; if(currentTransmitter !== null) return false; try { const lockRef = db.collection('p7_locks').doc(currentChannel); const result = await db.runTransaction(async (t) => { const doc = await t.get(lockRef); if(!doc.exists || doc.data().transmitter === null || doc.data().transmitter === deviceId) { t.set(lockRef, { transmitter: deviceId, timestamp: Date.now() }); return true; } return false; }); if(result) { currentTransmitter = deviceId; return true; } return false; } catch(e){ return false; } }
+    async function releaseTxLock() { if(!db || currentTransmitter !== deviceId) return; try { await db.collection('p7_locks').doc(currentChannel).delete(); currentTransmitter = null; } catch(e){} }
+    async function createPeer() { if(peerConnection) peerConnection.close(); peerConnection = new RTCPeerConnection(ICE_SERVERS); if(mediaStream) mediaStream.getTracks().forEach(t => peerConnection.addTrack(t, mediaStream)); if(!remoteAudio){ remoteAudio = new Audio(); remoteAudio.autoplay = true; remoteAudio.volume = masterVolSlider.value/100; } peerConnection.ontrack = e => { if(remoteAudio) remoteAudio.srcObject = e.streams[0]; }; peerConnection.onicecandidate = e => { if(e.candidate) sendSignal({ type: 'candidate', candidate: e.candidate }); }; return peerConnection; }
+    function sendSignal(sig) { if(!db) return; db.collection('p7_signals').add({ ...sig, from: deviceId, channel: currentChannel, timestamp: Date.now() }).then(docRef => { setTimeout(() => docRef.delete().catch(()=>{}), 10000); }).catch(()=>{}); }
+    async function setupRadioSignaling() { if(!db) return; signalUnsub = db.collection('p7_signals').where('channel','==',currentChannel).orderBy('timestamp','desc').onSnapshot(async (snap) => { for(const change of snap.docChanges()) { if(change.type === 'added') { const sig = change.doc.data(); if(sig.from === deviceId) continue; try { if(sig.type === 'offer' && peerConnection && peerConnection.signalingState === 'stable') { await peerConnection.setRemoteDescription(new RTCSessionDescription(sig.offer)); let ans = await peerConnection.createAnswer(); await peerConnection.setLocalDescription(ans); sendSignal({ type: 'answer', answer: ans }); } else if(sig.type === 'answer' && peerConnection && peerConnection.signalingState === 'have-local-offer') { await peerConnection.setRemoteDescription(new RTCSessionDescription(sig.answer)); } else if(sig.type === 'candidate' && sig.candidate) { await peerConnection.addIceCandidate(new RTCIceCandidate(sig.candidate)); } } catch(e){} change.doc.ref.delete().catch(()=>{}); } } }); const presenceDoc = db.collection('p7_presence').doc(`${currentChannel}_${deviceId}`); await presenceDoc.set({ deviceId, channel: currentChannel, online: true, timestamp: Date.now() }); if(heartbeatInterval) clearInterval(heartbeatInterval); heartbeatInterval = setInterval(async () => { if(db) await presenceDoc.set({ deviceId, channel: currentChannel, online: true, timestamp: Date.now() }); }, 15000); presenceUnsub = db.collection('p7_presence').where('channel','==',currentChannel).where('online','==',true).onSnapshot((snap) => { const newPeers = new Map(); snap.forEach(doc => { if(doc.data().deviceId !== deviceId) newPeers.set(doc.data().deviceId, {}); }); for(let id of newPeers.keys()) { if(!activePeers.has(id) && peerConnection && peerConnection.connectionState === 'new') { createPeer().then(async () => { let offer = await peerConnection.createOffer(); await peerConnection.setLocalDescription(offer); sendSignal({ type: 'offer', offer: offer }); }); } } activePeers = newPeers; updateStatsUI(); renderPeerList(); }); lockUnsub = db.collection('p7_locks').doc(currentChannel).onSnapshot((doc) => { currentTransmitter = doc.exists ? doc.data().transmitter : null; renderPeerList(); if(currentTransmitter && currentTransmitter !== deviceId) txStatusSpan.innerHTML = '🔴 CHANNEL BUSY'; else txStatusSpan.innerHTML = '🟢 CHANNEL CLEAR · READY'; }); }
+    function renderPeerList() { if(activePeers.size===0){ peerListDiv.innerHTML='<span>🔄 No peers on channel</span>'; return; } let html=''; for(let id of activePeers.keys()){ html+=`<div class="peer-badge" style="${currentTransmitter===id?'background:#330000; border-color:red;':''}"><i class="fas fa-user"></i> ${id.slice(0,8)}... ${currentTransmitter===id?'🔴 TX':'🎧'}</div>`; } peerListDiv.innerHTML=html; }
+    async function initRadio() { if(!db) return; await createPeer(); await setupRadioSignaling(); addLog(`📡 RADIO ACTIVE on CHANNEL ${displayChannel}`); }
+    async function terminateRadio() { if(heartbeatInterval) clearInterval(heartbeatInterval); if(presenceUnsub) presenceUnsub(); if(lockUnsub) lockUnsub(); if(signalUnsub) signalUnsub(); if(peerConnection) peerConnection.close(); if(db && deviceId) await db.collection('p7_presence').doc(`${currentChannel}_${deviceId}`).delete().catch(()=>{}); await releaseTxLock(); activePeers.clear(); renderPeerList(); addLog(`📡 RADIO TERMINATED`); }
+    async function changeChannel() { let newRaw = channelInput.value.trim(); if(!newRaw) newRaw='4625625'; let newChan=sanitizeChannel(newRaw), newDisplay=newRaw.replace(/_/g,'.'); if(newChan===currentChannel) return; addLog(`🔁 Switching ${displayChannel} → ${newDisplay}`); await terminateRadio(); currentChannel=newChan; displayChannel=newDisplay; await initRadio(); addLog(`📡 Now on FREQ: ${displayChannel}`); }
+
+    // ========== CAMERA ==========
+    async function initCameraSurveillance() {
+        const camContainer = document.createElement('div'); camContainer.className='panel'; camContainer.style.marginTop='1rem';
+        camContainer.innerHTML=`<div class="panel-title"><i class="fas fa-video"></i> CCTV SURVEILLANCE</div><div style="position:relative;"><video id="surveillanceCam" autoplay playsinline muted style="width:100%; background:#000; border:1px solid var(--border-primary); border-radius:4px;"></video><div style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.7); padding:4px 8px; font-family:monospace; font-size:0.7rem;" id="camStatus">📷 INIT</div></div><div class="button-fleet"><button id="snapshotBtn" class="tact-btn"><i class="fas fa-camera"></i> SNAPSHOT</button><button id="startVideoRecBtn" class="tact-btn"><i class="fas fa-record-vinyl"></i> START VIDEO</button><button id="stopVideoRecBtn" class="tact-btn danger-btn"><i class="fas fa-stop"></i> STOP</button><button id="toggleCamBtn" class="tact-btn"><i class="fas fa-sync-alt"></i> SWITCH</button></div><div><span id="videoRecStatus">⚪ STANDBY</span> | <span id="snapshotCount">📸 0</span></div>`;
+        document.querySelector('.dual-panel').appendChild(camContainer);
+        let videoStream=null, videoRecorder=null, videoChunks=[], isVideoRecording=false, snapshotCounter=0, currentCamera='user';
+        const videoEl=document.getElementById('surveillanceCam'), camStatusSpan=document.getElementById('camStatus'), videoRecStatusSpan=document.getElementById('videoRecStatus'), snapshotCountSpan=document.getElementById('snapshotCount');
+        async function startCamera(){ if(videoStream) videoStream.getTracks().forEach(t=>t.stop()); try{ videoStream=await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: currentCamera } }, audio: false }); videoEl.srcObject=videoStream; camStatusSpan.innerHTML='✅ CAM ACTIVE'; camStatusSpan.style.color='#00ff41'; addLog(`📷 Camera ${currentCamera==='user'?'FRONT':'BACK'}`); return true; } catch(e){ try{ videoStream=await navigator.mediaDevices.getUserMedia({ video: true }); videoEl.srcObject=videoStream; camStatusSpan.innerHTML='⚠️ DEFAULT CAM'; addLog(`📷 Camera default mode`); return true; } catch(e2){ camStatusSpan.innerHTML='❌ CAM FAIL'; addLog(`Camera error: ${e2.message}`,true); return false; } } }
+        async function takeSnapshot(){ if(!videoEl||!videoEl.videoWidth){ addLog('No video feed',true); return; } const canvas=document.createElement('canvas'); canvas.width=videoEl.videoWidth; canvas.height=videoEl.videoHeight; const ctx=canvas.getContext('2d'); ctx.drawImage(videoEl,0,0); ctx.font='bold 16px monospace'; ctx.fillStyle='#00ff41'; ctx.shadowBlur=4; ctx.fillText(new Date().toLocaleString(),10,30); ctx.fillText(`CH: ${currentChannel}`,10,60); canvas.toBlob(async (blob)=>{ if(blob){ await saveRecordingToVault(blob,`SNAPSHOT_${Date.now()}.jpg`,false,'image/jpeg'); snapshotCounter++; if(snapshotCountSpan) snapshotCountSpan.innerHTML=`📸 ${snapshotCounter}`; const flash=document.createElement('div'); flash.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:white;opacity:0.3;pointer-events:none;z-index:9999'; document.body.appendChild(flash); setTimeout(()=>flash.remove(),100); } },'image/jpeg',0.85); }
+        async function startVideoRecording(){ if(isVideoRecording) return; if(!videoStream){ addLog('No camera stream',true); return; } videoChunks=[]; try{ videoRecorder=new MediaRecorder(videoStream,{mimeType:'video/webm'}); videoRecorder.ondataavailable=e=>{ if(e.data.size>0) videoChunks.push(e.data); }; videoRecorder.onstop=async()=>{ if(videoChunks.length){ const videoBlob=new Blob(videoChunks,{type:'video/webm'}); await saveRecordingToVault(videoBlob,`VIDEO_${Date.now()}.webm`,false,'video/webm'); videoChunks=[]; } isVideoRecording=false; if(videoRecStatusSpan) videoRecStatusSpan.innerHTML='⚪ STANDBY'; addLog('Video saved'); }; videoRecorder.start(1000); isVideoRecording=true; if(videoRecStatusSpan){ videoRecStatusSpan.innerHTML='🔴 RECORDING'; videoRecStatusSpan.style.color='#ff0044'; } addLog('🎥 VIDEO recording started'); } catch(e){ addLog(`Video rec fail: ${e.message}`,true); } }
+        function stopVideoRecording(){ if(videoRecorder && isVideoRecording) videoRecorder.stop(); else addLog('No active recording',true); }
+        async function toggleCamera(){ currentCamera=(currentCamera==='user')?'environment':'user'; await startCamera(); addLog(`Switched to ${currentCamera==='user'?'FRONT':'BACK'}`); }
+        document.getElementById('snapshotBtn')?.addEventListener('click',takeSnapshot); document.getElementById('startVideoRecBtn')?.addEventListener('click',startVideoRecording); document.getElementById('stopVideoRecBtn')?.addEventListener('click',stopVideoRecording); document.getElementById('toggleCamBtn')?.addEventListener('click',toggleCamera);
+        await startCamera();
+    }
+
+    // ========== BOOT ==========
+    window.addEventListener('load', async () => {
+        vaultDB = new RecordingVaultDB();
+        await vaultDB.init();
+        await loadLocalVault();
+        await initPerpetualRecorder();
+        if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+        db = firebase.firestore();
+        await db.enablePersistence({ synchronizeTabs: true }).catch(()=>addLog("Persistence failed",true));
+        await initRadio();
+        addLog("🚀 PROTOCOL-7 FULLY ONLINE | INDEXEDDB + RING BUFFER | REAL WebRTC");
+        setInterval(updateStorageWarning, 30000);
+        initCameraSurveillance();
+    });
+    document.getElementById('scrollTopBtn').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+    document.getElementById('scrollMidBtn').addEventListener('click',()=>document.getElementById('vaultAnchor').scrollIntoView({behavior:'smooth'}));
+    document.getElementById('scrollDownBtn').addEventListener('click',()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}));
+    pttBtn.addEventListener('mousedown', async () => { if(isMuted){ addLog("🔇 Muted",true); return; } if(!mediaStream){ addLog("No audio",true); return; } if(currentTransmitter && currentTransmitter !== deviceId){ addLog("Channel busy",true); return; } let gotLock = await requestTxLock(); if(!gotLock){ addLog("TX lock failed",true); return; } isPTTActive=true; pttBtn.classList.add('tx-active'); pttBtn.innerHTML='<i class="fas fa-broadcast-tower"></i> TRANSMITTING...'; txStatusSpan.innerHTML='🔴 YOU ARE TRANSMITTING'; if(gainNode) gainNode.gain.value=0.85; addLog("🎙️ PTT ACTIVE"); });
+    pttBtn.addEventListener('mouseup', async () => { if(!isPTTActive) return; isPTTActive=false; pttBtn.classList.remove('tx-active'); pttBtn.innerHTML='<i class="fas fa-microphone-alt"></i> HOLD TO TRANSMIT'; if(gainNode) gainNode.gain.value=isMuted?0:1; await releaseTxLock(); txStatusSpan.innerHTML='🟢 CHANNEL CLEAR'; addLog("⏹️ TX ENDED"); const txBlob = ringBuffer.getLatestBlob(30); if(txBlob){ await saveRecordingToVault(txBlob,`TX_${Date.now()}.webm`,true); txEventCounter++; updateStatsUI(); } });
+    pttBtn.addEventListener('touchstart', (e) => { e.preventDefault(); pttBtn.dispatchEvent(new Event('mousedown')); });
+    pttBtn.addEventListener('touchend', (e) => { e.preventDefault(); pttBtn.dispatchEvent(new Event('mouseup')); });
+    muteMic.addEventListener('click', () => { isMuted=true; if(gainNode) gainNode.gain.value=0; addLog("🔇 MIC MUTED"); });
+    unmuteMic.addEventListener('click', () => { isMuted=false; if(gainNode && !isPTTActive) gainNode.gain.value=1; addLog("🎤 MIC UNMUTED"); });
+    forceSave.addEventListener('click', async () => { const blob=ringBuffer.getAllBlob(); if(blob) await saveRecordingToVault(blob,`MANUAL_${Date.now()}.webm`,false); else addLog("No buffer",true); });
+    playAll.addEventListener('click', () => recordingsLibrary.slice(0,5).forEach(r=>playById(r.id)));
+    stopAll.addEventListener('click', stopAllAudios);
+    cloudBackupAll.addEventListener('click', async () => { let unsynced=recordingsLibrary.filter(r=>!r.cloudId); for(let r of unsynced) await cloudSyncSingle(r.id); addLog(`☁️ Bulk backup ${unsynced.length} items`); });
+    refreshVault.addEventListener('click', renderVault);
+    searchInput.addEventListener('input',renderVault);
+    filterSelect.addEventListener('change',renderVault);
+    masterVolSlider.addEventListener('input',(e)=>{ activeAudios.forEach(a=>a.volume=e.target.value/100); if(remoteAudio) remoteAudio.volume=e.target.value/100; });
+    setChannel.addEventListener('click', changeChannel);
+    channelInput.addEventListener('keypress',(e)=>{ if(e.key==='Enter') changeChannel(); });
+    if('mediaSession' in navigator) { navigator.mediaSession.setActionHandler('play',()=>pttBtn.dispatchEvent(new Event('mousedown'))); navigator.mediaSession.setActionHandler('pause',()=>pttBtn.dispatchEvent(new Event('mouseup'))); addLog("🎧 Earphone button = PTT"); }
+</script>
+</body>
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GHOST CELL: DIRECT ACTION SNIPER OPS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Chakra+Petch:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #000000;
+            overflow: hidden;
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+            z-index: 1;
+        }
+
+        /* TACTICAL GLASS HUD - ZERO GLOWS, ZERO SHADOWS (pure matte) */
+        .hud-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 20;
+            pointer-events: none;
+            padding: 1rem 1.5rem;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+        }
+
+        .hud-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid #ff2a2a;
+            padding-bottom: 10px;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(2px);
+        }
+
+        .hud-card {
+            background: #050505cc;
+            padding: 6px 16px;
+            border-left: 3px solid #ff2a2a;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .hud-value {
+            font-size: 1.6rem;
+            font-family: 'Chakra Petch', monospace;
+            color: #ff5566;
+            margin-left: 8px;
+        }
+
+        .ammo-panel {
+            background: #000000aa;
+            border: 1px solid #ff2a2a;
+            padding: 6px 18px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .difficulty-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 35;
+            pointer-events: auto;
+            background: #0a0a0cee;
+            border: 1px solid #ff2a2a;
+            padding: 6px 12px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #ffaabb;
+        }
+
+        .crosshair-static {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 44px;
+            height: 44px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 18;
+        }
+
+        .crosshair-static::before,
+        .crosshair-static::after {
+            content: '';
+            position: absolute;
+            background: #ff2a2a;
+        }
+        .crosshair-static::before {
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1.5px;
+            transform: translateY(-50%);
+        }
+        .crosshair-static::after {
+            top: 0;
+            left: 50%;
+            width: 1.5px;
+            height: 100%;
+            transform: translateX(-50%);
+        }
+        .crosshair-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #ff2a2a;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 19;
+        }
+
+        .kill-log {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 260px;
+            z-index: 30;
+            pointer-events: none;
+            text-align: right;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .kill-entry {
+            background: #020202dd;
+            border-right: 3px solid #ff2a2a;
+            padding: 5px 12px;
+            margin-top: 6px;
+            font-size: 0.8rem;
+            animation: fadeKill 3s forwards;
+        }
+
+        @keyframes fadeKill {
+            0% { opacity: 1; transform: translateX(0);}
+            80% { opacity: 0.9;}
+            100% { opacity: 0; display: none;}
+        }
+
+        .mission-brief {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: #010101cc;
+            border-top: 2px solid #ff2a2a;
+            padding: 12px 20px;
+            backdrop-filter: blur(3px);
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .reload-overlay {
+            position: absolute;
+            bottom: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #aa2222ee;
+            color: black;
+            font-weight: bold;
+            font-size: 1.3rem;
+            padding: 8px 28px;
+            letter-spacing: 4px;
+            z-index: 45;
+            white-space: nowrap;
+            pointer-events: none;
+            font-family: 'Orbitron', monospace;
+            animation: pulseAlert 0.7s infinite;
+        }
+
+        @keyframes pulseAlert {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .weather-tag {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            background: #000000aa;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            border-left: 2px solid #ff2a2a;
+            z-index: 22;
+            pointer-events: none;
+        }
+
+        @media (max-width: 700px) {
+            .hud-card { padding: 3px 10px; font-size: 0.7rem; }
+            .hud-value { font-size: 1.2rem; }
+            .ammo-panel { font-size: 1.2rem; padding: 3px 12px; }
+        }
+    </style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+
+<div class="hud-container">
+    <div class="hud-row">
+        <div class="hud-card"><i class="fas fa-skull"></i> ELIM <span id="killCountHud" class="hud-value">0</span></div>
+        <div class="hud-card"><i class="fas fa-bullseye"></i> ACC <span id="accuracyHud" class="hud-value">100</span>%</div>
+        <div class="ammo-panel"><i class="fas fa-gun"></i> <span id="currentAmmoHud">5</span>/<span id="maxAmmoHud">5</span></div>
+        <div class="hud-card"><i class="fas fa-tachometer-alt"></i> DIFF: <span id="diffIndicator" class="hud-value">NORM</span></div>
+    </div>
+    <div class="hud-row" style="margin-top: 8px; border: none;">
+        <div class="hud-card"><i class="fas fa-hourglass-half"></i> MISSION <span id="timerHud" class="hud-value">0</span>s</div>
+        <div class="hud-card"><i class="fas fa-ruler-combined"></i> LONGEST <span id="longestShotHud" class="hud-value">0</span>m</div>
+        <div class="hud-card"><i class="fas fa-lungs"></i> STEADY [SHIFT]</div>
+    </div>
+</div>
+
+<select id="difficultySelect" class="difficulty-selector">
+    <option value="easy">EASY MODE</option>
+    <option value="medium" selected>MEDIUM MODE</option>
+    <option value="hard">HARD MODE</option>
+    <option value="extreme">EXTREME MODE</option>
+</select>
+
+<div class="crosshair-static"></div>
+<div class="crosshair-dot"></div>
+<div class="kill-log" id="killLogPanel"></div>
+<div class="mission-brief">
+    <div>⚡ DIRECT ACTION: NEUTRALIZE ALL THREATS ⚡</div>
+    <div id="remainEnemies" style="color:#ff2a2a;">HOSTILES: 8</div>
+    <div style="font-size:0.7rem;">[R] RELOAD | [SHIFT] HOLD BREATH | CLICK TO ENGAGE</div>
+</div>
+<div id="reloadWarningPanel" class="reload-overlay" style="display: none;">⟳ RELOADING ⟳</div>
+<div id="weatherDisplay" class="weather-tag">🌙 CLEAR NIGHT</div>
+
+<script>
+    (function(){
+        // =================  ADVANCED SNIPER OPS : NO GLOWS, REALISTIC BALLISTICS, WEATHER, DIFFICULTY ============
+        // FULLY OPTIMIZED FOR ANY RESOLUTION + ORIENTATION, MANUAL RELOAD, RANDOM THREATS, ENEMY AI VARIANTS
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Game state
+        let enemies = [];
+        let kills = 0;
+        let shotsFired = 0;
+        let hits = 0;
+        let currentAmmo = 5;
+        const MAX_AMMO = 5;
+        let gameActive = true;
+        let missionSeconds = 0;
+        let timerInterval = null;
+        let longestShot = 0;
+        
+        // Breath & stability
+        let currentBreath = 100;
+        let maxBreath = 100;
+        let isHoldingBreath = false;
+        
+        // Weapon sway & motion sensing
+        let swayX = 0, swayY = 0;
+        let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+        let isReloading = false;
+        let reloadTimer = null;
+        
+        // Weather & conditions (random dynamic)
+        let weatherType = "CLEAR";
+        let windStrength = 0;
+        let visibilityFactor = 1.0;
+        
+        // Difficulty params
+        let difficulty = "medium"; // easy, medium, hard, extreme
+        let enemyAggressionFactor = 0.5;   // affects offset randomness, target size/alertness
+        let aiReactionScale = 1.0;
+        
+        // Visual recoil & hit impulse
+        let recoilIntensity = 0;
+        let hitMarker = 0;
+        
+        let animationFrame = null;
+        
+        // ---- resize & orientation fully dynamic ----
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawScene();
+        }
+        window.addEventListener('resize', () => { resizeCanvas(); drawScene(); });
+        window.addEventListener('orientationchange', () => { setTimeout(() => { resizeCanvas(); drawScene(); }, 20); });
+        
+        // =================  ENEMY SYSTEM: ADVANCED REAL-TIME TACTICAL UNIT =================
+        class HostileUnit {
+            constructor(x, y, distance, difficultyMod) {
+                this.x = x;
+                this.y = y;
+                this.distance = distance;
+                this.alive = true;
+                this.id = Math.random();
+                this.headshotFlag = false;
+                // difficulty affects hitbox radius
+                let baseRadius = Math.max(14, 36 - Math.floor(distance / 42));
+                if(difficulty === "easy") baseRadius += 4;
+                if(difficulty === "hard") baseRadius -= 3;
+                if(difficulty === "extreme") baseRadius -= 6;
+                this.radius = Math.max(11, baseRadius);
+                this.movementPhase = Math.random() * Math.PI * 2;
+                this.patrolSpeed = (difficulty === "extreme") ? 0.9 : (difficulty === "hard" ? 0.6 : 0.3);
+            }
+            
+            updatePosition(time) {
+                if(!this.alive) return;
+                if(difficulty === "hard" || difficulty === "extreme") {
+                    this.movementPhase += 0.025;
+                    let offsetX = Math.sin(this.movementPhase) * (this.patrolSpeed * 2.5);
+                    let offsetY = Math.cos(this.movementPhase * 0.9) * (this.patrolSpeed * 2);
+                    this.x += offsetX;
+                    this.y += offsetY;
+                    // boundary clamp
+                    this.x = Math.min(Math.max(this.x, 40), canvas.width - 40);
+                    this.y = Math.min(Math.max(this.y, 50), canvas.height - 60);
+                }
+            }
+            
+            draw(ctx, swayXoff, swayYoff) {
+                if(!this.alive) return;
+                let drawX = this.x + swayXoff * 0.2;
+                let drawY = this.y + swayYoff * 0.15;
+                ctx.save();
+                ctx.shadowBlur = 0;
+                ctx.beginPath();
+                ctx.arc(drawX, drawY, this.radius, 0, Math.PI*2);
+                ctx.fillStyle = "#1a1215";
+                ctx.fill();
+                ctx.strokeStyle = "#ff4d4d";
+                ctx.lineWidth = 1.8;
+                ctx.stroke();
+                // tactical silhouette
+                ctx.beginPath();
+                ctx.arc(drawX - 3, drawY - 3, 3, 0, Math.PI*2);
+                ctx.fillStyle = "#ff6666aa";
+                ctx.fill();
+                ctx.font = `${Math.floor(this.radius * 0.9)}px "Font Awesome 6 Free"`;
+                ctx.fillStyle = "#ff7777";
+                ctx.fillText("\uf183", drawX - 11, drawY + 6);
+                ctx.font = "bold 10px 'Share Tech Mono'";
+                ctx.fillStyle = "#ffaaaa";
+                ctx.fillText(`${this.distance}m`, drawX - 12, drawY - this.radius - 2);
+                ctx.restore();
+            }
+            
+            isHitAt(clickX, clickY, swayOffX, swayOffY, stability, wind, difficultyMod) {
+                if(!this.alive) return false;
+                let instabilityX = (Math.random() - 0.5) * 13 * (1 - stability);
+                let instabilityY = (Math.random() - 0.5) * 11 * (1 - stability);
+                let windDrift = wind * 2.2;
+                let aimX = clickX + swayOffX + instabilityX + windDrift;
+                let aimY = clickY + swayOffY + instabilityY;
+                const dx = aimX - this.x;
+                const dy = aimY - this.y;
+                const distanceToCenter = Math.hypot(dx, dy);
+                let hitboxMod = 1.0;
+                if(difficulty === "easy") hitboxMod = 1.18;
+                if(difficulty === "hard") hitboxMod = 0.88;
+                if(difficulty === "extreme") hitboxMod = 0.78;
+                let finalHitRadius = this.radius * hitboxMod * (0.85 + (1 - stability)*0.2);
+                if(distanceToCenter <= finalHitRadius) {
+                    let headRadius = this.radius * 0.3;
+                    let headDeltaY = aimY - (this.y - this.radius*0.2);
+                    if(Math.abs(headDeltaY) <= headRadius && Math.abs(dx) <= headRadius) this.headshotFlag = true;
+                    return true;
+                }
+                return false;
+            }
+        }
+        
+        // --- weather & environmental randomization ---
+        function generateRandomWeather() {
+            const weathers = ["CLEAR NIGHT", "LIGHT FOG", "DRIZZLE", "WIND GUSTS", "HEAVY MIST"];
+            const idx = Math.floor(Math.random() * weathers.length);
+            weatherType = weathers[idx];
+            if(weatherType === "WIND GUSTS") windStrength = 2.2 + Math.random() * 1.8;
+            else if(weatherType === "LIGHT FOG") windStrength = 0.8;
+            else windStrength = 0.5 + Math.random() * 1.2;
+            if(weatherType === "HEAVY MIST") visibilityFactor = 0.85;
+            else visibilityFactor = 1.0;
+            document.getElementById("weatherDisplay").innerHTML = `<i class="fas fa-cloud-moon"></i> ${weatherType}`;
+        }
+        
+        // enemy spawn with random distances
+        function spawnWave() {
+            enemies = [];
+            const w = canvas.width;
+            const h = canvas.height;
+            const distances = [120, 180, 250, 310, 390, 470, 550, 630, 700];
+            let count = (difficulty === "easy") ? 7 : (difficulty === "extreme" ? 9 : 8);
+            for(let i=0; i<count; i++) {
+                let randX = 60 + Math.random() * (w - 120);
+                let randY = 70 + Math.random() * (h - 140);
+                let distIdx = Math.floor(Math.random() * distances.length);
+                let dist = distances[distIdx] + (Math.random() - 0.5) * 45;
+                let enemy = new HostileUnit(randX, randY, Math.floor(Math.max(80, dist)), difficulty);
+                enemies.push(enemy);
+            }
+            updateRemainingUI();
+        }
+        
+        function updateRemainingUI() {
+            let aliveCount = enemies.filter(e => e.alive).length;
+            document.getElementById("remainEnemies").innerHTML = `HOSTILES: ${aliveCount}`;
+            if(aliveCount === 0 && gameActive && kills > 0) {
+                gameActive = false;
+                if(timerInterval) clearInterval(timerInterval);
+                if(animationFrame) cancelAnimationFrame(animationFrame);
+                drawMissionComplete();
+                setTimeout(() => { resetGame(); }, 2200);
+            }
+        }
+        
+        function drawMissionComplete() {
+            ctx.font = "bold 32px 'Orbitron'";
+            ctx.fillStyle = "#ff4d4d";
+            ctx.shadowBlur = 0;
+            ctx.fillText("MISSION ACCOMPLISHED", canvas.width/2-180, canvas.height/2);
+        }
+        
+        function updateUIstats() {
+            document.getElementById("killCountHud").innerText = kills;
+            let accuracy = shotsFired === 0 ? 100 : Math.floor((hits / shotsFired) * 100);
+            document.getElementById("accuracyHud").innerText = accuracy;
+            document.getElementById("currentAmmoHud").innerText = currentAmmo;
+            document.getElementById("maxAmmoHud").innerText = MAX_AMMO;
+            document.getElementById("longestShotHud").innerText = longestShot;
+            let diffText = difficulty.toUpperCase();
+            document.getElementById("diffIndicator").innerText = diffText.substring(0,4);
+        }
+        
+        function addKillLog(message, isHead) {
+            const logDiv = document.getElementById("killLogPanel");
+            const entry = document.createElement("div");
+            entry.className = "kill-entry";
+            entry.innerHTML = isHead ? `💀 ${message}  [HEAD]` : `🎯 ${message}`;
+            logDiv.appendChild(entry);
+            setTimeout(() => { if(entry.parentNode) entry.remove(); }, 2800);
+        }
+        
+        // weapon fire: ballistics, wind, difficulty modifies sway penalty
+        function fireWeapon(clickCanvasX, clickCanvasY) {
+            if(!gameActive) return;
+            if(isReloading) { addKillLog("RELOAD IN PROGRESS", false); return; }
+            if(currentAmmo <= 0) {
+                document.getElementById("reloadWarningPanel").style.display = "block";
+                document.getElementById("reloadWarningPanel").innerText = "⚠️ EMPTY MAGAZINE ⚠️";
+                setTimeout(()=>{ if(document.getElementById("reloadWarningPanel").style.display === "block") 
+                    document.getElementById("reloadWarningPanel").style.display = "none"; }, 900);
+                return;
+            }
+            let stability = isHoldingBreath ? Math.max(0.3, currentBreath / maxBreath) : 0.52;
+            if(difficulty === "hard") stability *= 0.85;
+            if(difficulty === "extreme") stability *= 0.7;
+            let windFactor = windStrength * (Math.random() * 0.8 + 0.5);
+            recoilIntensity = 16;
+            shotsFired++;
+            let hitOccurred = false;
+            let hitDistanceVal = 0;
+            let headBonus = false;
+            for(let enemy of enemies) {
+                if(!enemy.alive) continue;
+                if(enemy.isHitAt(clickCanvasX, clickCanvasY, swayX, swayY, stability, windFactor, difficulty)) {
+                    hitOccurred = true;
+                    hitDistanceVal = enemy.distance;
+                    enemy.alive = false;
+                    hits++;
+                    kills++;
+                    headBonus = enemy.headshotFlag;
+                    if(hitDistanceVal > longestShot) longestShot = hitDistanceVal;
+                    addKillLog(`HOSTILE DOWN ${hitDistanceVal}m`, headBonus);
+                    updateUIstats();
+                    updateRemainingUI();
+                    hitMarker = 12;
+                    break;
+                }
+            }
+            if(!hitOccurred) {
+                addKillLog(`MISS: WIND DRIFT ${Math.floor(windFactor*10)}%`, false);
+                hitMarker = 6;
+            }
+            currentAmmo--;
+            updateUIstats();
+            // recoil sway
+            swayX += (Math.random() - 0.5) * 17;
+            swayY += (Math.random() - 0.5) * 13;
+            swayX = Math.min(Math.max(swayX, -35), 35);
+            swayY = Math.min(Math.max(swayY, -28), 28);
+            drawScene();
+            if(currentAmmo === 0 && gameActive && !isReloading) manualReload();
+        }
+        
+        function manualReload() {
+            if(isReloading || !gameActive) return;
+            if(currentAmmo === MAX_AMMO) return;
+            isReloading = true;
+            const reloadDiv = document.getElementById("reloadWarningPanel");
+            reloadDiv.style.display = "block";
+            reloadDiv.innerText = "⟳ TACTICAL RELOAD ⟳";
+            if(reloadTimer) clearTimeout(reloadTimer);
+            reloadTimer = setTimeout(() => {
+                currentAmmo = MAX_AMMO;
+                isReloading = false;
+                reloadDiv.style.display = "none";
+                updateUIstats();
+                drawScene();
+            }, 1050);
+        }
+        
+        // Breathing and sway logic
+        function updateBreathMechanics() {
+            if(isHoldingBreath && gameActive && !isReloading) {
+                if(currentBreath > 0) currentBreath -= 1.55;
+                if(currentBreath <= 0) { currentBreath = 0; isHoldingBreath = false; }
+            } else {
+                if(currentBreath < maxBreath) currentBreath += 1.05;
+                if(currentBreath > maxBreath) currentBreath = maxBreath;
+            }
+        }
+        
+        function updateSwayMotion() {
+            let stability = isHoldingBreath ? (currentBreath / maxBreath) : 0.52;
+            let targetSwayX = (mouseX - window.innerWidth/2) / (window.innerWidth/2) * 18;
+            let targetSwayY = (mouseY - window.innerHeight/2) / (window.innerHeight/2) * 14;
+            targetSwayX *= (1 - stability);
+            targetSwayY *= (1 - stability);
+            swayX += (targetSwayX - swayX) * 0.12;
+            swayY += (targetSwayY - swayY) * 0.1;
+            if(!isHoldingBreath) {
+                swayX += (Math.random() - 0.5) * 1.7;
+                swayY += (Math.random() - 0.5) * 1.4;
+            }
+            swayX = Math.min(Math.max(swayX, -38), 38);
+            swayY = Math.min(Math.max(swayY, -30), 30);
+        }
+        
+        // update advanced AI movement (only hard/extreme)
+        function updateEnemyMovement() {
+            let time = Date.now() / 1000;
+            for(let e of enemies) if(e.alive) e.updatePosition(time);
+        }
+        
+        // DRAW ENTIRE TACTICAL ENVIRONMENT
+        function drawScene(complete = false) {
+            if(!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let grd = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grd.addColorStop(0, "#0a070c");
+            grd.addColorStop(1, "#010002");
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // grid: tactical reference
+            ctx.strokeStyle = "#ff2a2a22";
+            ctx.lineWidth = 0.8;
+            for(let i=0;i<canvas.width;i+=60){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+            for(let i=0;i<canvas.height;i+=60){ ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
+            // draw enemies
+            for(let enemy of enemies) if(enemy.alive) enemy.draw(ctx, swayX, swayY);
+            // breath instability marker
+            let wobble = 18 * (1 - (isHoldingBreath ? currentBreath/maxBreath : 0.6));
+            ctx.beginPath();
+            ctx.arc(window.innerWidth/2 + swayX, window.innerHeight/2 + swayY, wobble+4, 0, Math.PI*2);
+            ctx.strokeStyle = "#ff5555aa";
+            ctx.setLineDash([4,8]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            if(recoilIntensity>0) {
+                ctx.fillStyle = `rgba(200,40,40,${recoilIntensity/24})`;
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                recoilIntensity -= 0.9;
+            }
+            if(hitMarker>0) {
+                ctx.fillStyle = `rgba(220,60,60,${hitMarker/18})`;
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                hitMarker -= 0.7;
+            }
+            if(complete) {
+                ctx.font = "bold 30px Orbitron";
+                ctx.fillStyle = "#ff6666";
+                ctx.fillText("OBJECTIVE SECURED", canvas.width/2-150, canvas.height/2);
+            }
+        }
+        
+        function animateGame() {
+            if(!gameActive) return;
+            updateBreathMechanics();
+            updateSwayMotion();
+            updateEnemyMovement();
+            drawScene();
+            animationFrame = requestAnimationFrame(animateGame);
+        }
+        
+        function startTimerMission() {
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if(gameActive) {
+                    missionSeconds++;
+                    document.getElementById("timerHud").innerText = missionSeconds;
+                }
+            }, 1000);
+        }
+        
+        function resetGame() {
+            kills = 0; shotsFired = 0; hits = 0; currentAmmo = MAX_AMMO; missionSeconds = 0; longestShot = 0;
+            currentBreath = maxBreath; isHoldingBreath = false; isReloading = false;
+            if(reloadTimer) clearTimeout(reloadTimer);
+            gameActive = true;
+            document.getElementById("reloadWarningPanel").style.display = "none";
+            generateRandomWeather();
+            spawnWave();
+            updateUIstats();
+            updateRemainingUI();
+            document.getElementById("timerHud").innerText = "0";
+            if(timerInterval) clearInterval(timerInterval);
+            startTimerMission();
+            if(animationFrame) cancelAnimationFrame(animationFrame);
+            animateGame();
+        }
+        
+        function changeDifficulty() {
+            let select = document.getElementById("difficultySelect");
+            difficulty = select.value;
+            if(!gameActive) resetGame();
+            else {
+                gameActive = false;
+                setTimeout(() => { resetGame(); }, 100);
+            }
+        }
+        
+        // EVENT HANDLERS
+        function handleCanvasClick(e) {
+            if(!gameActive) return;
+            let rect = canvas.getBoundingClientRect();
+            let scaleX = canvas.width / rect.width;
+            let scaleY = canvas.height / rect.height;
+            let clickX, clickY;
+            if(e.touches) {
+                let touch = e.touches[0];
+                clickX = (touch.clientX - rect.left) * scaleX;
+                clickY = (touch.clientY - rect.top) * scaleY;
+                e.preventDefault();
+            } else {
+                clickX = (e.clientX - rect.left) * scaleX;
+                clickY = (e.clientY - rect.top) * scaleY;
+            }
+            fireWeapon(clickX, clickY);
+        }
+        
+        function handleMouseMove(e) { mouseX = e.clientX; mouseY = e.clientY; }
+        function handleTouchMove(e) { if(e.touches[0]) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; } e.preventDefault(); }
+        function handleKey(e) {
+            if(e.key === 'r' || e.key === 'R') { e.preventDefault(); if(!isReloading && currentAmmo !== MAX_AMMO && gameActive) manualReload(); }
+            if(e.key === 'Shift') { e.preventDefault(); if(gameActive && !isReloading && currentBreath > 0) isHoldingBreath = true; }
+        }
+        function handleKeyUp(e) { if(e.key === 'Shift') isHoldingBreath = false; }
+        
+        function init() {
+            resizeCanvas();
+            generateRandomWeather();
+            spawnWave();
+            startTimerMission();
+            updateUIstats();
+            animateGame();
+            canvas.addEventListener('click', handleCanvasClick);
+            canvas.addEventListener('touchstart', handleCanvasClick);
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('touchmove', handleTouchMove);
+            window.addEventListener('keydown', handleKey);
+            window.addEventListener('keyup', handleKeyUp);
+            document.getElementById("difficultySelect").addEventListener("change", changeDifficulty);
+        }
+        
+        init();
+    })();
+</script>
+</body>
+</html>

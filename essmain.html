@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>E.S.S</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <link rel="icon" type="image/png" href="logo_tr.png">
+
+    <style>
+
+        :root {
+            --bg: #020406;
+            --neon: #00f7ff;
+            --neon-dim: rgba(0, 247, 255, 0.3);
+            --laser: #ff0000;
+            --laser-glow: rgba(255, 0, 0, 0.8);
+            --panel: rgba(0, 20, 30, 0.85);
+            --border: rgba(0, 247, 255, 0.2);
+            --militant-red: #ff3c3c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; cursor: crosshair; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg);
+            color: var(--neon);
+            overflow-x: hidden;
+            height: 100vh;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 247, 255, 0.05) 0%, transparent 80%),
+                linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)),
+                url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+        }
+
+        /* CRT SCANLINE EFFECT */
+        body::after {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            pointer-events: none;
+            background-size: 100% 2px, 3px 100%;
+        }
+
+        /* GRID HUD NAVIGATION */
+        .hud-overlay {
+            position: fixed;
+            inset: 0;
+            border: 20px solid transparent;
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M 10 0 L 0 0 L 0 10 M 90 0 L 100 0 L 100 10 M 10 100 L 0 100 L 0 90 M 90 100 L 100 100 L 100 90" fill="none" stroke="%2300f7ff" stroke-width="2"/></svg>') 20;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* ADVANCED HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+
+            display: flex;
+            justify-content: flex-start;   /* 🔥 THIS pushes everything left */
+            align-items: center;
+
+            padding: 0 30px;               /* optional tighter spacing */
+            
+            background: rgba(0, 10, 15, 0.95);
+            border-bottom: 2px solid var(--neon);
+            box-shadow: 0 0 20px var(--neon-dim);
+            z-index: 1100;
+        }
+
+        .home-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        /* SPHERE LOGO EVOLUTION */
+        .logo-sphere {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--neon);
+            box-shadow: 0 0 15px var(--neon);
+            animation: sphereRotate 10s linear infinite;
+        }
+
+        .logo-sphere img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            filter: contrast(1.2) brightness(1.1);
+        }
+
+        @keyframes sphereRotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .header-title-wrap {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+        }
+
+        .header-title {
+            font-family: 'Orbitron';
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .status-tag {
+            font-family: 'Share Tech Mono';
+            font-size: 0.7rem;
+            color: #55ff55;
+            text-shadow: 0 0 5px #55ff55;
+        }
+
+        /* FLOATING RED LASER */
+        #sniper-laser {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--laser);
+            border-radius: 50%;
+            box-shadow: 0 0 10px 4px var(--laser-glow), 0 0 20px 8px var(--laser-glow);
+            z-index: 9998;
+            pointer-events: none;
+            transition: transform 0.1s linear;
+        }
+
+        #laser-line-h, #laser-line-v {
+            position: absolute;
+            background: rgba(255, 0, 0, 0.2);
+            pointer-events: none;
+        }
+        #laser-line-h { width: 100vw; height: 1px; top: 50%; left: -50vw; }
+        #laser-line-v { height: 100vh; width: 1px; left: 50%; top: -50vh; }
+
+        /* MAIN CONTENT */
+        main {
+            padding-top: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tactical-display {
+            width: 90%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* YOUTUBE ADVANCED SECTION */
+        .video-hq {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 20px;
+            position: relative;
+            clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+        }
+
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            position: relative;
+            border: 1px solid var(--neon-dim);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* MISSION SELECTORS */
+        .mission-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .mission-btn {
+            background: rgba(0, 247, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 20px;
+            color: var(--neon);
+            text-align: left;
+            position: relative;
+            transition: 0.3s;
+            overflow: hidden;
+        }
+
+        .mission-btn::before {
+            /* content: "LOCKED"; */
+            position: absolute;
+            right: 10px;
+            bottom: 5px;
+            font-size: 0.6rem;
+            font-family: 'Share Tech Mono';
+            opacity: 0.5;
+        }
+
+        .mission-btn:hover {
+            background: var(--neon);
+            color: green;
+            box-shadow: 0 0 20px var(--neon-dim);
+            transform: translateX(10px);
+        }
+
+        .mission-btn.active {
+            border-left: 5px solid var(--militant-red);
+            background: rgba(255, 60, 60, 0.1);
+        }
+
+        /* TACTICAL BUTTONS */
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .t-btn {
+            background: transparent;
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            padding: 10px;
+            font-family: 'Orbitron';
+            font-size: 0.7rem;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            transition: 0.2s;
+        }
+
+        .t-btn:hover {
+            background: var(--neon-dim);
+            transform: scale(1.05);
+        }
+
+        /* DATA FEED SCROLLER */
+        .data-stream {
+            position: fixed;
+            bottom: 20px;
+            left: 50px;
+            width: 300px;
+            height: 100px;
+            font-family: 'Share Tech Mono';
+            font-size: 0.8rem;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* LOADING */
+        #boot-sequence {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--neon);
+        }
+
+        .loader-bar {
+            width: 300px;
+            height: 2px;
+            background: #111;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .loader-progress {
+            position: absolute;
+            height: 100%;
+            background: var(--neon);
+            width: 0%;
+            box-shadow: 0 0 10px var(--neon);
+            animation: load 2s forwards;
+        }
+
+        .simple-footer {
+            margin-top: 60px;
+            padding: 20px;
+            text-align: center;
+            font-family: 'Share Tech Mono';
+            font-size: 0.8rem;
+            background: rgba(0, 10, 15, 0.9);
+            border-top: 1px solid var(--border);
+            color: var(--neon);
+            opacity: 0.8;
+        }
+
+        @keyframes load {
+            to { width: 100%; }
+        }
+
+        /* RESPONSIVE MAPPING */
+        @media (max-width: 1024px) {
+            .tactical-display { grid-template-columns: 1fr; }
+            .mission-sidebar { order: 2; }
+            .data-stream { display: none; }
+        }
+
+        .quick-controls {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 2000;
+        }
+
+        .quick-controls button {
+            background: rgba(0, 20, 30, 0.9);
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            padding: 8px 12px;
+            font-family: 'Share Tech Mono';
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .quick-controls button:hover {
+            background: var(--neon);
+            color: #000;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div id="boot-sequence">
+    <div style="font-family: Orbitron; letter-spacing: 10px;">ENCRYPTING LINK...</div>
+    <div class="loader-bar"><div class="loader-progress"></div></div>
+    <div id="boot-text" style="font-family: 'Share Tech Mono'; margin-top: 10px; font-size: 0.8rem;"></div>
+</div>
+
+<div class="hud-overlay"></div>
+
+<div id="sniper-laser">
+    <div id="laser-line-h"></div>
+    <div id="laser-line-v"></div>
+</div>
+
+<header>
+    <a href="index.html" class="home-link">
+    <div style="display: flex; align-items: center;">
+        <div class="logo-sphere">
+            <img src="images/esslogo1.png" alt="E.S.S CORE" onerror="this.src='https://via.placeholder.com/150/00f7ff/000000?text=ESS'">
+        </div>
+        <div class="header-title-wrap" title="back to home">
+            <div class="header-title">E.S.S COMMAND</div>
+        </div>
+    </div>
+
+    </div>
+</a>
+    
+</header>
+
+<main>
+    <div class="tactical-display">
+        
+        <section class="video-hq">
+            <h2 style="font-family: Orbitron; margin-bottom: 15px; font-size: 1rem; letter-spacing: 2px;">
+                <i class="fas fa-satellite-dish" style="margin-right: 10px;"></i> LIVE FEED: OPERATOR_UNIT_EDEN
+            </h2>
+            
+            <div class="video-container">
+                <div id="player"></div>
+            </div>
+
+            
+        </section>
+
+        <aside class="mission-sidebar">
+            <h3 style="font-family: Orbitron; font-size: 0.8rem; border-bottom: 1px solid var(--border); padding-bottom: 5px;">OPERATION DATABASE</h3>
+            
+            <div class="mission-btn active" onclick="launchMission('ess2025.html')">
+                <h4 style="font-family: Orbitron;" title="click.">OP: E.S.S 2025</h4>
+            </div>
+
+            <div class="mission-btn" onclick="launchMission('ess2026.html')">
+                <h4 style="font-family: Orbitron;" title="click.">OP: E.S.S 2026</h4>
+            </div>
+
+            <div class="mission-btn locked">
+                <h4 style="font-family: Orbitron;">OP: SEASON 2027</h4>
+                <p style="font-size: 0.7rem; opacity: 0.7;">Requires Certain Level Clearance</p>
+            </div>
+        </aside>
+
+    </div>
+</main>
+
+<div class="data-stream" id="data-stream"></div>
+
+<audio id="sniper-sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+<script>
+
+    // 1. BOOT SEQUENCE
+    const bootLines = [
+        "Initializing...",
+        "Establishing SSL Link...",
+        "Bypassing Firewalls...",
+        "Loading Optics...",
+        "SYSTEM READY. WELCOME!"
+    ];
+    let lineIdx = 0;
+    const bootText = document.getElementById('boot-text');
+    
+    const bootInterval = setInterval(() => {
+        bootText.innerText = bootLines[lineIdx];
+        lineIdx++;
+        if(lineIdx >= bootLines.length) {
+            clearInterval(bootInterval);
+            setTimeout(() => {
+                document.getElementById('boot-sequence').style.display = 'none';
+            }, 500);
+        }
+    }, 400);
+
+    // 2. REAL YOUTUBE API CONFIGURATION
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        playerVars: {
+            listType: 'playlist',
+            list: 'PL0p6zu3zMrEMP3N5ZmJN9v1S99yQv_j0u', // your playlist ID
+            autoplay: 1,
+            controls: 1,
+            modestbranding: 1,
+            rel: 0,
+            loop: 1,
+            fs: 1,
+            disablekb: 0,
+        },
+        events: {
+            'onReady': onPlayerReady
+        }
+    });
+}
+
+
+    function onPlayerReady(event) {
+        event.target.mute();
+        event.target.playVideo();
+    }
+
+    function controlPlayer(action) {
+        if(action === 'play') player.playVideo();
+        if(action === 'pause') player.pauseVideo();
+    }
+    
+    function toggleMute() {
+        if(player.isMuted()) {
+            player.unMute();
+        } else {
+            player.mute();
+        }
+    }
+
+    function reloadLive() {
+        player.loadVideoById('dQw4w9WgXcQ'); // Or refresh current logic
+    }
+
+    // 3. ADVANCED SNIPER LASER LOGIC
+    const laser = document.getElementById('sniper-laser');
+    const sniperSound = document.getElementById('sniper-sound');
+    let lx = 0, ly = 0;
+    let tx = Math.random() * window.innerWidth;
+    let ty = Math.random() * window.innerHeight;
+
+    function moveLaser() {
+        // Smooth interpolation
+        lx += (tx - lx) * 0.05;
+        ly += (ty - ly) * 0.05;
+        
+        laser.style.transform = `translate(${lx}px, ${ly}px)`;
+
+        // Check distance to target
+        if (Math.abs(lx - tx) < 5 && Math.abs(ly - ty) < 5) {
+            // "LOCK ON" SEQUENCE
+            laser.style.boxShadow = "0 0 30px 15px var(--laser)";
+            
+            // Random chance to "Fire/Bolt Action"
+            if(Math.random() > 0.8) {
+                sniperSound.currentTime = 0;
+                sniperSound.play();
+            }
+
+            // New Random Target
+            setTimeout(() => {
+                tx = Math.random() * window.innerWidth;
+                ty = Math.random() * window.innerHeight;
+                laser.style.boxShadow = "0 0 10px 4px var(--laser-glow)";
+            }, 1000);
+        }
+        requestAnimationFrame(moveLaser);
+    }
+    moveLaser();
+
+    // 4. HUD DATA STREAM
+    const stream = document.getElementById('data-stream');
+    setInterval(() => {
+        const p = document.createElement('div');
+        p.innerText = `> TRACE_PKT: ${Math.random().toString(16).substr(2, 8)}... RECEIVED`;
+        stream.prepend(p);
+        if(stream.children.length > 5) stream.removeChild(stream.lastChild);
+    }, 1500);
+
+    // 5. CLOCK
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toTimeString().split(' ')[0];
+    }, 1000);
+
+    // 6. MISSION NAV
+    function launchMission(url) {
+        document.body.style.filter = "brightness(0) cyan(100%)";
+        setTimeout(() => { window.location.href = url; }, 500);
+    }
+
+    function scrollToTop() {
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function scrollToMiddle() {
+        window.scrollTo({ top: document.body.scrollHeight / 2, behavior: 'smooth' });
+    }
+
+    function scrollToBottom() {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function refreshPage() {
+        location.reload();
+    }
+
+</script>
+
+<div class="quick-controls">
+    <button onclick="scrollToTop()">TOP</button>
+    <button onclick="scrollToMiddle()">MID</button>
+    <button onclick="scrollToBottom()">DOWN</button>
+    <button onclick="refreshPage()">⟳</button>
+</div>
+
+<footer class="simple-footer">
+    © 2026 Eden Soccer Sundays
+</footer>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

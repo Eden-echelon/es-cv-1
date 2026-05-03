@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    
+<head>
+    
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    
+    <title>AEROSPACE ENGINEERING</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/png" href="logo_tr1.png">
+    
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #dc2626;
+            --primary-red-dark: #b91c1c;
+            --accent-orange: #f97316;
+            --deep-space: #0b0b1a;
+            --card-bg: #111111;
+            --border-glow: rgba(220, 38, 38, 0.3);
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --text-accent: #f97316;
+            --astronaut-blue: #3b82f6;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background: var(--deep-space);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #0a0a1a 0%, #030308 100%);
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(8, 8, 18, 0.96);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.4);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--primary-red);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-red) 70%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+        }
+
+        .main-container {
+            max-width: 1280px;
+            margin: 100px auto 0;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(0, 0, 0, 0) 90%);
+            border-radius: 32px;
+            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-orange) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            max-width: 780px;
+            margin: 0 auto;
+            font-size: 1.15rem;
+            line-height: 1.5;
+        }
+
+        .branch-intro {
+            margin: 1rem 0 2rem 0;
+            padding: 0.75rem 1.25rem;
+            border-left: 5px solid var(--primary-red);
+            background: rgba(220,38,38,0.07);
+            border-radius: 16px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .branch-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+            margin: 2rem 0 2.5rem;
+        }
+
+        .branch-card {
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(2px);
+            border-radius: 28px;
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+
+        .branch-card:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-4px);
+        }
+
+        .branch-header {
+            padding: 1.2rem 1.5rem;
+            background: linear-gradient(90deg, rgba(220,38,38,0.15), rgba(0,0,0,0.3));
+            border-bottom: 1px solid rgba(220,38,38,0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .branch-header i {
+            font-size: 2rem;
+        }
+
+        .branch-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .branch-body {
+            padding: 1.5rem;
+        }
+
+        .branch-body p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background: rgba(220,38,38,0.2);
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+            border: 1px solid rgba(220,38,38,0.4);
+        }
+
+        .instrument-panel-main {
+            background: var(--card-bg);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .instrument {
+            text-align: center;
+            padding: 0.9rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            border-left: 3px solid var(--primary-red);
+        }
+
+        .instrument-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .instrument-value {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--accent-orange);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .procedure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin: 2rem 0;
+        }
+
+        .procedure-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .procedure-card:hover {
+            border-color: rgba(220, 38, 38, 0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
+            background: rgba(220, 38, 38, 0.1);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .step-number {
+            background: var(--primary-red);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .procedure-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .spec-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .spec-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .spec-label {
+            color: var(--text-secondary);
+        }
+
+        .spec-value {
+            color: var(--accent-orange);
+        }
+
+        .warning-note {
+            background: rgba(220, 38, 38, 0.12);
+            border-left: 3px solid var(--primary-red);
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+
+        .contact-section {
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            border-radius: 28px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            padding: 0.8rem 1rem;
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.3);
+        }
+
+        .submit-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            font-weight: 600;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-red-dark);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 3rem;
+            padding: 2rem 0 1rem;
+            border-top: 1px solid rgba(220, 38, 38, 0.25);
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section h4 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section p {
+            font-size: 0.8rem;
+            color: #7e8a98;
+        }
+
+        .copyright {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .audio-control {
+            position: fixed;
+            bottom: 22px;
+            right: 22px;
+            z-index: 1000;
+            background: rgba(17, 17, 17, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(220, 38, 38, 0.5);
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            transition: 0.2s;
+        }
+
+        @media (min-width: 1600px) {
+            .main-container {
+                max-width: 1400px;
+                padding: 2rem 2.5rem;
+            }
+            .hero-title {
+                font-size: 3.4rem;
+            }
+            .branch-header h2 {
+                font-size: 1.7rem;
+            }
+            .instrument-value {
+                font-size: 1.9rem;
+            }
+        }
+
+        @media (max-width: 1280px) {
+            .main-container {
+                max-width: 1100px;
+                padding: 1.8rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .branch-showcase {
+                gap: 1.4rem;
+            }
+            .instrument-panel-main {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+        }
+
+        @media (max-width: 800px) {
+            .branch-showcase {
+                grid-template-columns: 1fr;
+            }
+            .hero-title {
+                font-size: 2rem;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .fixed-header {
+                padding: 0.75rem 1.25rem;
+                gap: 0.7rem;
+            }
+            .page-title {
+                font-size: 1.2rem;
+            }
+            .badge {
+                font-size: 0.65rem;
+                padding: 0.25rem 0.8rem;
+            }
+            .main-container {
+                margin-top: 85px;
+                padding: 1.2rem;
+            }
+            .hero-section {
+                padding: 1.2rem 1rem;
+                margin-bottom: 1.8rem;
+            }
+            .branch-header {
+                padding: 1rem 1.2rem;
+            }
+            .branch-body {
+                padding: 1.2rem;
+            }
+            .instrument-panel-main {
+                gap: 0.8rem;
+                padding: 1rem;
+            }
+            .instrument-value {
+                font-size: 1.3rem;
+            }
+            .procedure-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .contact-section {
+                padding: 1.3rem;
+            }
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.8rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .fixed-header {
+                flex-direction: column;
+                padding: 0.6rem 1rem;
+            }
+            .logo-area {
+                gap: 0.5rem;
+            }
+            .page-title {
+                font-size: 1.1rem;
+            }
+            .badge {
+                font-size: 0.6rem;
+            }
+            .main-container {
+                margin-top: 110px;
+                padding: 1rem;
+            }
+            .hero-title {
+                font-size: 1.7rem;
+            }
+            .hero-subtitle {
+                font-size: 0.95rem;
+            }
+            .branch-header h2 {
+                font-size: 1.2rem;
+            }
+            .branch-header i {
+                font-size: 1.5rem;
+            }
+            .tech-tag {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.7rem;
+            }
+            .instrument-panel-main {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .instrument {
+                padding: 0.6rem;
+            }
+            .instrument-value {
+                font-size: 1.1rem;
+            }
+            .instrument-label {
+                font-size: 0.6rem;
+            }
+            .card-title {
+                font-size: 0.95rem;
+            }
+            .procedure-text, .spec-list li {
+                font-size: 0.8rem;
+            }
+            .submit-btn {
+                padding: 0.7rem;
+            }
+            .audio-control {
+                bottom: 12px;
+                right: 12px;
+                padding: 0.35rem 0.9rem;
+                font-size: 0.65rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.85rem;
+                margin-top: 120px;
+            }
+            .hero-title {
+                font-size: 1.5rem;
+            }
+            .hero-subtitle {
+                font-size: 0.85rem;
+            }
+            .branch-header {
+                padding: 0.8rem 1rem;
+            }
+            .branch-body p {
+                font-size: 0.85rem;
+            }
+            .instrument-panel-main {
+                grid-template-columns: 1fr;
+                gap: 0.6rem;
+            }
+            .instrument {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                text-align: left;
+                padding: 0.6rem 1rem;
+            }
+            .instrument-label {
+                margin-bottom: 0;
+                font-size: 0.7rem;
+            }
+            .instrument-value {
+                font-size: 1.2rem;
+            }
+            .section-title {
+                font-size: 1.1rem;
+            }
+            .warning-note {
+                font-size: 0.75rem;
+            }
+            .contact-section {
+                padding: 1rem;
+            }
+            .footer {
+                margin-top: 1.5rem;
+            }
+            .footer-section p, .copyright {
+                font-size: 0.7rem;
+            }
+            .audio-control {
+                bottom: 8px;
+                right: 8px;
+                padding: 0.25rem 0.7rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .fixed-header {
+                padding: 0.4rem 0.7rem;
+            }
+            .page-title {
+                font-size: 0.85rem;
+            }
+            .logo-icon {
+                font-size: 1.2rem;
+            }
+            .badge {
+                font-size: 0.5rem;
+                padding: 0.2rem 0.5rem;
+            }
+            .main-container {
+                margin-top: 105px;
+                padding: 0.6rem;
+            }
+            .hero-section {
+                padding: 0.8rem 0.5rem;
+                border-radius: 20px;
+            }
+            .hero-title {
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+            }
+            .hero-subtitle {
+                font-size: 0.75rem;
+                line-height: 1.3;
+            }
+            .branch-card {
+                border-radius: 18px;
+            }
+            .branch-header h2 {
+                font-size: 1rem;
+            }
+            .branch-header i {
+                font-size: 1.2rem;
+            }
+            .branch-header {
+                padding: 0.6rem 0.8rem;
+                gap: 0.5rem;
+            }
+            .branch-body {
+                padding: 0.8rem;
+            }
+            .branch-body p {
+                font-size: 0.7rem;
+            }
+            .tech-tag {
+                font-size: 0.55rem;
+                padding: 0.15rem 0.5rem;
+            }
+            .instrument-panel-main {
+                padding: 0.7rem;
+                margin: 1rem 0;
+            }
+            .instrument {
+                padding: 0.4rem 0.6rem;
+            }
+            .instrument-label {
+                font-size: 0.55rem;
+            }
+            .instrument-value {
+                font-size: 0.9rem;
+            }
+            .procedure-card {
+                border-radius: 18px;
+            }
+            .card-header {
+                padding: 0.6rem 0.8rem;
+            }
+            .step-number {
+                width: 24px;
+                height: 24px;
+                font-size: 0.7rem;
+            }
+            .card-title {
+                font-size: 0.8rem;
+            }
+            .card-content {
+                padding: 0.8rem;
+            }
+            .procedure-text {
+                font-size: 0.7rem;
+            }
+            .spec-list li {
+                font-size: 0.65rem;
+                padding: 0.3rem 0;
+            }
+            .warning-note {
+                padding: 0.5rem;
+                font-size: 0.65rem;
+            }
+            .contact-section {
+                padding: 0.8rem;
+                margin: 1rem 0;
+            }
+            .section-title {
+                font-size: 0.9rem;
+                margin-bottom: 0.8rem;
+            }
+            .form-group input, .form-group textarea {
+                padding: 0.5rem 0.7rem;
+                font-size: 0.7rem;
+            }
+            .form-group label {
+                font-size: 0.65rem;
+            }
+            .submit-btn {
+                padding: 0.5rem;
+                font-size: 0.7rem;
+            }
+            .footer {
+                margin-top: 1rem;
+                padding: 1rem 0 0.5rem;
+            }
+            .footer-content {
+                gap: 0.5rem;
+                margin-bottom: 0.8rem;
+            }
+            .footer-section h4 {
+                font-size: 0.7rem;
+            }
+            .footer-section p {
+                font-size: 0.6rem;
+            }
+            .copyright {
+                font-size: 0.55rem;
+            }
+            .audio-control {
+                bottom: 5px;
+                right: 5px;
+                padding: 0.2rem 0.5rem;
+                font-size: 0.5rem;
+            }
+        }
+
+        @media (max-width: 240px) {
+            .fixed-header {
+                flex-direction: column;
+                gap: 0.2rem;
+                padding: 0.3rem;
+            }
+            .logo-area {
+                gap: 0.2rem;
+            }
+            .page-title {
+                font-size: 0.7rem;
+            }
+            .logo-icon {
+                font-size: 0.9rem;
+            }
+            .badge {
+                font-size: 0.4rem;
+                padding: 0.1rem 0.3rem;
+            }
+            .hero-title {
+                font-size: 0.9rem;
+            }
+            .hero-subtitle {
+                font-size: 0.6rem;
+            }
+            .branch-header h2 {
+                font-size: 0.8rem;
+            }
+            .branch-header i {
+                font-size: 0.9rem;
+            }
+            .branch-body p {
+                font-size: 0.6rem;
+            }
+            .tech-tag {
+                font-size: 0.45rem;
+                padding: 0.1rem 0.3rem;
+            }
+            .instrument-value {
+                font-size: 0.75rem;
+            }
+            .instrument-label {
+                font-size: 0.45rem;
+            }
+            .card-title {
+                font-size: 0.65rem;
+            }
+            .procedure-text {
+                font-size: 0.55rem;
+            }
+            .spec-list li {
+                font-size: 0.5rem;
+            }
+            .warning-note {
+                font-size: 0.5rem;
+            }
+            .submit-btn {
+                font-size: 0.6rem;
+            }
+            .copyright {
+                font-size: 0.45rem;
+            }
+        }
+
+        .hud-nav {
+            position: fixed;
+            right: 30px;
+            bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 3000;
+        }
+
+        .hud-btn {
+            width: 50px; height: 50px;
+            background: #000;
+            border: 1px solid var(--primary-red);
+            color: var(--primary-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 12px;
+        }
+
+        .hud-btn:hover { background: var(--primary-red); color: #000; }
+    </style>
+</head>
+<body>
+
+<header class="fixed-header">
+    <div class="logo-area">
+        <i class="fas fa-rocket logo-icon"></i>
+        <span class="page-title">AEROSPACE ENGINEERING</span>
+    </div>
+    <div class="badge"><i class="fas fa-microchip"></i> <a href="#astrodynamics" style="text-decoration: none; color: var(--text-secondary);">FLIGHT DYNAMICS & ORBITAL MECHANICS</a></div>
+</header>
+
+<canvas id="bgCanvas" class="bg-canvas"></canvas>
+<div class="audio-control" id="audioToggle">
+    <i class="fas fa-headset"></i> ATMOSPHERE TO ORBIT · AUDIO · ACTIVE
+</div>
+<audio id="bgAudio" loop preload="auto" style="display:none;"></audio>
+
+<div class="hud-nav">
+    <button class="hud-btn" id="internalRefreshBtn" title="Internal Refresh">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+    <button class="hud-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-angle-double-up"></i>
+    </button>
+    <button class="hud-btn" onclick="scrollToSection('branch-card')">
+        <i class="fas fa-crosshairs"></i>
+    </button>
+    <button class="hud-btn" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})">
+        <i class="fas fa-angle-double-down"></i>
+    </button>
+</div>
+
+<main class="main-container">
+    <div class="hero-section">
+        <h1 class="hero-title">What is Aerospace Engineering?</h1>
+        <p class="hero-subtitle">Aerospace Engineering is the primary field of engineering concerned with the development of aircraft and spacecraft. It has two major and overlapping branches: aeronautical engineering and astronautical engineering.</p>
+        <p class="hero-subtitle">Aerodynamics, Air Propulsion, Avionics, Materials Science, Structural Analysis, and Manufacturing - The interaction between these technologies is known as Aerospace Engineering.</p>
+    </div>
+
+    <div class="branch-showcase">
+        <div class="branch-card">
+            <div class="branch-header">
+                <i class="fas fa-fighter-jet" style="color: var(--primary-red); font-size: 2rem;"></i>
+                <h2>Aeronautical Engineering</h2>
+            </div>
+            <div class="branch-body">
+                <p><strong>Atmospheric flight mastery:</strong> Aeronautical engineering deals with the design, analysis, and optimization of vehicles that operate within Earth's atmosphere. From commercial airliners to supersonic jets and drones, this branch governs lift, drag, propulsion, and control surfaces.</p>
+                <p>Core domains: <strong>aerodynamics, propulsion (turbofan, ramjet), avionics, aeroelasticity, flight stability, and lightweight composite structures.</strong> Advanced computational fluid dynamics (CFD) and wind tunnel testing validate performance across subsonic, transonic, and hypersonic regimes.</p>
+                <div class="tech-grid">
+                    <span class="tech-tag"><i class="fas fa-chart-line"></i> Lift/Drag Optimization</span>
+                    <span class="tech-tag"><i class="fas fa-cogs"></i> Fly-by-Wire</span>
+                    <span class="tech-tag"><i class="fas fa-tachometer-alt"></i> Wing Morphing</span>
+                    <span class="tech-tag"><i class="fas fa-cloud"></i> Icing Protection</span>
+                </div>
+                <div class="warning-note" style="margin-top: 1rem;">
+                    <i class="fas fa-wind"></i> High-altitude dynamics & boundary layer control: critical for fuel efficiency and maneuverability.
+                </div>
+            </div>
+        </div>
+
+        <div class="branch-card">
+            <div class="branch-header">
+                <i class="fas fa-saturn" style="color: var(--astronaut-blue); font-size: 2rem;"></i>
+                <h2>Astronautical Engineering</h2>
+            </div>
+            <div class="branch-body">
+                <p><strong>Beyond the Kármán line:</strong> Astronautical engineering focuses on spacecraft, launch vehicles, satellites, and interplanetary probes. It tackles the vacuum of space, extreme thermal cycles, radiation, microgravity, and orbital mechanics. Engineers design propulsion (chemical/ion thrusters), attitude control, life support, and re-entry systems.</p>
+                <p>Key disciplines: <strong>orbital mechanics, space environment, rocket propulsion, astrodynamics, thermal control, and deep-space communications.</strong> From CubeSats to Mars landers, astronautical innovation expands humanity's reach into the cosmos.</p>
+                <div class="tech-grid">
+                    <span class="tech-tag"><i class="fas fa-globe"></i> Hohmann Transfers</span>
+                    <span class="tech-tag"><i class="fas fa-broadcast-tower"></i> TDRSS</span>
+                    <span class="tech-tag"><i class="fas fa-burn"></i> Rocket Staging</span>
+                    <span class="tech-tag"><i class="fas fa-shield-alt"></i> Radiation Hardening</span>
+                </div>
+                <div class="warning-note" style="margin-top: 1rem;">
+                    <i class="fas fa-meteor"></i> Orbital insertion & station-keeping: precise delta-v maneuvers for mission success.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p>AIR PROPULSION
+        
+        *Air propulsion* = using air to create thrust and move something forward.
+
+*How it works:*
+Newton's Third Law: push air backwards → you get pushed forwards.
+
+*Common types:*
+- *Propellers*: Spin blades to push air back. Planes, drones, boats.
+- *Ducted fans*: Propeller inside a tube for more thrust, less noise. Used in RC jets and "stealth" designs.
+- *Jet engines*: Suck air in, compress + burn fuel, blast it out fast. Airliners, fighters.
+- *Rockets*: Don’t need air, but ducted air-augmented rockets exist.
+- *Hovercraft/fans*: Blow air down for lift, then push air back for movement.
+
+*Key parts:* 
+1. Power source → spins fan/turbine 
+2. Air intake → grab air 
+3. Exhaust → shoot air out fast = thrust
+
+In your E.S.S context with "CV-1 ENGINE" and "WE TAKE FLIGHT" — air propulsion would be how that craft moves. Electric ducted fans would keep it quiet for "STEALTH SOUND OPERATIONS".
+
+Want the science version or the build-your-own version?
+[04/18, 12:22] Big-Joe is'qilibonso: AVIONICS
+[04/18, 12:22] Meta AI: *Avionics* = aviation + electronics. All the electronic systems that make an aircraft fly, navigate, and communicate.
+
+*Core avionics systems:*
+- *Flight control*: Autopilot, fly-by-wire, stability systems
+- *Navigation*: GPS, inertial nav, altimeter, airspeed sensors  
+- *Communication*: Radios, data links, transponders
+- *Mission systems*: Radar, sensors, displays, targeting — key for "SPECIAL OPERATIONS"
+- *Monitoring*: Engine data, fuel, system health warnings
+
+        <br>
+
+MATERIALS SCIENCE
+        
+*Materials science* is figuring out how the stuff things are made of actually works, then building better stuff.
+
+*The core idea:* 
+Structure → Properties → Performance
+
+Change how atoms are arranged = change how strong, light, heat-resistant, or stealthy a material is.
+
+*4 main types it studies:*
+1. *Metals*: Steel, titanium, aluminum. Strong, conductive. Used in engines, frames.
+2. *Ceramics*: Super heat-resistant, hard, brittle. Engine turbines, heat shields.
+3. *Polymers*: Plastics, carbon fiber resins. Light, moldable. Fuselage, stealth coatings.
+4. *Composites*: Mixes like carbon fiber. Take the best of each. Most of modern aircraft.
+
+*Why it matters for your CV-1:*
+- Need *light + strong* → carbon fiber composite body so air propulsion can lift it
+- Need *heat-proof* → ceramic coatings around engines
+- Need *quiet + invisible* → radar-absorbing materials + acoustic damping layers for "STEALTH SOUND OPERATIONS"
+
+Materials science = the reason we went from wood planes to Mach 2 stealth craft.
+
+Want examples of specific stealth materials or how they test this stuff?
+
+        <br>
+        
+        AND STRUCTURAL ANALYSIS?
+
+        *Structural analysis* = proving your craft won’t snap, bend, or shake itself apart when forces hit it.
+
+If materials science picks _what_ you build with, structural analysis checks _if_ the design will actually survive.
+
+*What it tests:*
+1. *Loads*: Weight, G-forces during maneuvers, air pressure, landing impact. Your CV-1 pulling a hard turn? That’s 5-9G on the frame.
+2. *Stress & strain*: How much force each part takes before it deforms or breaks.
+3. *Vibration/flutter*: Wings/fans shaking at certain speeds. Bad flutter = parts rip off mid-flight.
+4. *Fatigue*: Tiny damage adding up over thousands of flights. Critical for "SPECIAL OPERATIONS" craft that see heavy use.
+5. *Failure modes*: Buckling, cracking, delamination. Where it would break first.
+
+*How it’s done:*
+- *FEA*: Finite Element Analysis. Software splits the design into millions of tiny blocks and simulates forces on each one.
+- *Wind tunnel + test rigs*: Physically stress parts to breaking point.
+- *Flight test data*: Strain gauges on the real thing to confirm the math.
+
+*For CV-1 with "STEALTH SOUND OPERATIONS":*
+Air propulsion gives thrust. Avionics gives control. Materials give you light/stealthy skin. Structural analysis makes sure that skin doesn’t peel off at 400 knots or crack from engine vibration.
+
+All four together = you actually "TAKE FLIGHT" instead of becoming modern art.
+
+Want me to break down how FEA works or what fails first on most aircraft?
+
+        <br>
+        
+        AND MANUFACTURING?
+
+        *Manufacturing* = turning the design into a real, flight-ready craft without introducing flaws that structural analysis missed.
+
+If structural analysis says "this design works on paper," manufacturing makes sure it works in reality.
+
+*For aerospace + stealth like your CV-1, key processes:*
+1. *Composite layup*: Carbon fiber sheets + resin layered in molds, then baked in an autoclave. Gets you light, strong, radar-absorbent shapes. This is how most stealth skins are made.
+2. *Precision machining*: CNC mills cut titanium/aluminum parts to micron tolerances. Engine mounts, landing gear, fan hubs. No wobble allowed.
+3. *Additive manufacturing*: 3D printing complex metal parts like fuel nozzles or internal ducting. Shapes you can’t machine, less weight.
+4. *Coatings & stealth treatments*: Radar-absorbing paint, edge treatments, and acoustic damping layers applied in clean rooms. Critical for "STEALTH SOUND OPERATIONS".
+5. *Assembly & integration*: Avionics, air propulsion, structure all come together. Miles of wiring, sealed fuel lines, zero loose bolts.
+
+*Why it’s brutal in aerospace:*
+- *Tolerances*: A 0.1 mm error can cause vibration or leaks at speed.
+- *QC*: X-ray, ultrasound, and laser scans of every part. One delaminated composite layer = failure at 9G.
+- *Traceability*: Every bolt has a serial number and paper trail.
+
+*The chain so far:* 
+Air propulsion → moves it. 
+Avionics → controls it. 
+Materials science → what it’s made of. 
+Structural analysis → will it hold. 
+Manufacturing → build it without screwing up 1-4.
+    
+    </p>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section"><p>© 2026 Advanced </p>
+            <br>
+            <p id="astrodynamics">Flight dynamics and orbital mechanics (often called astrodynamics) are the core disciplines that explain how spacecraft move through space and how we control that motion. While orbital mechanics focuses on the path a craft takes through space under the influence of gravity, flight dynamics covers the broader engineering involved in navigating and orienting the vehicle.</p>
+            </div>
+        </div>
+    </footer>
+</main>
+
+<script>
+    // ----- FIXED CANVAS BACKGROUND ANIMATION (FULLY WORKING) -----
+    const canvas = document.getElementById('bgCanvas');
+    let ctx = canvas.getContext('2d');
+    let width, height;
+    
+    function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    
+    // Jet class for background animation
+    class Jet {
+        constructor() {
+            this.reset(true);
+        }
+        reset(firstSpawn = false) {
+            const side = Math.floor(Math.random() * 4);
+            if (side === 0) { this.x = -40; this.y = Math.random() * height; }
+            if (side === 1) { this.x = width + 40; this.y = Math.random() * height; }
+            if (side === 2) { this.x = Math.random() * width; this.y = -40; }
+            if (side === 3) { this.x = Math.random() * width; this.y = height + 40; }
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1.2 + Math.random() * 1.8;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.size = 6;
+            this.cooldown = Math.random() * 100;
+            this.life = 0;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life++;
+            if (this.x < -150 || this.x > width + 150 || this.y < -150 || this.y > height + 150) {
+                this.reset();
+            }
+            this.cooldown--;
+            if (this.cooldown <= 0) {
+                this.shoot();
+                this.cooldown = 60 + Math.random() * 80;
+            }
+            for (let j of jets) {
+                if (j === this) continue;
+                const dx = this.x - j.x;
+                const dy = this.y - j.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < 80) {
+                    this.vx += dx * 0.0015;
+                    this.vy += dy * 0.0015;
+                }
+            }
+        }
+        shoot() {
+            bullets.push(new Bullet(this.x, this.y, this.vx, this.vy));
+        }
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(Math.atan2(this.vy, this.vx));
+            ctx.beginPath();
+            ctx.moveTo(12, 0);
+            ctx.lineTo(-6, -4);
+            ctx.lineTo(-2, 0);
+            ctx.lineTo(-6, 4);
+            ctx.closePath();
+            ctx.fillStyle = "rgba(220,38,38,0.7)";
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+    
+    class Bullet {
+        constructor(x, y, vx, vy) {
+            const speed = 4.5;
+            const mag = Math.hypot(vx, vy) || 1;
+            this.x = x;
+            this.y = y;
+            this.vx = (vx / mag) * speed;
+            this.vy = (vy / mag) * speed;
+            this.life = 70;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.life--;
+            if (this.life <= 0) {
+                explosions.push(new Explosion(this.x, this.y));
+            }
+        }
+        draw() {
+            ctx.fillStyle = "#f97316";
+            ctx.fillRect(this.x-1, this.y-1, 3, 3);
+        }
+    }
+    
+    class Explosion {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.radius = 2;
+            this.life = 18;
+        }
+        update() {
+            this.radius += 1.2;
+            this.life--;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(249,115,22,${this.life / 18})`;
+            ctx.stroke();
+        }
+    }
+    
+    const jets = [];
+    const bullets = [];
+    const explosions = [];
+    const MAX_JETS = 10;
+    for (let i = 0; i < MAX_JETS; i++) jets.push(new Jet());
+    
+    function animateBackground() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "rgba(5,5,15,0.25)";
+        ctx.fillRect(0, 0, width, height);
+        for (let j of jets) { j.update(); j.draw(); }
+        for (let i = bullets.length-1; i >= 0; i--) { bullets[i].update(); bullets[i].draw(); if (bullets[i].life <= 0) bullets.splice(i,1); }
+        for (let i = explosions.length-1; i >= 0; i--) { explosions[i].update(); explosions[i].draw(); if (explosions[i].life <= 0) explosions.splice(i,1); }
+        requestAnimationFrame(animateBackground);
+    }
+    animateBackground();
+    
+    // ----- FIXED YOUTUBE AUDIO (NO LOCAL) -----
+    let ytPlayer = null;
+    let audioActive = false;
+    const toggleBtn = document.getElementById('audioToggle');
+    
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player('bgAudio', {
+            videoId: 'Mfh_b4ZPkKs',
+            playerVars: {
+                autoplay: 1,
+                loop: 1,
+                playlist: 'Mfh_b4ZPkKs',
+                controls: 0,
+                disablekb: 1,
+                modestbranding: 1,
+                showinfo: 0
+            },
+            events: {
+                onReady: (event) => {
+                    event.target.setVolume(25);
+                    event.target.playVideo();
+                    audioActive = true;
+                    toggleBtn.innerHTML = '<i class="fas fa-headset"></i> ATMOSPHERE TO ORBIT · AUDIO · ACTIVE';
+                },
+                onStateChange: (event) => {
+                    if (event.data === YT.PlayerState.ENDED && ytPlayer) {
+                        ytPlayer.playVideo();
+                    }
+                    if (event.data === YT.PlayerState.PLAYING) {
+                        audioActive = true;
+                        toggleBtn.innerHTML = '<i class="fas fa-headset"></i> ATMOSPHERE TO ORBIT · AUDIO · ACTIVE';
+                    }
+                    if (event.data === YT.PlayerState.PAUSED) {
+                        toggleBtn.innerHTML = '<i class="fas fa-headset"></i> AUDIO PAUSED';
+                    }
+                }
+            }
+        });
+    }
+    
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    
+    toggleBtn.addEventListener('click', () => {
+        if (ytPlayer) {
+            const state = ytPlayer.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) {
+                ytPlayer.pauseVideo();
+                toggleBtn.innerHTML = '<i class="fas fa-headset"></i> AUDIO PAUSED';
+            } else {
+                ytPlayer.playVideo();
+                toggleBtn.innerHTML = '<i class="fas fa-headset"></i> ATMOSPHERE TO ORBIT · AUDIO · ACTIVE';
+            }
+        }
+    });
+    
+    // Helper functions that were missing
+    window.internalRefresh = function() {
+        location.reload();
+    };
+    document.getElementById('internalRefreshBtn').addEventListener('click', () => {
+        location.reload();
+    });
+    
+    function scrollToSection(className) {
+        const element = document.querySelector('.' + className);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+    }
+    window.scrollToSection = scrollToSection;
+    
+    // Prevent any canvas context loss
+    setInterval(() => {
+        if (!ctx || !canvas) {
+            ctx = canvas?.getContext('2d');
+            if (canvas) resizeCanvas();
+        }
+    }, 5000);
+</script>
+</body>
+</html>

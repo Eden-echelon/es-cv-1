@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  
+<head>
+  
+  <meta charset="UTF-8" />
+  
+  <title>E.S.S - Eden Soccer Sundays</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" type="image/png" href="logo_tr.png">
+
+  <style>
+
+    /* =====================
+       🎨 Root Variables
+    ====================== */
+    :root {
+      --primary: #1f2937;
+      --secondary: #3b82f6;
+      --bg: #f9fafb;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --text-dark: #111827;
+      --text-light: #6b7280;
+
+      --fs-xl: clamp(1.8rem, 6vw, 2.5rem);
+      --fs-lg: clamp(1.25rem, 5vw, 2rem);
+      --fs-md: clamp(1rem, 4vw, 1.25rem);
+      --fs-sm: clamp(0.85rem, 3vw, 1rem);
+    }
+
+    /* =====================
+       ⚡ Global Styles
+    ====================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =====================
+       🏟️ Header
+    ====================== */
+    header {
+      background: linear-gradient(135deg, var(--primary), #111);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    header h1 {
+      font-size: var(--fs-xl);
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    header h2 {
+      font-size: var(--fs-md);
+      margin-bottom: 0.25rem;
+      font-weight: 400;
+    }
+
+    header p {
+      font-size: var(--fs-sm);
+      margin-bottom: 0.75rem;
+    }
+
+    .countdown {
+      font-size: var(--fs-md);
+      font-weight: bold;
+      color: #facc15;
+      text-shadow: 1px 1px 4px black;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* =====================
+       📦 Layout
+    ====================== */
+    main {
+      padding: 2rem 1rem;
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: 1fr;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    section {
+      background: var(--card);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
+    }
+
+    section:hover {
+      transform: translateY(-2px);
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      font-size: var(--fs-lg);
+      color: var(--accent);
+      border-left: 4px solid var(--accent);
+      padding-left: 0.5rem;
+    }
+
+    /* =====================
+       📊 Tables
+    ====================== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--fs-sm);
+      overflow: hidden;
+      border-radius: 8px;
+    }
+
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 0.6rem;
+      text-align: center;
+    }
+
+    th {
+      background: var(--secondary);
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tr:hover td {
+      background: #f1f5f9;
+    }
+
+    /* =====================
+       📅 Matchday Styling
+    ====================== */
+    #matchday-schedule li {
+      list-style: none;
+      margin: 0.5rem 0;
+      padding: 0.6rem;
+      border-radius: 8px;
+      font-weight: 500;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .completed {
+      background-color: #d1fae5;
+      color: #065f46;
+      border-left: 6px solid #059669;
+    }
+
+    .postponed {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border-left: 6px solid #dc2626;
+    }
+
+    .upcoming {
+      background-color: #e5e7eb;
+      color: #374151;
+      font-style: italic;
+      border-left: 6px solid #9ca3af;
+    }
+
+    .next-match {
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+      color: white !important;
+      border-left: 6px solid #1e40af !important;
+      font-weight: bold;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 6px #3b82f6; }
+      to { box-shadow: 0 0 16px #2563eb; }
+    }
+
+    /* =====================
+       🎨 Legend
+    ====================== */
+    .legend {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: var(--fs-sm);
+    }
+
+    .legend-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      margin-right: 6px;
+    }
+
+    .legend-completed { background: #d1fae5; border: 1px solid #059669; }
+    .legend-postponed { background: #fee2e2; border: 1px solid #dc2626; }
+    .legend-upcoming { background: #e5e7eb; border: 1px solid #9ca3af; }
+    .legend-next { background: #2563eb; border: 1px solid #1e3a8a; }
+
+    /* =====================
+       📱 Responsive
+    ====================== */
+    @media (max-width: 768px) {
+      body { font-size: 90%; }
+      header { padding: 1.5rem 0.5rem; }
+      main { padding: 1rem; gap: 1rem; }
+      h2 { font-size: 1.2rem; }
+      table { font-size: 0.8rem; }
+    }
+
+    /* =====================
+       ⚽ Footer
+    ====================== */
+    footer {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      font-size: var(--fs-sm);
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- =====================
+       🏟️ HEADER
+  ====================== -->
+  <header>
+    <a href="index.html"><h1>E.S.S ⚽</h1></a>
+    <h2>Eden Soccer Sundays — 2025 Season</h2>
+    <p><strong>League Duration:</strong> 6 July – 30 November 2025 | Sundays @ 14:00</p>
+    <div class="countdown" id="countdown">Loading next match countdown...</div>
+  </header>
+
+  <!-- =====================
+       📦 MAIN CONTENT
+  ====================== -->
+  <main>
+    <!-- League Table -->
+    <section>
+      <h2>🏆 League Table</h2>
+      <table>
+        <tr><th>Team</th><th>Played</th><th>Won</th><th>Lost</th><th>Draw</th><th>Points</th></tr>
+        <tr><td><strong>01. Eden Alpha</strong></td><td>25</td><td>15</td><td>9</td><td>1</td><td>46</td></tr>
+        <tr><td><strong>02. Eden Delta</strong></td><td>25</td><td>9</td><td>15</td><td>1</td><td>28</td></tr>
+      </table>
+    </section>
+    
+    <!-- Match Results -->
+    <section>
+      <h2>⚔️ Match Results</h2>
+      <ul>
+        <li><strong>Game 1</strong> – Eden Alpha 4 : 2 Eden Delta | <em>Man of the Match:</em> Vuyo</li>
+        <br>
+        <li><strong>Game 2</strong> – Eden Alpha 4 : 3 Eden Delta | <em>Man of the Match:</em> Hoss</li>
+        <br>
+        <li><strong>Game 3</strong> – Eden Delta 3 : 2 Eden Alpha | <em>Man of the Match:</em> Junior</li>
+        <br>
+        <li><strong>Game 4</strong> – Eden Alpha 4 : 1 Eden Delta | <em>Man of the Match:</em> Vuyo</li>
+        <br>
+        <li><strong>Game 4.1</strong> – Eden Delta 4 : 2 Eden Alpha | <em>Man of the Match:</em> Junior</li>
+        <br>
+        <li><strong>Game 4.2</strong> – Eden Alpha 4 : 0 Eden Delta | <em>Man of the Match:</em> Xan</li>
+        <br>
+        <li><strong>Game 5</strong> – Eden Alpha 4 : 2 Eden Delta | <em>Man of the Match:</em> Queener</li>
+        <br>
+        <li><strong>Game 5.1</strong> – Eden Delta 2 : 0 Eden Alpha | <em>Man of the Match:</em> Junior</li>
+        <br>
+        <li><strong>Game 6</strong> – Eden Alpha 3 : 3 Eden Delta | <em>Man of the Match:</em> Junior</li>
+        <br>
+        <li><strong>Game 7</strong> – Eden Delta 4 : 2 Eden Alpha | <em>Man of the Match:</em> Junior</li>
+        <br>
+        <li><strong>Game 8</strong> – *postponed match* Eden Alpha 2 : 1 Eden Delta | <em>Man of the Match:</em> Vuyo</li>
+        <br>
+        <li><strong>Game 9</strong> – Eden Delta 3 : 1 Eden Alpha | <em>Man of the Match:</em> S'phe</li>
+        <br>
+        <li><strong>Game 10</strong> – Eden Alpha 3 : 1 Eden Delta | <em>Man of the Match:</em> Vuyo</li>
+        <br>
+        <li><strong>Game 11</strong> – *postponed match* Eden Delta 2 : 1 Eden Alpha | <em>Man of the Match:</em> Bayanda</li>
+        <br>
+        <li><strong>Game 12</strong> – Eden Delta 2 : 1 Eden Alpha | <em>Man of the Match:</em> Junior</li>
+        <br>
+      <li><strong>Game 13</strong> – Eden Alpha 8 : 2 Eden Delta | <em>Man of the Match:</em> Vuyo</li>
+        <br>
+      <li><strong>Game 13.1</strong> – Eden Alpha 6 : 2 Eden Delta | <em>Man of the Match:</em> Hoss</li>
+        <br>
+      <li><strong>Game 14</strong> – Eden Alpha 10 : 5 Eden Delta | <em>Man of the Match:</em> Vuyo</li>
+        <br>
+      <li><strong>Game 15</strong> – Eden Alpha 7 : 6 Eden Delta | <em>Man of the Match:</em> Vuyo</li>
+        <br>
+        <li><strong>Game 16</strong> – Eden Delta 8 : 5 Eden Alpha | <em>Man of the Match:</em> Jonathan Kofi</li>
+        <br>
+        <li><strong>Game 16.1</strong> – Eden Alpha 1 : 0 Eden Delta | <em>Man of the Match:</em> Hoss</li>
+        <br>
+        <li><strong>Game 17</strong> – Eden Delta 5 : 3 Eden Alpha | <em>Man of the Match:</em> S'phe</li>
+        <br>
+        <li><strong>Game 18</strong> – Eden Alpha 2 : 1 Eden Delta | <em>Man of the Match:</em> Junior</li>  
+        <br>
+        <li><strong>Game 19</strong> – Eden Alpha 4 : 0 Eden Delta | <em>Man of the Match:</em> Hoss</li>
+        <br>
+        <li><strong>Game 20</strong> – Eden Alpha 8 : 6 Eden Delta | <em>Man of the Match:</em> Hoss</li>
+    </ul>
+    </section>
+
+    <!-- Matchday Schedule -->
+    <section>
+      <h2>📅 Matchday Schedule</h2>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-box legend-completed"></div> Completed</div>
+        <div class="legend-item"><div class="legend-box legend-postponed"></div> Postponed</div>
+        <div class="legend-item"><div class="legend-box legend-upcoming"></div> Upcoming</div>
+        <div class="legend-item"><div class="legend-box legend-next"></div> Next Match</div>
+      </div>
+      <ul id="matchday-schedule"></ul>
+    </section>
+
+    <!-- Top Scorers -->
+    <section>
+      <h2>🎯 Top Goal Scorers</h2>
+      <table>
+        <tr><th>Player</th><th>Goals</th></tr>
+        <tr><td>01. Vuyo</td><td>37</td></tr>
+        <tr><td>02. Hoss</td><td>26</td></tr>
+        <tr><td>03. Junior</td><td>15</td></tr>
+        <tr><td>04. Bayanda</td><td>13</td></tr>
+        <tr><td>05. S'phe</td><td>11</td></tr>
+        <tr><td>05. Frost</td><td>9</td></tr>
+        <tr><td>06. Joy</td><td>7</td></tr>
+        <tr><td>07. Xan</td><td>4</td></tr>
+        <tr><td>08. Olama</td><td>3</td></tr>
+        <tr><td>09. Masiya</td><td>2</td></tr>
+      </table>
+    </section>
+
+    <!-- MOTM -->
+    <section>
+      <h2>🎖️ Man of the Matches</h2>
+      <table>
+        <tr><th>Game</th><th>Player</th></tr>
+        <tr><td>Game 1</td><td>Vuyo</td></tr>
+        <tr><td>Game 2</td><td>Hoss</td></tr>
+        <tr><td>Game 3</td><td>Junior</td></tr>
+        <tr><td>Game 4</td><td>Vuyo</td></tr>
+        <tr><td>Game 4.1</td><td>Junior</td></tr>
+        <tr><td>Game 4.2</td><td>Xan</td></tr>
+        <tr><td>Game 5</td><td>Queener</td></tr>
+        <tr><td>Game 5.1</td><td>Junior</td></tr>
+        <tr><td>Game 6</td><td>Junior</td></tr>
+        <tr><td>Game 7</td><td>Junior</td></tr>
+        <tr><td>Game 8</td><td>*postponed match*Vuyo</td></tr>
+        <tr><td>Game 9</td><td>S'phe</td></tr>
+        <tr><td>Game 10</td><td>Vuyo</td></tr>
+        <tr><td>Game 11</td><td>*postponed match*Bayanda</td></tr>
+        <tr><td>Game 12</td><td>Junior</td></tr>
+        <tr><td>Game 13</td><td>Vuyo</td></tr>
+        <tr><td>Game 13.1</td><td>Hoss</td></tr>
+        <tr><td>Game 14</td><td>Vuyo</td></tr>
+        <tr><td>Game 15</td><td>Vuyo</td></tr>
+        <tr><td>Game 16</td><td>Jonathan Kofi</td></tr>
+        <tr><td>Game 16.1</td><td>Hoss</td></tr>
+        <tr><td>Game 17</td><td>S'phe</td></tr>
+        <tr><td>Game 18</td><td>Junior</td></tr>
+        <tr><td>Game 19</td><td>Hoss</td></tr>
+        <tr><td>Game 20</td><td>Hoss</td></tr>
+      </table>
+    </section>
+
+    <!-- Defender of the Match -->
+    <section>
+      <h2>🔒 Defender of the Match</h2>
+      <table>
+        <tr><th>Game</th><th>Player</th></tr>
+        <tr><td>Game 1</td><td>N/A</td></tr>
+        <tr><td>Game 8</td><td>*postponed match*Vuyo</td></tr>
+        <tr><td>Game 9</td><td>Bayanda</td></tr>
+        <tr><td>Game 10</td><td>Queener</td></tr>
+        <tr><td>Game 11</td><td>*postponed match*Bayanda</td></tr>
+        <tr><td>Game 12</td><td>Olama</td></tr>
+        <tr><td>Game 13</td><td>Hoss</td></tr>
+        <tr><td>Game 13.1</td><td>Hoss</td></tr>
+        <tr><td>Game 14</td><td>Hoss</td></tr>
+        <tr><td>Game 15</td><td>Hoss</td></tr> 
+        <tr><td>Game 16</td><td>Masiya</td></tr>
+        <tr><td>Game 16.1</td><td>Hoss</td></tr>
+        <tr><td>Game 17</td><td>Joy</td></tr>
+        <tr><td>Game 18</td><td>Queener</td></tr>
+        <tr><td>Game 19</td><td>Hoss</td></tr>
+        <tr><td>Game 20</td><td>Hoss</td></tr>
+      </table>
+    </section>
+
+    <!-- Assisters -->
+    <section>
+      <h2>🤝🏽 Top Assisters</h2>
+      <table>
+        <tr><td>01. Frost</td><td>9</td></tr>
+        <tr><td>02. Vuyo</td><td>6</td></tr>
+        <tr><td>03. Bayanda</td><td>5</td></tr>
+        <tr><td>04. Junior</td><td>5</td></tr>
+        <tr><td>05. S'phe</td><td>3</td></tr>
+        <tr><td>06. Olama</td><td>2</td></tr>
+        <tr><td>07. Queener</td><td>2</td></tr>
+        <tr><td>08. Hoss</td><td>2</td></tr>
+      </table>
+    </section>
+    
+    <!-- Teams -->
+    <section>
+      <h2>👑 Teams</h2>
+      <h3>Eden Alpha</h3>
+      <ul>
+        <li>01. Hoss</li>
+        <li>02. Xan</li>
+        <li>03. Frost</li>
+        <li>04. Vuyo</li>
+        <li>05. Queener</li>
+      </ul>
+      <br>
+      <h3>Eden Delta</h3>
+      <ul>
+        <li>01. Olama</li>
+        <li>02. Joy</li>
+        <li>03. Junior</li>
+        <li>04. Bayanda</li>
+        <li>05. Masiya</li>
+        --
+        <br>
+        <li>06. S'phe</li>
+      </ul>
+    </section>
+
+    <!-- Eden Philosophy -->
+    <section>
+      <h2>🌍 Eden</h2>
+      <p><strong>Eden</strong> is an Empire — the core behind our ventures and collective identity.  
+      The E.S.S league reflects our strength, unity, and love for the game.  
+      A core 10, two elite squads. One legacy.</p>
+    </section>
+  </main>
+
+  <!-- =====================
+       ⚽ FOOTER
+  ====================== -->
+  <footer>
+    <p>&copy; 2025 Eden Soccer Sundays — Powered by the Eden Empire</p>
+  </footer>
+
+  <!-- =====================
+       ⚡ SCRIPTS
+  ====================== -->
+  <script>
+    const matchDates = [];
+    const startDate = new Date("2025-07-06T14:00:00");
+
+    // Generate matches every Sunday
+    for (let i = 0; i < 20; i++) {
+      let d = new Date(startDate);
+      d.setDate(startDate.getDate() + i * 7);
+      matchDates.push({ id: i+1, date: d });
+    }
+
+    // Postponed games
+    const postponed = [null, null];
+
+    // Completed games (so far up to Game 12)
+    const completed = Array.from({ length: 20 }, (_, i) => i+1).filter(n => !postponed.includes(n));
+
+    // Populate schedule
+    const scheduleEl = document.getElementById("matchday-schedule");
+    const now = new Date();
+    let nextFound = false;
+
+    matchDates.forEach(game => {
+      const li = document.createElement("li");
+      const formattedDate = game.date.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+
+      if (postponed.includes(game.id)) {
+        li.textContent = `Game ${game.id} – ${formattedDate} | Postponed ❌`;
+        li.classList.add("postponed");
+      } else if (completed.includes(game.id)) {
+        li.textContent = `Game ${game.id} – ${formattedDate} | ✅ Completed`;
+        li.classList.add("completed");
+      } else if (!nextFound && game.date > now) {
+        li.textContent = `Game ${game.id} – ${formattedDate} | Next Match ⏳`;
+        li.classList.add("next-match");
+        nextFound = true;
+
+        // Set countdown
+        updateCountdown(game.date);
+        setInterval(() => updateCountdown(game.date), 1000);
+      } else {
+        li.textContent = `Game ${game.id} – ${formattedDate} | Upcoming 🕒`;
+        li.classList.add("upcoming");
+      }
+      scheduleEl.appendChild(li);
+    });
+
+    function updateCountdown(targetDate) {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById("countdown").textContent = "Matchday is here! ⚽🔥";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("countdown").textContent =
+        `Next Match Starts In: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+  </script>
+
+</body>
+
+</html>
+
+
+
+
+
+

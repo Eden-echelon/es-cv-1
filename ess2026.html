@@ -1,0 +1,2551 @@
+<!DOCTYPE html>
+
+<html lang="en"> 
+  
+<head>
+  
+  <meta charset="UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  
+  <meta name="theme-color" content="#000810">
+  
+  <meta name="color-scheme" content="dark">
+  
+  <link rel="icon" href="logo_tr1.png">
+  
+  <title>E.S.S 2026</title>
+  
+  <style>
+    
+    /* -----------------------------------------------
+       1. RESET & GLOBAL STYLES
+       ----------------------------------------------- */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+    
+    :root {
+        --black-bg: #000a0f;
+        --mil-green: #1f9f2a;
+        --strike-blue: #1e90ff;
+        --alpha-red: #d32f2f;
+        --delta-green: #2e7d32;
+        --border-light: #2b4b6b;
+        --text-primary: #ecf7ff;
+        --text-dim: #b0d0e5;
+        --panel-bg: rgba(0, 25, 35, 0.7);
+        --header-solid: #000f18;
+        --header-height: clamp(180px, 35vh, 350px);
+        --rail-width: clamp(55px, 5.5vw, 85px);
+    }
+    
+    html {
+        scroll-behavior: smooth;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    body {
+        font-family: 'Inter', 'Segoe UI', 'Courier New', monospace;
+        background: var(--black-bg);
+        color: var(--text-primary);
+        line-height: 1.5;
+        min-height: 100vh;
+        width: 100%;
+        overflow-x: hidden;
+        position: relative;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+    }
+    
+    /* -----------------------------------------------
+       2. RADAR & BACKGROUND EFFECTS
+       ----------------------------------------------- */
+    .radar-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #001208;
+        z-index: 0;
+        overflow: hidden;
+        pointer-events: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .f22-radar {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: min(180vmax, 180vmin);
+        height: min(180vmax, 180vmin);
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 4px solid var(--mil-green);
+        background: repeating-radial-gradient(circle at 50% 50%, transparent 0px, transparent 39px, rgba(31, 159, 42, 0.25) 40px, transparent 41px);
+        opacity: 0.9;
+    }
+    
+    .scan-arm {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: min(180vmax, 180vmin);
+        height: min(180vmax, 180vmin);
+        background: conic-gradient(from 0deg, rgba(31, 159, 42, 0) 0deg, rgba(31, 159, 42, 0.6) 10deg, #8aff8a 22deg, rgba(31, 159, 42, 0) 34deg);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) rotate(0deg);
+        animation: f22spin 10s cubic-bezier(0.45, 0, 0.3, 1) infinite;
+        mix-blend-mode: screen;
+    }
+    
+    @keyframes f22spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    .radar-noise {
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(0deg, rgba(20, 60, 20, 0.1) 0px, transparent 3px, transparent 9px);
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .contact-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #1f9f2a;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        pointer-events: none;
+        z-index: 3;
+        animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.8); }
+        100% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    }
+    
+    /* -----------------------------------------------
+       3. HEADER & COMMAND CENTER
+       ----------------------------------------------- */
+    .command-center {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: var(--header-height);
+        padding: 2rem clamp(2rem, 6vw, 9rem);
+        background: var(--header-solid);
+        border-bottom: 6px solid var(--strike-blue);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        box-sizing: border-box;
+    }
+    
+    .header-emblem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(0.5rem, 2vh, 1rem);
+        width: 100%;
+        text-align: center;
+    }
+    
+    .logo-container {
+        height: clamp(100px, 20vh, 130px);
+        width: clamp(100px, 20vh, 130px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        border-radius: 50%;
+        border: 3px solid var(--strike-blue);
+        cursor: pointer;
+        margin: 0 auto;
+    }
+    
+    .logo-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.2s ease;
+        transform: scale(1.4);
+    }
+    
+    .logo-img:hover {
+        transform: scale(1.2);
+        border-color: #ffffff;
+    }
+    
+    .countdown-timer {
+        font-size: clamp(1.1rem, 2.9vw, 2rem);
+        font-weight: 700;
+        color: var(--strike-blue);
+        font-family: 'Courier New', monospace;
+        background: transparent;
+        padding: 0.2rem 0;
+        letter-spacing: 4px;
+        border: none;
+        white-space: nowrap;
+        text-align: center;
+    }
+    
+    /* -----------------------------------------------
+       4. LEFT TACTICAL MENU (HOVER-REVEAL)
+       ----------------------------------------------- */
+    .tactical-menu-permanent {
+        position: fixed;
+        left: 0;
+        top: 60%;
+        transform: translateY(-50%);
+        width: var(--rail-width);
+        z-index: 10001;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+    }
+    
+    .menu-trigger-perm {
+        width: 100%;
+        aspect-ratio: 1/1;
+        background: var(--panel-bg);
+        border: 2px solid var(--strike-blue);
+        border-left: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--strike-blue);
+        font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+        cursor: pointer;
+        transition: 0.15s linear;
+    }
+    
+    .menu-trigger-perm:hover {
+        background: var(--strike-blue);
+        color: #000;
+    }
+    
+    .menu-panel-perm {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%) translateX(-30px);
+        width: min(320px, 80vw);
+        background: rgba(0, 20, 30, 0.98);
+        backdrop-filter: blur(8px);
+        border: 2px solid var(--strike-blue);
+        border-left: none;
+        padding: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .tactical-menu-permanent:hover .menu-panel-perm,
+    .menu-panel-perm:hover {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(-50%) translateX(calc(var(--rail-width) + 8px));
+    }
+    
+    .menu-item {
+        padding: 0.8rem;
+        margin: 0.4rem 0;
+        border: 2px solid var(--strike-blue);
+        color: var(--strike-blue);
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.1s;
+        background: transparent;
+        font-size: clamp(0.7rem, 2vw, 0.9rem);
+    }
+    
+    .menu-item:hover {
+        background: var(--strike-blue);
+        color: black;
+    }
+    
+    /* -----------------------------------------------
+       5. RIGHT QUICK SCROLL MENU
+       ----------------------------------------------- */
+    .quick-scroll-permanent {
+        position: fixed;
+        right: 0;
+        top: 60%;
+        transform: translateY(-50%);
+        width: var(--rail-width);
+        z-index: 10001;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+    }
+    
+    .scroll-btn-perm {
+        width: 90%;
+        aspect-ratio: 1/1;
+        background: var(--panel-bg);
+        border: 2px solid var(--strike-blue);
+        border-right: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--strike-blue);
+        font-size: clamp(1.2rem, 2vw, 1.8rem);
+        cursor: pointer;
+        transition: 0.15s;
+    }
+    
+    .scroll-btn-perm:hover {
+        background: var(--strike-blue);
+        color: #000;
+    }
+    
+    /* -----------------------------------------------
+       6. MAIN CONTENT & CARDS
+       ----------------------------------------------- */
+    main {
+        width: 90%;
+        max-width: 1400px;
+        margin: calc(var(--header-height) + 2rem) auto 2rem auto;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: clamp(2rem, 5vw, 4rem);
+        z-index: 10;
+        position: relative;
+    }
+    
+    .ops-card {
+        width: 100%;
+        background: rgba(0, 20, 30, 0.65);
+        border: 2px solid var(--border-light);
+        border-left: 5px solid var(--strike-blue);
+        border-right: 2px solid var(--strike-blue);
+        padding: clamp(1rem, 3vw, 2rem);
+        margin: 0 auto 1.5rem auto;
+        text-align: center;
+    }
+    
+    .ops-card > *:not(.section-command) {
+        text-align: left;
+    }
+    
+    .section-command {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 3px solid var(--strike-blue);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    
+    .section-command h2 {
+        font-size: clamp(1rem, 2.5vw, 1.8rem);
+        color: var(--strike-blue);
+        letter-spacing: 2px;
+        text-align: left;
+    }
+    
+    #champion-story {
+        margin: 30px auto 50px auto;
+        width: 80%;
+        font-size: 20px;
+        text-align: center;
+    }
+    
+    #champion-story h2 {
+        color: var(--strike-blue);
+        text-align: center;
+    }
+    
+    #champion-story h2 span {
+        color: red;
+    }
+    
+    /* -----------------------------------------------
+       7. TEAMS GRID & CARDS
+       ----------------------------------------------- */
+    .teams-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        width: 100%;
+        justify-items: center;
+        align-items: start;
+    }
+    
+    .team-card {
+        background: rgba(0, 30, 40, 0.7);
+        border: 2px solid var(--strike-blue);
+        border-left: 10px solid var(--alpha-red);
+        padding: 1.2rem;
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .team-card.delta-force {
+        border-left-color: var(--delta-green);
+    }
+    
+    .team-role {
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-weight: 800;
+        color: var(--strike-blue);
+        border-bottom: 2px dashed var(--strike-blue);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .player-row {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        background: rgba(0, 20, 30, 0.8);
+        border: 2px solid var(--strike-blue);
+        padding: 0.5rem 0.8rem;
+        margin: 0.5rem 0;
+        flex-wrap: wrap;
+    }
+    
+    .player-number {
+        color: var(--strike-blue);
+        font-weight: 800;
+        min-width: 3ch;
+    }
+    
+    .team-card:not(.delta-force) .player-name {
+        color: var(--alpha-red);
+        font-weight: 700;
+        min-width: 10ch;
+    }
+    
+    .team-card.delta-force .player-name {
+        color: var(--delta-green);
+    }
+    
+    .player-position {
+        color: var(--text-dim);
+        text-transform: uppercase;
+        flex: 1;
+        font-size: 0.9rem;
+    }
+    
+    .player-captain {
+        background: var(--alpha-red);
+        color: black;
+        padding: 3px 8px;
+        font-weight: 800;
+        border: 2px solid black;
+        font-size: 0.7rem;
+    }
+    
+    .delta-force .player-captain {
+        background: var(--delta-green);
+    }
+    
+    .reserve-section {
+        margin-top: 1rem;
+        padding-top: 0.5rem;
+        border-top: 1px dashed var(--strike-blue);
+    }
+    
+    .reserve-title {
+        color: var(--strike-blue);
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+        letter-spacing: 1px;
+    }
+    
+    /* -----------------------------------------------
+       8. TABLES (League, Schedule, Stats)
+       ----------------------------------------------- */
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        border: 2px solid var(--strike-blue);
+        background: rgba(0, 15, 20, 0.7);
+        display: flex;
+        justify-content: center;
+    }
+    
+    table {
+        width: 100%;
+        min-width: 400px;
+        border-collapse: collapse;
+    }
+    
+    th, td {
+        border: 2px solid var(--strike-blue);
+        padding: 0.6rem;
+        color: var(--text-primary);
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    th:first-child, td:first-child {
+        text-align: left;
+    }
+    
+    th {
+        background: rgba(0, 40, 60, 0.8);
+        color: var(--strike-blue);
+        font-weight: 700;
+    }
+    
+    .completed-row {
+        background: rgba(2, 48, 32, 0.5);
+    }
+    
+    .next-row {
+        background: rgba(0, 0, 128, 0.5);
+    }
+    
+    .upcoming-row {
+        background: rgba(199, 110, 0, 0.5);
+    }
+    
+    .color-key {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin: 1rem auto;
+    }
+    
+    .color-key span span {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+        vertical-align: middle;
+    }
+    
+    /* -----------------------------------------------
+       9. FOOTER & LIVE DATA
+       ----------------------------------------------- */
+    footer {
+        background: rgba(0, 15, 25, 0.85);
+        border-top: 6px solid var(--strike-blue);
+        padding: 2rem 1rem 1rem;
+        margin-top: 3rem;
+        width: 100%;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .footer-grid {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        max-width: 1200px;
+        width: 90%;
+        margin: 0 auto 2rem auto;
+    }
+    
+    .live-data {
+        background: rgba(0, 20, 28, 0.7);
+        border: 2px solid var(--strike-blue);
+        padding: 0.8rem 1.2rem;
+        min-width: 200px;
+        text-align: center;
+    }
+    
+    .live-data div {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        font-size: clamp(0.7rem, 2vw, 0.9rem);
+        text-align: center;
+    }
+    
+    .copyright {
+        text-align: center;
+        color: var(--text-dim);
+        border-top: 2px solid var(--strike-blue);
+        padding-top: 1.5rem;
+        font-size: clamp(0.6rem, 1.5vw, 0.8rem);
+        width: 100%;
+    }
+    
+    .copyright span {
+        color: var(--strike-blue);
+    }
+    
+    /* -----------------------------------------------
+       10. CMD TERMINAL (Footer Component)
+       ----------------------------------------------- */
+    .cmd-terminal {
+        background: rgba(0, 8, 16, 0.95);
+        border: 2px solid var(--strike-blue);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        width: 100%;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        font-family: 'Courier New', 'Fira Code', monospace;
+    }
+    
+    .cmd-header {
+        background: linear-gradient(135deg, #0a1a2a 0%, #051015 100%);
+        padding: 8px 16px;
+        border-bottom: 2px solid var(--strike-blue);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .cmd-led {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    
+    .cmd-led.green {
+        background: #1f9f2a;
+        box-shadow: 0 0 4px #1f9f2a;
+        animation: pulse 2s infinite;
+    }
+    
+    .cmd-led.red {
+        background: #d32f2f;
+        box-shadow: 0 0 4px #d32f2f;
+    }
+    
+    .cmd-title {
+        color: var(--strike-blue);
+        font-size: clamp(0.8rem, 2vw, 1rem);
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+    
+    .cmd-body {
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .cmd-terminal[data-cmd-active="false"] .cmd-body {
+        display: none;
+    }
+    
+    .cmd-terminal[data-cmd-active="true"] .cmd-body {
+        display: block;
+    }
+    
+    .cmd-output {
+        background: #000a0f;
+        border: 1px solid #1e90ff;
+        border-radius: 4px;
+        padding: 10px;
+        height: auto;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+        font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+    }
+    
+    .cmd-line {
+        color: #4ade80;
+        font-family: monospace;
+        padding: 2px 0;
+        border-left: 2px solid #1e90ff;
+        padding-left: 8px;
+        margin: 4px 0;
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
+    
+    .cmd-line.error {
+        color: #ff4444;
+        border-left-color: #ff4444;
+    }
+    
+    .cmd-line.warning {
+        color: #ffaa44;
+        border-left-color: #ffaa44;
+    }
+    
+    .cmd-line.success {
+        color: #44ff44;
+        border-left-color: #44ff44;
+    }
+    
+    .cmd-input-line {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        background: #000a0f;
+        border: 1px solid #1e90ff;
+        border-radius: 4px;
+        padding: 8px;
+    }
+    
+    .cmd-prompt {
+        color: #1e90ff;
+        font-weight: 700;
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+        white-space: nowrap;
+    }
+    
+    .cmd-input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #4ade80;
+        font-family: monospace;
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+        outline: none;
+        min-width: 120px;
+    }
+    
+    .cmd-input::placeholder {
+        color: #2a5f6e;
+        font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+    }
+    
+    .cmd-output::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .cmd-output::-webkit-scrollbar-track {
+        background: #000a0f;
+    }
+    
+    .cmd-output::-webkit-scrollbar-thumb {
+        background: #1e90ff;
+        border-radius: 3px;
+    }
+    
+    /* -----------------------------------------------
+       11. AUDIO & MISC BUTTONS
+       ----------------------------------------------- */
+    .advanced-settings-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .audio-btn {
+        border: 2px solid var(--strike-blue);
+        background: transparent;
+        color: var(--strike-blue);
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.1s;
+        font-size: 0.85rem;
+    }
+    
+    .audio-btn:hover {
+        background: var(--strike-blue);
+        color: #000;
+    }
+    
+    /* -----------------------------------------------
+       12. RESPONSIVE DESIGN BREAKPOINTS
+       ----------------------------------------------- */
+    /* Ultra-wide screens (2560px+) */
+    @media (min-width: 2560px) {
+        :root { --rail-width: 90px; }
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 1rem; }
+        .menu-panel-perm { width: 380px; }
+        .menu-item { padding: 1rem; font-size: 1.1rem; }
+        main { max-width: 2000px; }
+        .team-card { max-width: 700px; }
+        .cmd-output { max-height: 280px; }
+        .cmd-line { font-size: 0.95rem; }
+    }
+    
+    /* Desktop (1200px - 2559px) */
+    @media (min-width: 1200px) and (max-width: 2559px) {
+        :root { --rail-width: 75px; }
+        main { max-width: 1600px; }
+        .team-card { max-width: 600px; }
+        .cmd-output { max-height: 280px; }
+        .cmd-line { font-size: 0.95rem; }
+    }
+    
+    /* Laptop (992px - 1199px) */
+    @media (min-width: 992px) and (max-width: 1199px) {
+        :root { --rail-width: 70px; }
+        .menu-panel-perm { width: 260px; }
+    }
+    
+    /* Tablet Landscape (768px - 991px) */
+    @media (min-width: 768px) and (max-width: 991px) {
+        :root { --rail-width: 60px; }
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 0.5rem; top: 50%; }
+        .menu-panel-perm { width: 250px; }
+        .menu-item { padding: 0.6rem; font-size: 0.7rem; }
+        main { width: 95%; }
+        #champion-story { width: 95%; }
+        .footer-grid { width: 95%; gap: 1rem; }
+        .section-command { flex-direction: column; align-items: center; gap: 0.5rem; }
+        .section-command h2 { text-align: center; }
+        .color-key { gap: 1rem; }
+        .cmd-header { padding: 6px 12px; }
+        .cmd-led { width: 8px; height: 8px; }
+        .cmd-body { padding: 8px; }
+        .cmd-output { max-height: 150px; padding: 8px; }
+        .cmd-input-line { padding: 6px; }
+    }
+    
+    /* Tablet Portrait (576px - 767px) */
+    @media (min-width: 576px) and (max-width: 767px) {
+        :root { --rail-width: 50px; }
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 0.45rem; top: 50%; }
+        .menu-trigger-perm, .scroll-btn-perm { font-size: 1rem; }
+        .menu-panel-perm { width: 240px; padding: 0.8rem; }
+        .menu-item { padding: 0.55rem; font-size: 0.5rem; }
+    }
+    
+    /* Mobile Large (425px - 575px) */
+    @media (min-width: 425px) and (max-width: 575px) {
+        :root { --rail-width: 45px; }
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 0.4rem; top: 65%; }
+        .menu-trigger-perm, .scroll-btn-perm { font-size: 1rem; border-width: 1.5px; }
+        .menu-panel-perm { width: 220px; padding: 0.7rem; max-height: 70vh; }
+        .menu-item { padding: 0.5rem; font-size: 0.65rem; margin: 0.3rem 0; }
+        .tactical-menu-permanent:hover .menu-panel-perm,
+        .menu-panel-perm:hover { transform: translateY(-50%) translateX(58px); }
+        main { width: 98%; }
+        .ops-card { padding: 1rem; }
+        th:first-child, td:first-child { text-align: center; }
+        .player-row { justify-content: center; flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+        .player-captain { align-self: flex-start; }
+        .cmd-header { padding: 5px 10px; }
+        .cmd-title { font-size: 0.7rem; letter-spacing: 1px; }
+        .cmd-body { padding: 6px; }
+        .cmd-output { max-height: 120px; padding: 6px; }
+        .cmd-line { font-size: 0.65rem; }
+        .cmd-input-line { padding: 4px; gap: 4px; }
+        .cmd-prompt { font-size: 0.65rem; }
+    }
+    
+    /* Mobile Medium (375px - 424px) */
+    @media (min-width: 375px) and (max-width: 424px) {
+        :root { --rail-width: 40px; }
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 0.35rem; top: 70%; }
+        .menu-trigger-perm, .scroll-btn-perm { font-size: 1.1rem; border-width: 1.5px; }
+        .menu-panel-perm { width: 200px; padding: 0.6rem; }
+        .menu-item { padding: 0.45rem; font-size: 0.6rem; }
+        .live-data div { font-size: 0.7rem; }
+    }
+    
+    /* Mobile Small (320px - 374px) */
+    @media (min-width: 320px) and (max-width: 374px) {
+        :root { --rail-width: 44px; }
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 0.3rem; top: 70%; }
+        .menu-trigger-perm, .scroll-btn-perm { font-size: 1rem; border-width: 1.5px; }
+        .menu-panel-perm { width: 185px; padding: 0.5rem; max-height: 65vh; }
+        .menu-item { padding: 0.4rem; font-size: 0.55rem; margin: 0.25rem 0; }
+        .cmd-output { max-height: 100px; }
+        .cmd-line { font-size: 0.55rem; padding: 1px 0 1px 4px; }
+        .cmd-prompt { font-size: 0.55rem; }
+        .cmd-input { font-size: 0.55rem; min-width: 80px; }
+    }
+    
+    /* Very Small Devices (under 320px) */
+    @media (max-width: 319px) {
+        :root { --rail-width: 35px; }
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 0.25rem; top: 70%; }
+        .menu-trigger-perm, .scroll-btn-perm { font-size: 0.9rem; border-width: 1px; }
+        .menu-panel-perm { width: 165px; padding: 0.4rem; max-height: 60vh; }
+        .menu-item { padding: 0.35rem; font-size: 0.5rem; margin: 0.2rem 0; letter-spacing: 0.5px; }
+        main { padding: 0 0.3rem; }
+    }
+    
+    /* Special: Small Height Devices */
+    @media (max-height: 700px) {
+        .tactical-menu-permanent, .quick-scroll-permanent { top: 50%; }
+        .menu-panel-perm { max-height: 75vh; }
+        .menu-item { padding: 0.4rem; margin: 0.25rem 0; }
+    }
+    
+    /* Special: Extra Tall Devices */
+    @media (min-height: 1000px) {
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 0.8rem; top: 50%; }
+        .menu-panel-perm { max-height: 70vh; }
+    }
+    
+    /* Landscape Orientation Fixes */
+    @media (orientation: landscape) and (max-height: 500px) {
+        .tactical-menu-permanent, .quick-scroll-permanent { gap: 0.2rem; top: 50%; }
+        .menu-trigger-perm, .scroll-btn-perm { font-size: 0.6rem; }
+        .menu-panel-perm { max-height: 85vh; overflow-y: auto; }
+        .menu-item { padding: 0.3rem; font-size: 0.5rem; }
+        .cmd-output { max-height: 80px; }
+        .cmd-body { padding: 4px; }
+        .cmd-line { font-size: 0.6rem; margin: 2px 0; }
+    }
+    
+    @media (orientation: landscape) and (max-height: 600px) {
+        main { margin-top: calc(var(--header-height, 140px) + 1rem); }
+    }
+    
+    /* -----------------------------------------------
+       13. ACCESSIBILITY & PRINT STYLES
+       ----------------------------------------------- */
+    @media (prefers-reduced-motion: reduce) {
+        .menu-panel-perm, .menu-trigger-perm, .scroll-btn-perm, .menu-item,
+        .tactical-menu-permanent:hover .menu-panel-perm {
+            transition: none !important;
+        }
+        .scan-arm { animation: none !important; }
+        .cmd-led.green { animation: none !important; }
+    }
+    
+    @media print {
+        .tactical-menu-permanent, .quick-scroll-permanent, .radar-grid,
+        .cmd-terminal, .audio-btn {
+            display: none !important;
+        }
+        main, footer, .ops-card {
+            margin: 0 auto !important;
+            text-align: center !important;
+        }
+        main { margin: 0 !important; padding: 0 !important; }
+    }
+      
+  </style>
+  
+</head>
+  
+<body>
+
+  <div class="radar-grid" id="radarGrid">
+    <div class="f22-radar"></div>
+    <div class="scan-arm"></div>
+    <div class="radar-noise"></div>
+  </div>
+
+  <audio id="bgTrack" loop preload="auto" autoplay style="display:none;">
+    <source src="1.mp3" type="audio/mpeg">
+  </audio>
+
+  <header class="command-center">
+    <div class="header-emblem">
+
+      <div class="logo-container" onclick="window.location.href='index.html';" title="back to home..." style="cursor: pointer;">
+        <img src="images/esslogo1.png" alt="ESS" class="logo-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23000%22 stroke=%22%231e90ff%22 stroke-width=%226%22/><text x=%2250%22 y=%2268%22 font-size=%2248%22 text-anchor=%22middle%22 fill=%22%231e90ff%22 font-family=%22monospace%22>ESS</text></svg>';">
+      </div>
+      <span class="countdown-timer" id="mainCountdown">--D --H --M --S</span>
+    </div>
+  </header>
+
+  <nav class="tactical-menu-permanent">
+    <div class="menu-trigger-perm">☰</div>
+    <div class="menu-panel-perm">
+      <div class="menu-header" style="color:var(--strike-blue); border-bottom:2px solid; padding-bottom:0.5rem;">◈ NAVIGATION ◈</div>
+      <div class="menu-items">
+        <div class="menu-item" onclick="document.getElementById('champion-story').scrollIntoView({behavior:'smooth'})">🏆 CHAMPS</div>
+        <div class="menu-item" onclick="document.getElementById('league-table').scrollIntoView({behavior:'smooth'})">📊 LEAGUE</div>
+        <div class="menu-item" onclick="document.getElementById('schedule').scrollIntoView({behavior:'smooth'})">📅 SCHEDULE</div>
+        <div class="menu-item" onclick="document.getElementById('match-summary').scrollIntoView({behavior:'smooth'})">📋 SUMMARY</div>
+        <div class="menu-item" onclick="document.getElementById('scorers').scrollIntoView({behavior:'smooth'})">🎯 SNIPERS</div>
+        <div class="menu-item" onclick="document.getElementById('teams').scrollIntoView({behavior:'smooth'})">👥 TEAMS</div>
+        <div class="menu-item" onclick="document.getElementById('awards').scrollIntoView({behavior:'smooth'})">🏅 AWARDS</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="quick-scroll-permanent">
+    <div class="scroll-btn-perm" onclick="window.scrollTo({top:0, behavior:'smooth'})">🔼</div>
+    <div class="scroll-btn-perm" onclick="window.scrollTo({top: window.innerHeight * 1.8, behavior:'smooth'})">⏺️</div>
+    <div class="scroll-btn-perm" onclick="window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'})">🔽</div>
+  </div>
+
+  <main>
+
+    <section id="champion-story" class="ops-card">
+      <div class="story-title"><h2 style="color:var(--strike-blue);">🏆 REIGNING CHAMPIONS: <br><span style="color: red;">EDEN ALPHA</span></h2></div><br>
+      <p style="color:var(--text-dim);">Can Alpha, as ancient Spartan warriors, retain their trophy against a 'full' modern airborne militant Delta Force side? | E.S.S 2026: locked and loaded.</p>
+    </section>
+
+    <section id="league-table" class="ops-card">
+      
+      <div class="section-command"><h2>LEAGUE TABLE · WEEK 09</h2><span>2026</span></div>
+      
+      <div class="table-container"><table><thead><tr><th>TEAM</th><th>PTS</th>
+        
+        <th>W</th>
+        
+        <th>D</th>
+        
+        <th>L</th>
+        
+        <th>P</th></tr></thead>
+        
+        <tbody id="league-tbody">
+          
+          <tr><td style="color: red;">EDEN ALPHA</td><td>10</td>
+            
+            <td>3</td> 
+            
+            <td>1</td>
+            
+            <td>0</td>
+            
+            <td>4</td></tr>
+          
+          <tr><td style="color: green;">EDEN DELTA</td><td>1</td>
+            
+            <td>0</td>
+            
+            <td>1</td>
+            
+            <td>3</td>
+            
+            <td>4</td></tr>
+          
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="schedule" class="ops-card">
+      <div class="section-command"><h2>OPERATION SCHEDULE · 38 GAMES</h2></div>
+      
+      <div class="color-key" style="display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
+        
+        <span><span style="background:#4ade80; width:16px; height:16px; display:inline-block;">
+          
+        </span> COMPLETED</span>
+        
+        <span><span style="background:#60a5fa; width:16px; height:16px; display:inline-block;">
+          
+        </span> NEXT</span>
+        
+        <span><span style="background:#fb923c; width:16px; height:16px; display:inline-block;">
+          
+        </span> UPCOMING</span>
+
+        <span><span style="background:red; width:16px; height:16px; display:inline-block;">
+          
+        </span> POSTPONED</span>
+        
+      </div>
+      <div class="table-container">
+        <table><thead><tr><th>DIRECT ACTION</th><th>DATE (14:00)</th><th>LOCATION</th></tr></thead>
+        <tbody id="schedule-tbody">
+
+          <tr class="completed-row"><td>DA01</td><td>01 Mar 2026</td><td>HARBOUR</td></tr>
+          <tr class="completed-row"><td>DA02</td><td>08 Mar 2026</td><td>HARBOUR</td></tr>
+          <tr class="completed-row"><td>DA03</td><td>15 Mar 2026</td><td>HARBOUR</td></tr>
+          
+          <tr class="completed-row"><td>DA04</td><td>22 Mar 2026</td><td>HARBOUR</td></tr>
+          <tr class="next-row"><td>DA05</td><td>29 Mar 2026</td><td>HARBOUR</td></tr>
+          <tr class="upcoming-row"><td>DA06</td><td>05 Apr 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA07</td><td>12 Apr 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA08</td><td>19 Apr 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA09</td><td>26 Apr 2026</td><td>TBD</td></tr>
+          
+          <tr class="upcoming-row"><td>DA10</td><td>03 May 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA11</td><td>10 May 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA12</td><td>17 May 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA13</td><td>24 May 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA14</td><td>31 May 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA15</td><td>07 Jun 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA16</td><td>14 Jun 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA17</td><td>21 Jun 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA18</td><td>28 Jun 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA19</td><td>05 Jul 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA20</td><td>12 Jul 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA21</td><td>19 Jul 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA22</td><td>26 Jul 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA23</td><td>02 Aug 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA24</td><td>09 Aug 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA25</td><td>16 Aug 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA26</td><td>23 Aug 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA27</td><td>30 Aug 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA28</td><td>06 Sep 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA29</td><td>13 Sep 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA30</td><td>20 Sep 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA31</td><td>27 Sep 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA32</td><td>04 Oct 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA33</td><td>11 Oct 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA34</td><td>18 Oct 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA35</td><td>25 Oct 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA36</td><td>01 Nov 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA37</td><td>08 Nov 2026</td><td>TBD</td></tr>
+          <tr class="upcoming-row"><td>DA38</td><td>15 Nov 2026</td><td>TBD</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="match-summary" class="ops-card">
+      <div class="section-command"><h2>OPERATION SUMMARY</h2></div>
+      <div class="table-container">
+        <table><thead><tr><th>DIRECT ACTION</th><th>RESULT</th><th>SCORERS</th><th>MOTM</th><th>LOCATION</th><th>INTEL</th></tr></thead>
+        <tbody id="summary-tbody">
+          <tr><td>DA01</td><td>2-1</td><td>BAYANDA (1), HOSS (1), VUYO (1)</td><td>QUEENER</td><td>HARBOUR</td><td>alpha comeback</td></tr>
+          
+          <tr><td>DA02</td><td>11-4</td><td>VUYO (5), JONATHAN (2), QUEENER (4), SPHE (3), OLAMA (1)</td><td>JONATHAN</td><td>HARBOUR</td><td>alpha just completely embarrased delta. the score was 2-2 at one point, but alpha just ran away with it, with no one being able to defend jonathan.</td></tr>
+          
+          <tr><td>DA03</td><td>4-1</td><td>VUYO (2), JONATHAN (1), XAN (1)</td><td>VUYO</td><td>HARBOUR</td><td>NIL-NIL DRAW AT HALFTIME, AND OLAMA HAD TO COME OFF DUE TO ILLNESS, AND HENCE ALPHA THEN JUST COMPLETELY DISMANTLED DELTA WITH 4 GOALS.</td></tr>
+          
+          <tr><td>DA04</td><td>1-1</td><td>JOY (1), XAN (1)</td><td>JOY</td><td>HARBOUR</td><td>EXCITING SCENES. SOME REALLY EXCITING SCENES. BOTH IN AND OUT OF THE GAME. LIEUTENANT COMMANDER JOYSON IS BACK - MR. 5 STARS HIMSELF. XAN SCORED POSSIBLY THE GOAL OF THE SEASON. DIRECT ACTIONS ARE NOW SOON TO BE POSTED ON OUR LOVELY YOUTUBE PAGE, STAY TUNED, AS OF DA05 - LEGGO! DELTA SCORED FIRST.</td></tr>
+          
+          <tr><td>DA05</td><td>—</td><td>—</td><td>TBD</td><td>POSTPONED</td><td>—</td></tr>
+          
+          <tr><td>DA06</td><td>—</td><td>—</td><td>TBD</td><td>POSTPONED</td><td>—</td></tr>
+          
+          <tr><td>DA07</td><td>—</td><td>—</td><td>TBD</td><td>POSTPONED</td><td>—</td></tr>
+          
+          <tr><td>DA08</td><td>—</td><td>—</td><td>TBD</td><td>POSTPONED</td><td>—</td></tr>
+          
+          <tr><td>DA09</td><td>—</td><td>—</td><td>TBD</td><td>POSTPONED</td><td>—</td></tr>
+
+          <tr><td>DA10</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA11</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA12</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA13</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA14</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA15</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA16</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA17</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA18</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA19</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA20</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+
+          <tr><td>DA21</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA22</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA23</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA24</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA25</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA26</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA27</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA28</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA29</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA30</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA31</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA32</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA33</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA34</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA35</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA36</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA37</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+          
+          <tr><td>DA38</td><td>—</td><td>—</td><td>TBD</td><td>TBD</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div></section>
+
+    <section id="scorers" class="ops-card">
+      
+      <div class="section-command"><h2>TOP SNIPERS</h2></div>
+      
+      <div class="table-container">
+      
+      <table><thead><tr><th>OPERATOR</th><th>GOALS</th></tr></thead>
+      
+      <tbody id="scorers-tbody">
+      
+      <tr><td>VUYO</td><td>8</td></tr>
+      <tr><td>QUEENER</td><td>4</td></tr>
+      <tr><td>JONATHAN</td><td>3</td></tr>
+      <tr><td>SPHE</td><td>3</td></tr>
+      <tr><td>XAN</td><td>2</td></tr>
+      <tr><td>OLAMA</td><td>1</td></tr>
+      <tr><td>JOY</td><td>1</td></tr>
+      <tr><td>BAYANDA</td><td>1</td></tr>
+      <tr><td>HOSS</td><td>1</td></tr>
+    
+    </tbody></table></div></section>
+
+    <section id="motm" class="ops-card"><div class="section-command"><h2>MAN OF THE MATCH</h2></div><div class="table-container"><table><thead><tr><th>DIRECT ACTION</th><th>OPERATOR</th></tr></thead><tbody id="motm-tbody"><tr><td>DA01</td><td>QUEENER</td></tr><tr><td>DA02</td><td>JONATHAN</td></tr><tr><td>DA03</td><td>VUYO</td></tr><tr><td>DA04</td><td>TBD</td></tr><tr><td>DA05</td><td>TBD</td></tr><tr><td>DA06</td><td>TBD</td></tr><tr><td>DA07</td><td>TBD</td></tr><tr><td>DA08</td><td>TBD</td></tr><tr><td>DA09</td><td>TBD</td></tr><tr><td>DA10</td><td>TBD</td></tr><tr><td>DA11</td><td>TBD</td></tr><tr><td>DA12</td><td>TBD</td></tr><tr><td>DA13</td><td>TBD</td></tr><tr><td>DA14</td><td>TBD</td></tr><tr><td>DA15</td><td>TBD</td></tr><tr><td>DA16</td><td>TBD</td></tr><tr><td>DA17</td><td>TBD</td></tr><tr><td>DA18</td><td>TBD</td></tr><tr><td>DA19</td><td>TBD</td></tr><tr><td>DA20</td><td>TBD</td></tr><tr><td>DA21</td><td>TBD</td></tr><tr><td>DA22</td><td>TBD</td></tr><tr><td>DA23</td><td>TBD</td></tr><tr><td>DA24</td><td>TBD</td></tr><tr><td>DA25</td><td>TBD</td></tr><tr><td>DA26</td><td>TBD</td></tr><tr><td>DA27</td><td>TBD</td></tr><tr><td>DA28</td><td>TBD</td></tr><tr><td>DA29</td><td>TBD</td></tr><tr><td>DA30</td><td>TBD</td></tr><tr><td>DA31</td><td>TBD</td></tr><tr><td>DA32</td><td>TBD</td></tr><tr><td>DA33</td><td>TBD</td></tr><tr><td>DA34</td><td>TBD</td></tr><tr><td>DA35</td><td>TBD</td></tr><tr><td>DA36</td><td>TBD</td></tr><tr><td>DA37</td><td>TBD</td></tr><tr><td>DA38</td><td>TBD</td></tr></tbody></table></div></section>
+
+    <section id="defenders" class="ops-card">
+      
+      <div class="section-command"><h2>DEFENDER OF THE GAME</h2></div>
+      
+      <div class="table-container"><table>
+      
+      <thead><tr><th>MISSION</th><th>OPERATOR</th></tr></thead>
+      
+      <tbody id="defenders-tbody">
+      
+      <tr><td>DA01</td><td>QUEENER</td></tr>
+        
+        <tr><td>DA02</td><td>JONATHAN</td></tr>
+        
+        <tr><td>DA03</td><td>HOSS</td></tr>
+        
+        <tr><td>DA04</td><td>OLAMA</td></tr>
+        
+        <tr><td>DA05</td><td>TBD</td></tr>
+        
+        <tr><td>DA06</td><td>TBD</td></tr>
+        
+        <tr><td>DA07</td><td>TBD</td></tr>
+        
+        <tr><td>DA08</td><td>TBD</td></tr>
+        
+        <tr><td>DA09</td><td>TBD</td></tr>
+        
+        <tr><td>DA10</td><td>TBD</td></tr>
+        
+        <tr><td>DA11</td><td>TBD</td></tr>
+        
+        <tr><td>DA12</td><td>TBD</td></tr>
+        
+        <tr><td>DA13</td><td>TBD</td></tr>
+        
+        <tr><td>DA14</td><td>TBD</td></tr>
+        
+        <tr><td>DA15</td><td>TBD</td></tr>
+        
+        <tr><td>DA16</td><td>TBD</td></tr>
+        
+        <tr><td>DA17</td><td>TBD</td></tr>
+        
+        <tr><td>DA18</td><td>TBD</td></tr>
+        
+        <tr><td>DA19</td><td>TBD</td></tr>
+        
+        <tr><td>DA20</td><td>TBD</td></tr>
+        
+        <tr><td>DA21</td><td>TBD</td></tr>
+        
+        <tr><td>DA22</td><td>TBD</td></tr>
+        
+        <tr><td>DA23</td><td>TBD</td></tr>
+        
+        <tr><td>DA24</td><td>TBD</td></tr>
+        
+        <tr><td>DA25</td><td>TBD</td></tr>
+        
+        <tr><td>DA26</td><td>TBD</td></tr>
+        
+        <tr><td>DA27</td><td>TBD</td></tr>
+        
+        <tr><td>DA28</td><td>TBD</td></tr>
+        
+        <tr><td>DA29</td><td>TBD</td></tr>
+        
+        <tr><td>DA30</td><td>TBD</td></tr>
+        
+        <tr><td>DA31</td><td>TBD</td></tr>
+        
+        <tr><td>DA32</td><td>TBD</td></tr>
+        
+        <tr><td>DA33</td><td>TBD</td></tr>
+        
+        <tr><td>DA34</td><td>TBD</td></tr>
+        
+        <tr><td>DA35</td><td>TBD</td></tr>
+        
+        <tr><td>DA36</td><td>TBD</td></tr>
+        
+        <tr><td>DA37</td><td>TBD</td></tr>
+        
+        <tr><td>DA38</td><td>TBD</td></tr>
+      
+      </tbody>
+      
+      </table>
+      
+      </div>
+    
+    </section>
+
+    <section id="assisters" class="ops-card">
+      
+      <div class="section-command">
+        
+        <h2>TOP ASSISTERS</h2>
+      
+      </div>
+      
+      <div class="table-container">
+        
+        <table>
+          
+          <thead>
+            
+            <tr><th>OPERATOR</th><th>ASSISTS</th></tr>
+          
+          </thead>
+          
+          <tbody id="assisters-tbody">
+      
+      <tr><td>JONATHAN</td><td>2</td></tr>
+      
+      <tr><td>FROST</td><td>1</td></tr>
+            
+      <tr><td>JOY</td><td>1</td></tr>
+      
+      <tr><td>OLAMA</td><td>1</td></tr>
+      
+      <tr><td>BAYANDA</td><td>1</td></tr>
+      
+    
+    </tbody></table></div></section>
+
+    <section id="teams" class="ops-card">
+      
+      <div class="section-command"><h2>TEAMS · 5v5 TACTICAL</h2></div>
+      
+      <div class="teams-grid">
+        
+        <div class="team-card">
+          
+          <div class="team-role">⚔️ ALPHA SQUAD</div>
+          
+          <div class="starting-five">
+            
+            <div class="player-row"><span class="player-number">#09</span><span class="player-name">HOSS</span><span class="player-position">FORWARD · C</span><span class="player-captain">CAPTAIN</span></div>
+            
+            <div class="player-row"><span class="player-number">#10</span><span class="player-name">VUYO</span><span class="player-position">STRIKER</span></div>
+            
+            <div class="player-row"><span class="player-number">#08</span><span class="player-name">XAN</span><span class="player-position">CENTER MID</span></div>
+            
+            <div class="player-row"><span class="player-number">#06</span><span class="player-name">FROST</span><span class="player-position">DEF MID</span></div>
+            
+            <div class="player-row"><span class="player-number">#11</span><span class="player-name">QUEENER</span><span class="player-position">LEFT WING · VC</span><span class="player-captain">VICE</span></div></div>
+          
+          <div class="reserve-section"><div class="reserve-title">🔰 RESERVES</div>
+              
+              <div class="player-row"><span class="player-number">#12</span><span class="player-name">JONATHAN</span><span class="player-position">STRIKER</span></div></div></div>
+
+        <!-- delta -->
+        
+        <div class="team-card delta-force">
+          
+          <div class="team-role">🎯 DELTA FORCE</div>
+          
+          <div class="starting-five">
+            
+            <div class="player-row"><span class="player-number">#05</span><span class="player-name">JOY</span><span class="player-position">ATT MID · C</span><span class="player-captain">CAPTAIN</span></div>
+
+            <div class="player-row"><span class="player-number">#03</span><span class="player-name">JUNIOR</span><span class="player-position">RIGHT WING</span></div>
+
+            <div class="player-row"><span class="player-number">#02</span><span class="player-name">BAYANDA</span><span class="player-position">CENTER BACK + COVER ATTACK</span></div></div>
+
+          <div class="player-row"><span class="player-number">#07</span><span class="player-name">OLAMA</span><span class="player-position">LEFT WING + COVER DEFENCE · VC</span><span class="player-captain">VICE</span></div>
+
+          <div class="player-row"><span class="player-number">#00</span><span class="player-name">MASIYA</span><span class="player-position">ATT MID</span></div></div></div>
+              
+              <div class="reserve-section"><div class="reserve-title">🔰 RESERVES</div>
+              
+              <div class="player-row"><span class="player-number">#33</span><span class="player-name">S'PHE</span><span class="player-position">STRIKER</span></div></div></div>
+
+    </div>
+    </div>
+      
+    </section>
+
+    <section id="awards" class="ops-card">
+      
+      <div class="section-command"><h2>END OF OPERATION AWARDS</h2></div>
+      
+      <div class="table-container">
+        
+        <table><thead><tr><th>HONOUR</th><th>RECIPIENT</th></tr></thead>
+          
+          <tbody id="awards-tbody">
+            
+            <tr><td>BEST OPERATOR OF THE OPERATION</td><td>—</td></tr>
+
+            <tr><td>THE PPsH-41 + AK-47 + AR-15 + SVD DRAGUNOV SNIPER RIFLE + BLACK GLOCK 17 + PLATINUM COLT M1911 + BLACK STEALTH KNIFE</td><td>—</td></tr>
+            
+            <tr><td>THE BRONZE BOOT</td><td>—</td></tr>
+            
+            <tr><td>DEFENDER OF THE OPERATION</td><td>—</td></tr>
+            
+            <tr><td>PLAYMAKER OF THE OPERATION</td><td>—</td></tr>
+
+            <tr><td>MOST TACTICAL OF THE OPERATION</td><td>—</td></tr>
+
+            <tr><td>BEST LEADER OF THE OPERATION</td><td>—</td></tr>
+            
+            <tr><td>GOAL OF THE OPERATION</td><td>—</td></tr>
+
+            <tr><td>TEAM OF THE OPERATION</td><td>—</td></tr>
+          
+          </tbody>
+        
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="live-data"><div><span>TIME:</span><span id="liveTime"></span></div><div><span>WEATHER:</span><span id="liveWeather">18°C · CLEAR</span></div><div><span>WIND:</span><span>12km/h NW</span></div></div>
+      <div class="live-data"><div><span>RADAR:</span><span>ACTIVE SWEEP</span></div><div><span>CONTACTS:</span><span id="dotCount">16</span></div><div><span>THREAT:</span><span>LOW</span></div><div><span>MISSION:</span><span>DA05 · HARBOUR</span></div></div>
+    </div>
+    <div class="copyright">© <span>EDEN</span> · 2026 · ALL INTELLECTUAL PROPERTY</div>
+  </footer>
+
+  <script>
+    
+    (function() {
+
+      const audio = document.getElementById('bgTrack');
+      if (audio) {
+        audio.volume = 0.25;
+        audio.loop = true;
+        let playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+
+            const retryPlay = function() {
+              audio.play();
+              document.removeEventListener('click', retryPlay);
+              document.removeEventListener('touchstart', retryPlay);
+            };
+            document.addEventListener('click', retryPlay, { once: true });
+            document.addEventListener('touchstart', retryPlay, { once: true });
+          });
+        }
+      }
+
+      const radarGrid = document.getElementById('radarGrid');
+      function generateDots() {
+        const existing = document.querySelectorAll('.contact-dot');
+        existing.forEach(d => d.remove());
+        const count = Math.floor(Math.random() * 30) + 15; // 15-45
+        for (let i = 0; i < count; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'contact-dot';
+          dot.style.left = Math.random() * 100 + '%';
+          dot.style.top = Math.random() * 100 + '%';
+          radarGrid.appendChild(dot);
+        }
+        document.getElementById('dotCount') && (document.getElementById('dotCount').innerText = count);
+      }
+      generateDots();
+      setInterval(generateDots, 2200);
+
+      const matches = [];
+      let base = new Date(2026, 2, 1, 14, 0, 0);
+      for (let i = 0; i < 38; i++) { 
+        let d = new Date(base); 
+        d.setDate(base.getDate() + i * 7); 
+        matches.push({ date: d }); 
+      }
+      function updateCountdown() {
+        const now = new Date();
+        let nextMatch = null;
+        for (let m of matches) { 
+          if (m.date > now) { 
+            nextMatch = m; 
+            break; 
+          } 
+        }
+        const cd = document.getElementById('mainCountdown');
+        if (!nextMatch) { 
+          cd.innerText = 'OP COMPLETE'; 
+          return; 
+        }
+        const diff = nextMatch.date - now;
+        if (diff <= 0) cd.innerText = '⚔️ MISSION ACTIVE ⚔️';
+        else { 
+          const d = Math.floor(diff / 86400000), 
+                h = Math.floor((diff % 86400000) / 3600000), 
+                m = Math.floor((diff % 3600000) / 60000), 
+                s = Math.floor((diff % 60000) / 1000);
+          cd.innerText = `${d}D ${h.toString().padStart(2, '0')}H ${m.toString().padStart(2, '0')}M ${s.toString().padStart(2, '0')}S`;
+        }
+      }
+      setInterval(updateCountdown, 500); 
+      updateCountdown();
+
+      function updateLive() { 
+        document.getElementById('liveTime').innerText = new Date().toLocaleTimeString('en-GB', { hour12: false }); 
+      }
+      setInterval(updateLive, 1000); 
+      updateLive();
+      setInterval(() => {
+        let w = ['18°C · CLEAR', '16°C · LIGHT RAIN', '21°C · HAZE', '14°C · SCOUT']; 
+        document.getElementById('liveWeather').innerText = w[Math.floor(Math.random() * w.length)];
+      }, 15000);
+    })();
+    
+  </script>
+
+  <script>
+(function() {
+    // ============================================================
+    // E.S.S 2026 - STYLING BUG FIXES ONLY
+    // Fixes: missing borders, alignment issues, responsive breaks,
+    // broken hover effects, overlapping elements, table styling,
+    // color inconsistencies, spacing errors, and visual glitches.
+    // LEAGUE STATUS PRESERVED - no data changes.
+    // ============================================================
+
+    // Inject critical style fixes
+    const styleFix = document.createElement('style');
+    styleFix.textContent = `
+        /* Fix missing borders and outlines */
+        .ops-card, .team-card, .player-row, .table-container, 
+        .live-data, .menu-item, .menu-trigger-perm, .scroll-btn-perm {
+            outline: none !important;
+        }
+        
+        /* Fix border consistency on all interactive elements */
+        .menu-trigger-perm, .scroll-btn-perm {
+            border: 2px solid var(--strike-blue, #1e90ff) !important;
+        }
+        
+        .tactical-menu-permanent .menu-trigger-perm {
+            border-left: none !important;
+        }
+        
+        .quick-scroll-permanent .scroll-btn-perm {
+            border-right: none !important;
+        }
+        
+        /* Fix menu panel transform and visibility */
+        .menu-panel-perm {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 20, 30, 0.98) !important;
+            border: 2px solid var(--strike-blue, #1e90ff) !important;
+            border-left: none !important;
+            transition: 0.25s cubic-bezier(0.2, 0.9, 0.3, 1) !important;
+        }
+        
+        /* Fix hover state for menu panel on all devices */
+        .tactical-menu-permanent:hover .menu-panel-perm,
+        .menu-panel-perm:hover {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            transform: translateY(-50%) translateX(calc(var(--rail-width, 70px) + 8px)) !important;
+        }
+        
+        /* Fix quick scroll panel alignment */
+        .quick-scroll-permanent {
+            z-index: 10001 !important;
+        }
+        
+        /* Fix main content spacing to never overlap header */
+        main {
+            position: relative !important;
+            z-index: 10 !important;
+            padding-top: 0 !important;
+        }
+        
+        /* Fix table cell borders and text alignment */
+        table, th, td {
+            border: 2px solid var(--strike-blue, #1e90ff) !important;
+            border-collapse: collapse !important;
+        }
+        
+        th {
+            background: rgba(0, 40, 60, 0.8) !important;
+            color: var(--strike-blue, #1e90ff) !important;
+            font-weight: 700 !important;
+        }
+        
+        td {
+            color: var(--text-primary, #ecf7ff) !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Fix completed/next/upcoming row styling */
+        .completed-row {
+            background: rgba(2, 48, 32, 0.5) !important;
+        }
+        .next-row {
+            background: rgba(0, 0, 128, 0.5) !important;
+        }
+        .upcoming-row {
+            background: rgba(199, 110, 0, 0.5) !important;
+        }
+        
+        /* Fix color key legend display */
+        .color-key span span {
+            display: inline-block !important;
+            width: 16px !important;
+            height: 16px !important;
+            margin-right: 6px !important;
+            vertical-align: middle !important;
+        }
+        
+        /* Fix player row styling */
+        .player-row {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.8rem !important;
+            flex-wrap: wrap !important;
+            background: rgba(0, 20, 30, 0.8) !important;
+            border: 2px solid var(--strike-blue, #1e90ff) !important;
+            padding: 0.5rem 0.8rem !important;
+            margin: 0.5rem 0 !important;
+        }
+        
+        .player-number {
+            color: var(--strike-blue, #1e90ff) !important;
+            font-weight: 800 !important;
+            min-width: 3ch !important;
+        }
+        
+        .player-name {
+            font-weight: 700 !important;
+            min-width: 10ch !important;
+        }
+        
+        .team-card:not(.delta-force) .player-name {
+            color: var(--alpha-red, #d32f2f) !important;
+        }
+        
+        .team-card.delta-force .player-name {
+            color: var(--delta-green, #2e7d32) !important;
+        }
+        
+        .player-position {
+            color: var(--text-dim, #b0d0e5) !important;
+            text-transform: uppercase !important;
+            flex: 1 !important;
+            font-size: 0.9rem !important;
+        }
+        
+        .player-captain {
+            background: var(--alpha-red, #d32f2f) !important;
+            color: black !important;
+            padding: 3px 8px !important;
+            font-weight: 800 !important;
+            border: 2px solid black !important;
+            font-size: 0.7rem !important;
+        }
+        
+        .delta-force .player-captain {
+            background: var(--delta-green, #2e7d32) !important;
+        }
+        
+        /* Fix logo container and image */
+        .logo-container {
+            overflow: hidden !important;
+            border-radius: 50% !important;
+            border: 3px solid var(--strike-blue, #1e90ff) !important;
+            cursor: pointer !important;
+        }
+        
+        .logo-img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            transition: transform 0.2s ease !important;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.1) !important;
+        }
+        
+        /* Fix countdown timer positioning */
+        .countdown-timer {
+            white-space: nowrap !important;
+            text-align: center !important;
+            font-family: 'Courier New', monospace !important;
+        }
+        
+        /* Fix footer styling */
+        footer {
+            position: relative !important;
+            z-index: 10 !important;
+            background: rgba(0, 15, 25, 0.85) !important;
+            border-top: 6px solid var(--strike-blue, #1e90ff) !important;
+        }
+        
+        .copyright {
+            text-align: center !important;
+            border-top: 2px solid var(--strike-blue, #1e90ff) !important;
+            padding-top: 1.5rem !important;
+        }
+        
+        .copyright span {
+            color: var(--strike-blue, #1e90ff) !important;
+        }
+        
+        /* Fix radar grid layering */
+        .radar-grid {
+            z-index: 0 !important;
+            pointer-events: none !important;
+        }
+        
+        .f22-radar, .scan-arm, .radar-noise {
+            pointer-events: none !important;
+        }
+        
+        /* Fix contact dots styling */
+        .contact-dot {
+            position: absolute !important;
+            width: 8px !important;
+            height: 8px !important;
+            background: #1f9f2a !important;
+            border-radius: 50% !important;
+            animation: pulse 1.5s infinite !important;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.8); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+        }
+        
+        /* Fix section headers */
+        .section-command {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            border-bottom: 3px solid var(--strike-blue, #1e90ff) !important;
+            margin-bottom: 1.5rem !important;
+            padding-bottom: 0.5rem !important;
+            flex-wrap: wrap !important;
+        }
+        
+        .section-command h2 {
+            color: var(--strike-blue, #1e90ff) !important;
+            letter-spacing: 2px !important;
+        }
+        
+        /* Fix champion story section */
+        #champion-story {
+            margin: 30px auto !important;
+            text-align: center !important;
+        }
+        
+        #champion-story h2 {
+            color: var(--strike-blue, #1e90ff) !important;
+        }
+        
+        #champion-story h2 span {
+            color: red !important;
+        }
+        
+        /* Fix audio button styling */
+        .audio-btn {
+            border: 2px solid var(--strike-blue, #1e90ff) !important;
+            background: transparent !important;
+            color: var(--strike-blue, #1e90ff) !important;
+            padding: 0.5rem 1rem !important;
+            cursor: pointer !important;
+            transition: 0.1s !important;
+        }
+        
+        .audio-btn:hover {
+            background: var(--strike-blue, #1e90ff) !important;
+            color: #000 !important;
+        }
+        
+        /* Fix responsive styles for mobile */
+        @media (max-width: 480px) {
+            .player-row {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.4rem !important;
+            }
+            
+            .player-captain {
+                align-self: flex-start !important;
+            }
+            
+            .tactical-menu-permanent:hover .menu-panel-perm,
+            .menu-panel-perm:hover {
+                transform: translateY(-50%) translateX(58px) !important;
+            }
+            
+            .section-command {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+            
+            .color-key {
+                flex-wrap: wrap !important;
+                gap: 0.5rem !important;
+            }
+            
+            .live-data div {
+                font-size: 0.7rem !important;
+            }
+        }
+        
+        /* Fix hover transitions for all buttons */
+        .menu-trigger-perm, .scroll-btn-perm, .menu-item, .audio-btn {
+            transition: all 0.15s ease !important;
+            cursor: pointer !important;
+        }
+        
+        .menu-trigger-perm:hover, .scroll-btn-perm:hover {
+            background: var(--strike-blue, #1e90ff) !important;
+            color: #000 !important;
+        }
+        
+        .menu-item:hover {
+            background: var(--strike-blue, #1e90ff) !important;
+            color: black !important;
+        }
+        
+        /* Fix table container overflow */
+        .table-container {
+            overflow-x: auto !important;
+            width: 100% !important;
+        }
+        
+        /* Fix teams grid */
+        .teams-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+            gap: 2rem !important;
+        }
+        
+        /* Fix reserve section styling */
+        .reserve-section {
+            margin-top: 1rem !important;
+            padding-top: 0.5rem !important;
+            border-top: 1px dashed var(--strike-blue, #1e90ff) !important;
+        }
+        
+        .reserve-title {
+            color: var(--strike-blue, #1e90ff) !important;
+            font-size: 0.8rem !important;
+            margin-bottom: 0.5rem !important;
+            letter-spacing: 1px !important;
+        }
+        
+        /* Fix live data box */
+        .live-data {
+            background: rgba(0, 20, 28, 0.7) !important;
+            border: 2px solid var(--strike-blue, #1e90ff) !important;
+            padding: 0.8rem 1.2rem !important;
+        }
+        
+        .live-data div {
+            display: flex !important;
+            justify-content: space-between !important;
+            gap: 1rem !important;
+        }
+        
+        /* Fix scroll behavior */
+        html {
+            scroll-behavior: smooth !important;
+        }
+        
+        /* Fix body overflow */
+        body {
+            overflow-x: hidden !important;
+            position: relative !important;
+        }
+        
+        /* Ensure all cards have consistent borders */
+        .ops-card {
+            border-left: 5px solid var(--strike-blue, #1e90ff) !important;
+            border-right: 2px solid var(--strike-blue, #1e90ff) !important;
+            border-top: 2px solid var(--border-light, #2b4b6b) !important;
+            border-bottom: 2px solid var(--border-light, #2b4b6b) !important;
+        }
+        
+        /* Fix team card special borders */
+        .team-card {
+            border-left: 10px solid var(--alpha-red, #d32f2f) !important;
+        }
+        
+        .team-card.delta-force {
+            border-left-color: var(--delta-green, #2e7d32) !important;
+        }
+    `;
+    document.head.appendChild(styleFix);
+
+    // Fix missing box-shadow removal (override any existing shadows)
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach(el => {
+        el.style.setProperty('box-shadow', 'none', 'important');
+        el.style.setProperty('text-shadow', 'none', 'important');
+    });
+
+    // Fix any elements with missing border colors
+    const borderElements = document.querySelectorAll('[style*="border"]');
+    borderElements.forEach(el => {
+        const computed = getComputedStyle(el);
+        if (computed.borderColor === 'rgba(0, 0, 0, 0)' || computed.borderColor === 'transparent') {
+            if (el.classList.contains('menu-trigger-perm') || el.classList.contains('scroll-btn-perm')) {
+                el.style.borderColor = '#1e90ff';
+            }
+        }
+    });
+
+    // Ensure header height is respected on all screen sizes
+    function adjustHeaderSpacing() {
+        const header = document.querySelector('.command-center');
+        const main = document.querySelector('main');
+        if (header && main) {
+            const headerHeight = header.offsetHeight;
+            main.style.marginTop = `${headerHeight + 30}px`;
+        }
+    }
+    
+    window.addEventListener('load', adjustHeaderSpacing);
+    window.addEventListener('resize', adjustHeaderSpacing);
+    adjustHeaderSpacing();
+
+    // Fix radar dots animation smoothness
+    const radarDots = document.querySelectorAll('.contact-dot');
+    radarDots.forEach(dot => {
+        dot.style.animation = 'pulse 1.5s infinite';
+    });
+
+    // Ensure all table rows have proper background colors preserved
+    const completedRows = document.querySelectorAll('.completed-row');
+    const nextRows = document.querySelectorAll('.next-row');
+    const upcomingRows = document.querySelectorAll('.upcoming-row');
+    
+    completedRows.forEach(row => row.style.backgroundColor = 'rgba(2, 48, 32, 0.5)');
+    nextRows.forEach(row => row.style.backgroundColor = 'rgba(0, 0, 128, 0.5)');
+    upcomingRows.forEach(row => row.style.backgroundColor = 'rgba(199, 110, 0, 0.5)');
+
+    console.log('✓ All styling bugs fixed - league status preserved, no data changed');
+})();
+
+// CMD ON FOOTER
+    
+(function() {
+    // ============================================================
+    // E.S.S 2026 - CMD TERMINAL NAVIGATION SYSTEM
+    // Adds a tactical command interface to footer
+    // Auto-sizes across ALL screen devices
+    // ============================================================
+
+    function initCmdNavigation() {
+        // Get footer element
+        const footer = document.querySelector('footer');
+        if (!footer) return;
+
+        // Create CMD terminal container
+        const cmdContainer = document.createElement('div');
+        cmdContainer.className = 'cmd-terminal';
+        cmdContainer.setAttribute('data-cmd-active', 'false');
+        
+        // Create terminal HTML structure
+        cmdContainer.innerHTML = `
+            <div class="cmd-header">
+                <span class="cmd-led green"></span>
+                <span class="cmd-title">◈ E.S.S TERMINAL ◈</span>
+                <span class="cmd-led red"></span>
+            </div>
+            <div class="cmd-body">
+                <div class="cmd-output" id="cmdOutput">
+                    <div class="cmd-line">> E.S.S NAVIGATION SYSTEM v2.6</div>
+                    <div class="cmd-line">> Type 'help' for commands | 'clear' to reset</div>
+                    <div class="cmd-line">> ${new Date().toLocaleTimeString()} - SYSTEM READY</div>
+                </div>
+                <div class="cmd-input-line">
+                    <span class="cmd-prompt">ESS@CMD:~$</span>
+                    <input type="text" class="cmd-input" id="cmdInput" placeholder="enter command..." autocomplete="off">
+                </div>
+            </div>
+        `;
+
+        // Insert CMD terminal at the beginning of footer
+        const footerGrid = footer.querySelector('.footer-grid');
+        if (footerGrid) {
+            footerGrid.insertBefore(cmdContainer, footerGrid.firstChild);
+        } else {
+            footer.insertBefore(cmdContainer, footer.firstChild);
+        }
+
+        // Add dynamic CSS for responsive terminal
+        const cmdStyles = document.createElement('style');
+        cmdStyles.textContent = `
+            /* CMD TERMINAL - BASE STYLES */
+            .cmd-terminal {
+                background: rgba(0, 8, 16, 0.95);
+                border: 2px solid var(--strike-blue, #1e90ff);
+                border-radius: 8px;
+                margin-bottom: 1rem;
+                width: 100%;
+                overflow: hidden;
+                transition: all 0.3s ease;
+                font-family: 'Courier New', 'Fira Code', monospace;
+            }
+
+            .cmd-header {
+                background: linear-gradient(135deg, #0a1a2a 0%, #051015 100%);
+                padding: 8px 16px;
+                border-bottom: 2px solid var(--strike-blue, #1e90ff);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .cmd-led {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+
+            .cmd-led.green {
+                background: #1f9f2a;
+                box-shadow: 0 0 4px #1f9f2a;
+                animation: pulse 2s infinite;
+            }
+
+            .cmd-led.red {
+                background: #d32f2f;
+                box-shadow: 0 0 4px #d32f2f;
+            }
+
+            .cmd-title {
+                color: var(--strike-blue, #1e90ff);
+                font-size: clamp(0.8rem, 2vw, 1rem);
+                font-weight: 700;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+
+            .cmd-body {
+                padding: 12px;
+                transition: all 0.3s ease;
+            }
+
+            .cmd-terminal[data-cmd-active="false"] .cmd-body {
+                display: none;
+            }
+
+            .cmd-terminal[data-cmd-active="true"] .cmd-body {
+                display: block;
+            }
+
+            .cmd-output {
+                background: #000a0f;
+                border: 1px solid #1e90ff;
+                border-radius: 4px;
+                padding: 10px;
+                height: auto;
+                max-height: 200px;
+                overflow-y: auto;
+                margin-bottom: 10px;
+                font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+            }
+
+            .cmd-line {
+                color: #4ade80;
+                font-family: monospace;
+                padding: 2px 0;
+                border-left: 2px solid #1e90ff;
+                padding-left: 8px;
+                margin: 4px 0;
+                word-break: break-word;
+                white-space: pre-wrap;
+            }
+
+            .cmd-line.error {
+                color: #ff4444;
+                border-left-color: #ff4444;
+            }
+
+            .cmd-line.warning {
+                color: #ffaa44;
+                border-left-color: #ffaa44;
+            }
+
+            .cmd-line.success {
+                color: #44ff44;
+                border-left-color: #44ff44;
+            }
+
+            .cmd-input-line {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                background: #000a0f;
+                border: 1px solid #1e90ff;
+                border-radius: 4px;
+                padding: 8px;
+            }
+
+            .cmd-prompt {
+                color: #1e90ff;
+                font-weight: 700;
+                font-size: clamp(0.7rem, 2vw, 0.85rem);
+                white-space: nowrap;
+            }
+
+            .cmd-input {
+                flex: 1;
+                background: transparent;
+                border: none;
+                color: #4ade80;
+                font-family: monospace;
+                font-size: clamp(0.7rem, 2vw, 0.85rem);
+                outline: none;
+                min-width: 120px;
+            }
+
+            .cmd-input::placeholder {
+                color: #2a5f6e;
+                font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+            }
+
+            /* Scrollbar styling */
+            .cmd-output::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .cmd-output::-webkit-scrollbar-track {
+                background: #000a0f;
+            }
+
+            .cmd-output::-webkit-scrollbar-thumb {
+                background: #1e90ff;
+                border-radius: 3px;
+            }
+
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.4; }
+            }
+
+            /* RESPONSIVE SIZING - ALL DEVICES */
+            @media (max-width: 768px) {
+                .cmd-header {
+                    padding: 6px 12px;
+                }
+                .cmd-led {
+                    width: 8px;
+                    height: 8px;
+                }
+                .cmd-body {
+                    padding: 8px;
+                }
+                .cmd-output {
+                    max-height: 150px;
+                    padding: 8px;
+                }
+                .cmd-input-line {
+                    padding: 6px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .cmd-header {
+                    padding: 5px 10px;
+                }
+                .cmd-title {
+                    font-size: 0.7rem;
+                    letter-spacing: 1px;
+                }
+                .cmd-body {
+                    padding: 6px;
+                }
+                .cmd-output {
+                    max-height: 120px;
+                    padding: 6px;
+                }
+                .cmd-line {
+                    font-size: 0.65rem;
+                }
+                .cmd-input-line {
+                    padding: 4px;
+                    gap: 4px;
+                }
+                .cmd-prompt {
+                    font-size: 0.65rem;
+                }
+            }
+
+            @media (max-width: 320px) {
+                .cmd-output {
+                    max-height: 100px;
+                }
+                .cmd-line {
+                    font-size: 0.55rem;
+                    padding: 1px 0 1px 4px;
+                }
+                .cmd-prompt {
+                    font-size: 0.55rem;
+                }
+                .cmd-input {
+                    font-size: 0.55rem;
+                    min-width: 80px;
+                }
+            }
+
+            @media (min-width: 1920px) {
+                .cmd-output {
+                    max-height: 280px;
+                }
+                .cmd-line {
+                    font-size: 0.95rem;
+                }
+            }
+
+            /* Landscape orientation */
+            @media (orientation: landscape) and (max-height: 500px) {
+                .cmd-output {
+                    max-height: 80px;
+                }
+                .cmd-body {
+                    padding: 4px;
+                }
+                .cmd-line {
+                    font-size: 0.6rem;
+                    margin: 2px 0;
+                }
+            }
+
+            /* Ensure footer adjusts with CMD */
+            footer {
+                padding-bottom: 1rem !important;
+            }
+
+            .footer-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+        `;
+        document.head.appendChild(cmdStyles);
+
+        // CMD commands handler
+        const cmdInput = document.getElementById('cmdInput');
+        const cmdOutput = document.getElementById('cmdOutput');
+        const cmdTerminal = cmdContainer;
+
+        // Available commands
+        const commands = {
+            help: () => {
+                return [
+                    '╔════════════════════════════════════════╗',
+                    '║  AVAILABLE COMMANDS                    ║',
+                    '╠════════════════════════════════════════╣',
+                    '║  help     - Show this help menu        ║',
+                    '║  clear    - Clear terminal output      ║',
+                    '║  home     - Scroll to top              ║',
+                    '║  teams    - Scroll to teams section    ║',
+                    '║  table    - Scroll to league table     ║',
+                    '║  schedule - Scroll to schedule         ║',
+                    '║  summary  - Scroll to match summary    ║',
+                    '║  scorers  - Scroll to top scorers      ║',
+                    '║  awards   - Scroll to awards section   ║',
+                    '║  status   - Show system status         ║',
+                    '║  time     - Show current match time    ║',
+                    '╚════════════════════════════════════════╝'
+                ];
+            },
+            clear: () => {
+                cmdOutput.innerHTML = '';
+                return ['> Terminal cleared.'];
+            },
+            home: () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return ['> Navigating to HOME...', '> TOP OF PAGE'];
+            },
+            teams: () => {
+                const section = document.getElementById('teams');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+                return ['> Navigating to TEAMS section...', '> ALPHA & DELTA FORCE ROSTERS'];
+            },
+            table: () => {
+                const section = document.getElementById('league-table');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+                return ['> Navigating to LEAGUE TABLE...', '> CURRENT STANDINGS'];
+            },
+            schedule: () => {
+                const section = document.getElementById('schedule');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+                return ['> Navigating to SCHEDULE...', '> UPCOMING DIRECT ACTIONS'];
+            },
+            summary: () => {
+                const section = document.getElementById('match-summary');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+                return ['> Navigating to MATCH SUMMARY...', '> OPERATION REPORTS'];
+            },
+            scorers: () => {
+                const section = document.getElementById('scorers');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+                return ['> Navigating to TOP SNIPERS...', '> GOAL SCORERS LEADERBOARD'];
+            },
+            awards: () => {
+                const section = document.getElementById('awards');
+                if (section) section.scrollIntoView({ behavior: 'smooth' });
+                return ['> Navigating to AWARDS...', '> END OF OPERATION HONORS'];
+            },
+            status: () => {
+                const now = new Date();
+                const cdElem = document.getElementById('mainCountdown');
+                const countdown = cdElem ? cdElem.innerText : 'UNKNOWN';
+                const liveTime = document.getElementById('liveTime');
+                const time = liveTime ? liveTime.innerText : now.toLocaleTimeString();
+                return [
+                    '> SYSTEM STATUS: OPERATIONAL',
+                    `> TIME: ${time}`,
+                    `> COUNTDOWN: ${countdown}`,
+                    '> RADAR: ACTIVE',
+                    '> THREAT LEVEL: LOW',
+                    '> MISSION: DA05 · HARBOUR'
+                ];
+            },
+            time: () => {
+                const now = new Date();
+                return [`> Current time: ${now.toLocaleString()}`];
+            }
+        };
+
+        // Add command to output
+        function addToOutput(lines, type = 'normal') {
+            lines.forEach(line => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = `cmd-line ${type}`;
+                lineDiv.innerHTML = `> ${line}`;
+                cmdOutput.appendChild(lineDiv);
+            });
+            cmdOutput.scrollTop = cmdOutput.scrollHeight;
+        }
+
+        // Process command input
+        function processCommand(cmd) {
+            const trimmed = cmd.trim().toLowerCase();
+            if (!trimmed) return;
+
+            // Show user input
+            addToOutput([`${trimmed}`], 'normal');
+
+            if (commands[trimmed]) {
+                const result = commands[trimmed]();
+                addToOutput(result, 'success');
+            } else if (trimmed === 'ls' || trimmed === 'dir') {
+                addToOutput(['Available: ' + Object.keys(commands).join(', ')], 'warning');
+            } else {
+                addToOutput([`Command '${trimmed}' not recognized. Type 'help' for available commands.`], 'error');
+            }
+        }
+
+        // Event listeners
+        if (cmdInput) {
+            cmdInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    processCommand(cmdInput.value);
+                    cmdInput.value = '';
+                }
+            });
+        }
+
+        // Toggle terminal on header click
+        const cmdHeader = cmdContainer.querySelector('.cmd-header');
+        if (cmdHeader) {
+            cmdHeader.addEventListener('click', () => {
+                const isActive = cmdTerminal.getAttribute('data-cmd-active') === 'true';
+                cmdTerminal.setAttribute('data-cmd-active', isActive ? 'false' : 'true');
+            });
+            // Start with terminal open
+            cmdTerminal.setAttribute('data-cmd-active', 'true');
+        }
+
+        // Auto-resize footer when terminal toggles
+        const resizeObserver = new ResizeObserver(() => {
+            const footer = document.querySelector('footer');
+            if (footer) {
+                const main = document.querySelector('main');
+                if (main) {
+                    main.style.marginBottom = `${footer.offsetHeight + 20}px`;
+                }
+            }
+        });
+        resizeObserver.observe(footer);
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCmdNavigation);
+    } else {
+        initCmdNavigation();
+    }
+})();
+
+    // OVERLAPPING ISSUE
+
+(function() {
+    // ============================================================
+    // E.S.S 2026 - FORCED BUTTON POSITIONING
+    // Pushes buttons DOWN and keeps them AWAY from header
+    // ============================================================
+
+    function forceButtonsDown() {
+        const header = document.querySelector('.command-center');
+        const leftMenu = document.querySelector('.tactical-menu-permanent');
+        const rightMenu = document.querySelector('.quick-scroll-permanent');
+        
+        if (!header) return;
+        
+        function positionButtons() {
+            // Get header height
+            const headerHeight = header.offsetHeight;
+            const viewportHeight = window.innerHeight;
+            
+            // Calculate position - start buttons at 60% of viewport (well below header)
+            // This ensures they NEVER overlap header regardless of header size
+            const topPosition = Math.max(headerHeight + 50, viewportHeight * 0.55);
+            
+            if (leftMenu) {
+                leftMenu.style.position = 'fixed';
+                leftMenu.style.top = `${topPosition}px`;
+                leftMenu.style.transform = 'translateY(-50%)';
+                leftMenu.style.left = '0';
+                leftMenu.style.marginTop = '0';
+                leftMenu.style.zIndex = '10001';
+            }
+            
+            if (rightMenu) {
+                rightMenu.style.position = 'fixed';
+                rightMenu.style.top = `${topPosition}px`;
+                rightMenu.style.transform = 'translateY(-50%)';
+                rightMenu.style.right = '0';
+                rightMenu.style.marginTop = '0';
+                rightMenu.style.zIndex = '10001';
+            }
+        }
+        
+        // Force positioning on load
+        positionButtons();
+        
+        // Re-position on resize, scroll, and orientation change
+        window.addEventListener('resize', positionButtons);
+        window.addEventListener('orientationchange', positionButtons);
+        window.addEventListener('scroll', positionButtons);
+        
+        // Also force position after any delay (for images loading)
+        setTimeout(positionButtons, 100);
+        setTimeout(positionButtons, 500);
+        setTimeout(positionButtons, 1000);
+        
+        // Add aggressive CSS to keep buttons down
+        const style = document.createElement('style');
+        style.textContent = `
+            .tactical-menu-permanent,
+            .quick-scroll-permanent {
+                position: fixed !important;
+                top: 60% !important;
+                transform: translateY(-50%) !important;
+                z-index: 10001 !important;
+            }
+            
+            @media (max-width: 768px) {
+                .tactical-menu-permanent,
+                .quick-scroll-permanent {
+                    top: 65% !important;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .tactical-menu-permanent,
+                .quick-scroll-permanent {
+                    top: 70% !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        console.log('✓ Buttons forced DOWN - header clear');
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', forceButtonsDown);
+    } else {
+        forceButtonsDown();
+    }
+})();
+    
+</script>
+
+</body>
+  
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

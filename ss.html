@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  
+<head>
+  
+  <meta charset="UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  
+  <title>Stainless Steel</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=VT323&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="icon" type="image/png" href="logo_tr.png">
+  
+  <style>
+    
+    * {
+      
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      
+    }
+
+    body {
+      
+      background: #070707;
+      color: #e0e0e0;
+      font-family: 'Orbitron', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      
+    }
+
+    body::before {
+      
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 55px 55px;
+      pointer-events: none;
+      z-index: -1;
+      
+    }
+
+    header {
+      
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #0c0c0cEE;
+      backdrop-filter: blur(2px);
+      border-bottom: 1px solid #2e2e2e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      z-index: 1000;
+      transition: 0.2s;
+      
+    }
+
+    .logo {
+      
+      font-size: 20px;
+      letter-spacing: 3px;
+      font-weight: 900;
+      color: #eaeaea;
+      
+    }
+
+    .logo span {
+      
+      color: #8c8c8c;
+      font-size: 11px;
+      margin-left: 10px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      
+    }
+
+    nav a {
+      
+      color: #b0b0b0;
+      margin-left: 32px;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 2px;
+      font-weight: 500;
+      transition: 0.25s ease;
+      position: relative;
+      
+    }
+
+    nav a:hover {
+      
+      color: #ffffff;
+      text-shadow: 0 0 4px rgba(255,255,255,0.5);
+      
+    }
+
+    .hero {
+      
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      
+    }
+
+    .hero h1 {
+      
+      font-size: 6vw;
+      font-weight: 900;
+      letter-spacing: 12px;
+      color: transparent;
+      -webkit-text-stroke: 1.2px #dddddd;
+      text-stroke: 1.2px #dddddd;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #f0f0f0, #a0a0a0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 8px rgba(0,0,0,0.3);
+      
+    }
+
+    .hero p {
+      
+      font-family: 'VT323', monospace;
+      font-size: 26px;
+      letter-spacing: 3px;
+      color: #b0b0b0;
+      background: rgba(10,10,10,0.6);
+      padding: 6px 20px;
+      border-left: 2px solid #6c6c6c;
+      border-right: 2px solid #6c6c6c;
+      
+    }
+
+    .hero-buttons {
+      
+      margin-top: 48px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      
+    }
+
+    .btn {
+      
+      padding: 14px 36px;
+      border: 1.5px solid #c9c9c9;
+      background: transparent;
+      color: #c9c9c9;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      font-weight: 600;
+      transition: 0.3s;
+      display: inline-block;
+      backdrop-filter: blur(2px);
+      
+    }
+
+    .btn:hover {
+      
+      background: #c9c9c9;
+      color: #070707;
+      border-color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(200,200,200,0.1);
+      
+    }
+
+    section {
+      
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 90px 30px;
+      
+    }
+
+    .section-title {
+      
+      font-size: 24px;
+      letter-spacing: 6px;
+      margin-bottom: 55px;
+      color: #ffffff;
+      border-left: 4px solid #a5a5a5;
+      padding-left: 18px;
+      text-transform: uppercase;
+      font-weight: 600;
+      
+    }
+
+    .stats {
+      
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px;
+      
+    }
+
+    .stat {
+      
+      border: 1px solid #2a2a2a;
+      background: #0c0c0c;
+      padding: 42px 20px;
+      text-align: center;
+      transition: 0.2s;
+      
+    }
+
+    .stat:hover {
+      
+      border-color: #6c6c6c;
+      
+    }
+
+    .stat h2 {
+      
+      font-size: 52px;
+      color: #f5f5f5;
+      margin-bottom: 12px;
+      font-weight: 800;
+      
+    }
+
+    .stat span {
+      
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #909090;
+      text-transform: uppercase;
+      
+    }
+
+    .operations {
+      
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      
+    }
+
+    .operation {
+      
+      background: #0c0c0c;
+      border: 1px solid #2a2a2a;
+      padding: 40px 28px;
+      transition: all 0.25s ease;
+      
+    }
+
+    .operation:hover {
+      
+      border-color: #c9c9c9;
+      transform: translateY(-6px);
+      background: #111111;
+      
+    }
+
+    .operation i {
+      
+      font-size: 36px;
+      margin-bottom: 24px;
+      color: #d4d4d4;
+      
+    }
+
+    .operation h3 {
+      
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+      font-size: 20px;
+      font-weight: 600;
+      
+    }
+
+    .operation p {
+      
+      font-size: 14px;
+      line-height: 1.5;
+      color: #b5b5b5;
+      font-family: 'VT323', monospace;
+      letter-spacing: 0.5px;
+      
+    }
+
+    .operators {
+      
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 45px;
+      margin-bottom: 50px;
+      
+    }
+
+    .operator {
+      
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      padding: 40px 20px;
+      text-align: center;
+      transition: 0.2s;
+      
+    }
+
+    .operator:hover {
+      
+      border-color: #a5a5a5;
+      
+    }
+
+    .rank {
+      
+      border: 1px solid #7a7a7a;
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 800;
+      color: #cdcdcd;
+      background: #030303;
+      font-family: 'Orbitron', monospace;
+      
+    }
+
+    .operator h3 {
+      
+      margin-bottom: 8px;
+      font-size: 24px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      
+    }
+
+    .operator span {
+      
+      font-size: 12px;
+      color: #9b9b9b;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      
+    }
+
+    .terminal {
+      
+      background: #050505;
+      border-left: 5px solid #5f9e5f;
+      border-right: 1px solid #2a2a2a;
+      border-top: 1px solid #2a2a2a;
+      border-bottom: 1px solid #2a2a2a;
+      padding: 28px 32px;
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      color: #b3ffb3;
+      margin-top: 70px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.6);
+      
+    }
+
+    footer {
+      
+      background: #0b0b0b;
+      border-top: 1px solid #2c2c2c;
+      text-align: center;
+      padding: 60px 24px;
+      
+    }
+
+    footer h3 {
+      
+      letter-spacing: 4px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      font-size: 18px;
+      
+    }
+
+    footer p {
+      
+      color: #6e6e6e;
+      font-size: 12px;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 1px;
+      
+    }
+
+    @media (max-width: 780px) {
+      
+      header {
+        padding: 14px 24px;
+      }
+      .logo {
+        font-size: 16px;
+      }
+      .logo span {
+        font-size: 9px;
+      }
+      nav a {
+        margin-left: 18px;
+        font-size: 10px;
+      }
+      .hero h1 {
+        font-size: 12vw;
+        letter-spacing: 6px;
+      }
+      .hero p {
+        font-size: 18px;
+      }
+      .section-title {
+        font-size: 20px;
+        letter-spacing: 3px;
+      }
+      .stat h2 {
+        font-size: 42px;
+      }
+      
+    }
+
+    @media (max-width: 550px) {
+      nav {
+        display: flex;
+        gap: 14px;
+      }
+      nav a {
+        margin-left: 0;
+      }
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .btn {
+        width: 220px;
+        text-align: center;
+      }
+      section {
+        padding: 60px 20px;
+      }
+    }
+
+    ::selection {
+      background: #4f4f4f;
+      color: black;
+    }
+    a, button {
+      cursor: pointer;
+    }
+    .stat, .operation, .operator {
+      backdrop-filter: blur(1px);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <a href="index.html" style="text-decoration: none;">STAINLESS STEEL</a> <span>PRIVATE SECURITY DIVISION</span>
+  </div>
+  <nav>
+    <a href="#">HOME</a>
+    <a href="#">CONTACT</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <h1>STAINLESS STEEL</h1>
+  <p>// Elite Tactical Private Security company //</p>
+  <div class="hero-buttons">
+    <a class="btn" href="#">REQUEST PROTECTION</a>
+    <a class="btn" href="#">CONTACT COMMAND</a>
+  </div>
+</div>
+
+<section>
+  <h2 class="section-title">OPERATIONS STATUS</h2>
+  <div class="stats">
+    <div class="stat">
+      <h2>24/7</h2>
+      <span>ACTIVE RESPONSE</span>
+    </div>
+    <div class="stat">
+      <h2>2</h2>
+      <span>ACTIVE OPERATORS</span>
+    </div>
+    <div class="stat">
+      <h2>100%</h2>
+      <span>MISSION FOCUS</span>
+    </div>
+  </div>
+</section>
+
+<!-- CORE OPERATIONS: IP protection, physical & personnel -->
+<section>
+  <h2 class="section-title">CORE OPERATIONS</h2>
+  <div class="operations">
+    <div class="operation">
+      <i class="fa-solid fa-user-shield"></i>
+      <h3>Executive Protection</h3>
+      <p>High-threat close protection, dignitary security, and VIP movement coordination. Tailored threat assessment & real-time response.</p>
+    </div>
+    <div class="operation">
+      <i class="fa-solid fa-building-shield"></i>
+      <h3>Asset Security</h3>
+      <p>Physical asset defense, intellectual property protection, and facility hardening. Strategic security deployment for corporate estates.</p>
+    </div>
+    <div class="operation">
+      <i class="fa-solid fa-car"></i>
+      <h3>Secure Transport</h3>
+      <p>Armored & defensive convoy operations, low-visibility escort, and high-risk logistics. Protecting what matters, on the move.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OPERATORS: actual active bodyguards + additional tactical context -->
+<section>
+  <h2 class="section-title">ACTIVE OPERATORS</h2>
+  <div class="operators">
+    <div class="operator">
+      <div class="rank">01</div>
+      <h3>THATO</h3>
+      <span>Lead Bodyguard</span>
+      <p style="margin-top: 14px; font-size: 12px; color: #aaa; font-family: monospace;">Expert in close-quarters tactics & risk mitigation</p>
+    </div>
+    <div class="operator">
+      <div class="rank">02</div>
+      <h3>OLAMA</h3>
+      <span>Close Protection Specialist</span>
+      <p style="margin-top: 14px; font-size: 12px; color: #aaa; font-family: monospace;">Adv. surveillance detection & defensive driving</p>
+    </div>
+  </div>
+
+  <!-- Terminal Node: military style system status (South Africa base) -->
+  <div class="terminal">
+    > SYSTEM NODE: STAINLESS STEEL <br>
+    > STATUS: OPERATIONAL  |  TASK FORCE: READY <br>
+    > RESPONSE PROTOCOL: ACTIVE  |  THREAT LEVEL: MONITOR <br>
+    > LOCATION: SOUTH AFRICA  |  COVERAGE: GLOBAL ASSETS <br>
+    > INTELLECTUAL PROPERTY PROTECTION: ACTIVE <br>
+    > COMMAND: "WE PROTECT EVERYTHING — IP, PHYSICAL, PEOPLE"
+  </div>
+</section>
+
+<!-- Extra segment: "Protect everything" ethos – reinforces the brief -->
+<section style="padding-top: 0;">
+  <div style="border-top: 1px solid #242424; margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 30px; padding: 40px 0 20px;">
+    <div style="max-width: 500px;">
+      <i class="fa-solid fa-shield-hooded" style="font-size: 42px; color: #aaaaaa; margin-bottom: 16px; display: inline-block;"></i>
+      <h3 style="letter-spacing: 2px; font-weight: 600; margin-bottom: 12px;">Full Spectrum Protection</h3>
+      <p style="color: #bcbcbc; font-family: 'VT323', monospace; font-size: 17px;">From Intellectual Property assets to physical infrastructure and high-profile individuals — Stainless Steel operates with military precision, discretion, and absolute commitment.</p>
+    </div>
+    <div style="border-left: 1px solid #2c2c2c; padding-left: 30px;">
+      <span style="font-size: 12px; letter-spacing: 3px;">ADVANCE. LOCKDOWN. PROTECT.</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <h3>STAINLESS STEEL</h3>
+  <p>Professional Security Services • Registered & Compliant • South Africa</p>
+  <p style="margin-top: 20px;">© 2026 Stainless Steel Security — Elite Tactical Division</p>
+  <p style="margin-top: 12px; font-size: 10px;">Executive Protection | IP Security | Asset Hardening | Rapid Deployment</p>
+</footer>
+
+<script>
+  
+  (function() {
+    // Add subtle console logging to reflect "tactical" nature, no intrusive alerts.
+    const btns = document.querySelectorAll('.btn');
+    btns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if(btn.innerText.includes('REQUEST PROTECTION') || btn.innerText.includes('CONTACT COMMAND')) {
+          e.preventDefault();
+          console.log('[STAINLESS STEEL] :: PROTECTION REQUEST TRIGGERED :: COMMAND NOTIFIED');
+          // Optional visual feedback: terminal flash effect on footer
+          const terminalDiv = document.querySelector('.terminal');
+          if(terminalDiv) {
+            terminalDiv.style.transition = '0.1s';
+            terminalDiv.style.backgroundColor = '#1a2a1a';
+            setTimeout(() => { terminalDiv.style.backgroundColor = '#050505'; }, 200);
+          }
+          // Small non-intrusive UI hint
+          const fakeNotify = document.createElement('div');
+          fakeNotify.innerText = '🔒 COMMAND RECEIVED • SECURE CHANNEL ACTIVE';
+          fakeNotify.style.position = 'fixed';
+          fakeNotify.style.bottom = '20px';
+          fakeNotify.style.right = '20px';
+          fakeNotify.style.backgroundColor = '#0f0f0f';
+          fakeNotify.style.border = '1px solid #5a5a5a';
+          fakeNotify.style.padding = '8px 16px';
+          fakeNotify.style.fontFamily = 'VT323';
+          fakeNotify.style.fontSize = '14px';
+          fakeNotify.style.zIndex = '9999';
+          fakeNotify.style.color = '#b0ffb0';
+          fakeNotify.style.letterSpacing = '1px';
+          document.body.appendChild(fakeNotify);
+          setTimeout(() => { fakeNotify.style.opacity = '0'; setTimeout(() => fakeNotify.remove(), 800); }, 1800);
+        }
+      });
+    });
+    // Also operators interaction: dynamic log for readiness
+    const operators = document.querySelectorAll('.operator');
+    operators.forEach(op => {
+      op.addEventListener('click', () => {
+        const name = op.querySelector('h3')?.innerText || 'operator';
+        console.log(`STAINLESS STEEL | OPERATOR BRIEF: ${name} on standby. Ready for VIP detail & asset security.`);
+      });
+    });
+  })();
+
+  function secureApplication() {
+    'use strict';
+    
+    // ========== INTEGRITY PROTECTION ==========
+    let integrityHash = null;
+    let violations = 0;
+    
+    const computeHash = async (data) => {
+        const hash = await crypto.subtle.digest('SHA-384', new TextEncoder().encode(data));
+        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+    };
+    
+    const lockdown = () => {
+        violations++;
+        document.querySelectorAll('button, a, input, [onclick]').forEach(el => {
+            el.style.pointerEvents = 'none';
+            el.style.opacity = '0.3';
+        });
+        if (violations > 2) {
+            document.body.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#f00;display:flex;align-items:center;justify-content:center;z-index:99999;">🔒 SECURITY LOCKDOWN - Session Terminated</div>`;
+        }
+    };
+    
+    // ========== ANTI-DEBUGGING ==========
+    setInterval(() => {
+        const start = performance.now();
+        debugger;
+        if (performance.now() - start > 100) lockdown();
+    }, 1000);
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault();
+            lockdown();
+        }
+    });
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    
+    // ========== CODE HARDENING ==========
+    window.eval = function() { lockdown(); return null; };
+    window.Function = function() { lockdown(); return () => {}; };
+    
+    const originalCreate = document.createElement;
+    document.createElement = function(tag) {
+        const el = originalCreate.call(document, tag);
+        if (tag.toLowerCase() === 'script') {
+            Object.defineProperty(el, 'src', { set: () => lockdown() });
+        }
+        return el;
+    };
+    
+    // ========== INPUT SANITIZATION ==========
+    const sanitize = (str) => {
+        if (typeof str !== 'string') return str;
+        return str.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+                  .replace(/javascript:/gi, '')
+                  .replace(/on\w+\s*=/gi, '')
+                  .replace(/[<>]/g, (m) => m === '<' ? '&lt;' : '&gt;');
+    };
+    
+    document.addEventListener('input', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            e.target.value = sanitize(e.target.value);
+        }
+    });
+    
+    document.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text');
+        const active = document.activeElement;
+        if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
+            active.value = sanitize(text);
+        }
+    });
+    
+    // ========== CSRF PROTECTION ==========
+    let csrfToken = null;
+    crypto.getRandomValues(new Uint8Array(32)).forEach(b => csrfToken = (csrfToken || '') + b.toString(16));
+    
+    const originalFetch = window.fetch;
+    window.fetch = function(url, opts = {}) {
+        opts.headers = opts.headers || {};
+        if (opts.method && ['POST','PUT','DELETE'].includes(opts.method.toUpperCase())) {
+            opts.headers['X-CSRF-Token'] = csrfToken;
+            opts.headers['X-Secure'] = '1';
+        }
+        return originalFetch.call(this, url, opts);
+    };
+    
+    // ========== DATA LEAK PREVENTION ==========
+    document.addEventListener('copy', (e) => {
+        if (window.getSelection().toString().length > 200) {
+            e.preventDefault();
+            lockdown();
+        }
+    });
+    document.addEventListener('cut', (e) => e.preventDefault());
+    window.print = () => false;
+    
+    // ========== SESSION FINGERPRINT ==========
+    const getFP = async () => {
+        const components = [navigator.userAgent, screen.width, screen.height, navigator.language].join('|');
+        return await computeHash(components);
+    };
+    
+    (async () => {
+        const fp = await getFP();
+        sessionStorage.setItem('_fp', fp);
+        integrityHash = await computeHash(document.body.innerHTML);
+        
+        setInterval(async () => {
+            const newHash = await computeHash(document.body.innerHTML);
+            if (newHash !== integrityHash) lockdown();
+            
+            const storedFp = sessionStorage.getItem('_fp');
+            const currentFp = await getFP();
+            if (storedFp && storedFp !== currentFp) lockdown();
+        }, 3000);
+    })();
+    
+    // ========== CSP HEADERS ==========
+    const meta = document.createElement('meta');
+    meta.httpEquiv = 'Content-Security-Policy';
+    meta.content = "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';";
+    document.head.appendChild(meta);
+    
+    // ========== INIT COMPLETE ==========
+    console.log('🔒 SECURITY ACTIVE | Lockdown Engaged');
+    
+    return { status: 'PROTECTED', violations: () => violations };
+}
+
+// AUTO-INITIALIZE
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', secureApplication);
+else secureApplication();
+  
+</script>
+  
+</body>
+  
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
