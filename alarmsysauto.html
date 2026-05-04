@@ -1,1122 +1,676 @@
 <!DOCTYPE html>
-
 <html lang="en">
-  
 <head>
-  
   <meta charset="UTF-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  
-  <title>ALARM SYSTEM AUTOMATION</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>SA NAVY | SUBMARINE ALARM SYSTEM AUTOMATION</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#000000">
-  
-  <link rel="icon" href="logo_tr1.png" type="image/png">
-  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="theme-color" content="#000c1a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,700;14..32,900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
   <style>
-    
+    /* ========== TACTICAL SA NAVY - NO GLOWS, NO SHADOWS, HARD EDGES ========== */
     * {
-      
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
-      
     }
+
     :root {
-      
-      --bg: #000000;
-      --surface: #0a0c10;
-      --border: #2a3a44;
-      --accent: #00eaff;
-      --accent-dim: #007788;
-      --warn: #ffbb00;
-      --danger: #ff3b3b;
-      --text: #e0f0ff;
-      --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-      --font-mono: 'Roboto Mono', monospace;
-      --header-h: 70px;
-      --footer-h: 60px;
-      
+      --abyss: #010a0f;
+      --deep-sea: #031a24;
+      --sonar-green: #44ffaa;
+      --battleship-red: #cc2222;
+      --hull-gray: #2a3a3a;
+      --sonar-dim: #1a5a5a;
+      --text-hard: #cceeff;
     }
-    
+
     html, body {
-      
       height: 100%;
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: var(--font-main);
-      line-height: 1.4;
-      
+      background: var(--abyss);
+      color: var(--text-hard);
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
     }
-    
+
+    /* UNDERWATER INFINITE ANIMATION - NO GLOWS, PURE MOVEMENT */
+    .ocean-mantle {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: linear-gradient(145deg, #010a0f 0%, #021a24 45%, #010e14 100%);
+    }
+
+    .depth-layers {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .seaweed-field {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 180px;
+      background: repeating-linear-gradient(transparent 0px, transparent 28px, #14342e 28px, #0a2824 32px);
+      opacity: 0.5;
+      animation: swayWeed 18s infinite linear;
+    }
+
+    @keyframes swayWeed {
+      0% { background-position: 0 0; opacity: 0.4; }
+      50% { background-position: 40px 10px; opacity: 0.7; }
+      100% { background-position: 0 0; opacity: 0.4; }
+    }
+
+    .bubble-stream {
+      position: absolute;
+      bottom: -20px;
+      left: 15%;
+      width: 8px;
+      height: 8px;
+      background: rgba(100, 200, 180, 0.4);
+      border-radius: 50%;
+      animation: bubbleRise 12s infinite ease-in;
+    }
+
+    .bubble-stream:nth-child(2) { left: 65%; width: 12px; height: 12px; animation-duration: 18s; animation-delay: 2s; opacity: 0.3; }
+    .bubble-stream:nth-child(3) { left: 35%; width: 6px; height: 6px; animation-duration: 14s; animation-delay: 5s; }
+    .bubble-stream:nth-child(4) { left: 80%; width: 10px; height: 10px; animation-duration: 22s; animation-delay: 1s; }
+    .bubble-stream:nth-child(5) { left: 50%; width: 7px; height: 7px; animation-duration: 16s; animation-delay: 0s; }
+
+    @keyframes bubbleRise {
+      0% { bottom: -20px; opacity: 0.6; transform: translateX(0); }
+      100% { bottom: 110%; opacity: 0; transform: translateX(30px); }
+    }
+
+    .current-wave {
+      position: absolute;
+      top: 40%;
+      left: -10%;
+      width: 120%;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, transparent, transparent 80px, #2a7a6a 80px, #3eaa8a 120px);
+      animation: driftLine 14s infinite linear;
+      opacity: 0.35;
+    }
+
+    @keyframes driftLine {
+      0% { transform: translateX(-20%); }
+      100% { transform: translateX(20%); }
+    }
+
+    /* MAIN GRID - MILITARY */
     body {
-      
       display: grid;
       grid-template-rows: auto 1fr auto;
-      grid-template-columns: 1fr min(96%, 750px) 1fr;
-      grid-template-areas:
-        "header header header"
-        ". main ."
-        "footer footer footer";
-      align-items: start;
-      justify-items: stretch;
-      overflow-y: auto;
-      
+      grid-template-columns: 1fr min(96%, 880px) 1fr;
+      grid-template-areas: "header header header" ". main ." "footer footer footer";
+      position: relative;
     }
-    
+
     header {
-      
       grid-area: header;
-      background: var(--surface);
-      border-bottom: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 16px;
-      min-height: var(--header-h);
-      
-    }
-    
-    .header-title {
-      
-      font-size: clamp(1rem, 5vw, 1.6rem);
-      font-weight: 800;
-      letter-spacing: 1px;
-      background: linear-gradient(135deg, var(--accent), #88ffff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-align: center;
-      
-    }
-    
-    .main {
-      
-      grid-area: main;
-      width: 100%;
-      padding: 16px 0 24px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 18px;
-      
-    }
-    
-    .main > * {
-      
-      width: 100%;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-      
-    }
-    
-    .card {
-      
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: 28px;
-      padding: 20px 18px;
-      
-    }
-    
-    .current-time-card {
-      
-      text-align: center;
-      
-    }
-    
-    .current-label {
-      
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: #9ab0c0;
-      
-    }
-    
-    .current-time {
-      
-      font-family: var(--font-mono);
-      font-size: clamp(2.8rem, 12vw, 5rem);
-      font-weight: 700;
-      line-height: 1.2;
-      margin: 6px 0 2px;
-      color: var(--accent);
-      word-break: keep-all;
-      
-    }
-    
-    .current-date {
-      
-      font-size: clamp(0.9rem, 4vw, 1.2rem);
-      color: #b0c8da;
-      
-    }
-    
-    .quick-add {
-      
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      
-    }
-    
-    .quick-add input {
-      
-      flex: 1;
-      min-width: 140px;
-      background: #0a0c10;
-      border: 2px solid var(--border);
-      border-radius: 60px;
-      padding: 14px 20px;
-      font-family: var(--font-mono);
-      font-size: clamp(1.2rem, 5vw, 1.6rem);
-      color: var(--accent);
-      text-align: center;
-      letter-spacing: 2px;
-      
-    }
-    
-    .quick-add input:focus {
-      
-      outline: none;
-      border-color: var(--accent);
-      
-    }
-    
-    .quick-add button {
-      
-      width: 70px;
-      background: var(--surface);
-      border: 2px solid var(--border);
-      color: var(--accent);
-      border-radius: 60px;
-      font-size: 2.2rem;
-      cursor: pointer;
-      transition: 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      
-    }
-    
-    .quick-add button:hover {
-      
-      background: var(--accent);
-      color: black;
-      border-color: var(--accent);
-      
-    }
-    
-    .sound-selector-panel {
-      
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: 40px;
-      padding: 14px 20px;
+      background: #030f18;
+      border-bottom: 3px solid var(--sonar-dim);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 12px 28px;
       flex-wrap: wrap;
       gap: 12px;
-      
+      cursor: pointer;
     }
-    
-    .sound-selector-panel span {
-      font-size: clamp(0.9rem, 4vw, 1.2rem);
-      font-weight: 600;
-      color: var(--accent);
-    }
-    .sound-options {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .sound-option {
+
+    .header-title {
+      font-size: clamp(0.9rem, 5vw, 1.6rem);
+      font-weight: 800;
+      font-family: 'Roboto Mono', monospace;
+      color: var(--sonar-green);
+      letter-spacing: 1px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: black;
-      padding: 6px 16px;
-      border-radius: 60px;
-      border: 2px solid var(--border);
+      gap: 12px;
+    }
+
+    .navy-badge {
+      background: #02121c;
+      border: 1px solid var(--sonar-dim);
+      padding: 5px 14px;
+      font-family: monospace;
+      font-size: 0.7rem;
+    }
+
+    .main {
+      grid-area: main;
+      padding: 24px 0 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* FLAT CARDS - NO GLOW */
+    .card, .alarm-item, .sound-panel, .chatter-panel {
+      background: #07161f;
+      border: 1.5px solid #2a5a5a;
+      padding: 18px 22px;
+    }
+
+    .current-time-card {
+      border-left: 6px solid var(--sonar-green);
+      text-align: center;
+    }
+
+    .current-time {
+      font-family: 'Roboto Mono', monospace;
+      font-size: clamp(2.8rem, 14vw, 5.4rem);
+      font-weight: 800;
+      color: var(--sonar-green);
+      letter-spacing: 4px;
+    }
+
+    .quick-add {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .quick-add input {
+      flex: 3;
+      background: #020e16;
+      border: 1.5px solid #2a6a62;
+      padding: 14px 20px;
+      font-family: monospace;
+      font-size: 1.3rem;
+      color: var(--sonar-green);
+      text-align: center;
+    }
+
+    .quick-add button {
+      width: 74px;
+      background: #041e2a;
+      border: 1.5px solid var(--sonar-green);
+      font-size: 2rem;
       cursor: pointer;
     }
-    .sound-option input[type="radio"] {
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--border);
-      border-radius: 50%;
-      background: black;
-      cursor: pointer;
-    }
-    .sound-option input[type="radio"]:checked {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-    .sound-option label {
-      font-size: clamp(0.8rem, 3.5vw, 1rem);
-      cursor: pointer;
-    }
+
     .section-title {
-      font-size: clamp(1.3rem, 6vw, 1.7rem);
+      font-size: 1.2rem;
       font-weight: 700;
-      letter-spacing: -0.5px;
-      padding-bottom: 10px;
-      border-bottom: 3px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 12px;
+      font-family: monospace;
+      border-left: 5px solid var(--sonar-green);
+      padding-left: 14px;
     }
+
     .alarms-list {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-    }
-    .alarm-item {
-      background: var(--surface);
-      border: 2px solid var(--border);
-      border-radius: 32px;
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: grab;
-      transition: all 0.1s ease;
-      flex-wrap: wrap;
       gap: 12px;
     }
-    .alarm-item.active {
-      border-color: var(--accent);
-      background: #0f1a24;
-    }
-    .alarm-time-block {
+
+    .alarm-item {
       display: flex;
-      align-items: baseline;
-      gap: 5px;
       flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      cursor: grab;
     }
+
+    .alarm-item.active {
+      border-right: 4px solid var(--sonar-green);
+      background: #09222e;
+    }
+
     .alarm-time {
-      font-family: var(--font-mono);
-      font-size: clamp(1.6rem, 7vw, 2.2rem);
-      font-weight: 700;
-      color: var(--accent);
+      font-family: monospace;
+      font-size: clamp(1.5rem, 6vw, 2.2rem);
+      font-weight: 800;
+      color: var(--sonar-green);
     }
-    .alarm-period {
-      font-size: clamp(0.8rem, 3.5vw, 1rem);
-      color: #7f9faf;
-    }
-    .alarm-label {
-      font-size: clamp(0.9rem, 4vw, 1.1rem);
-      margin: 4px 0 8px;
-      word-break: break-word;
-    }
+
     .alarm-days {
       display: flex;
       gap: 6px;
+      margin-top: 6px;
       flex-wrap: wrap;
     }
+
     .day-badge {
-      width: 32px;
-      height: 32px;
-      border-radius: 28px;
-      background: #000000;
-      border: 2px solid var(--border);
+      width: 34px;
+      height: 34px;
+      background: #02121c;
+      border: 1px solid #2a6a62;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text);
+      font-weight: 600;
     }
+
     .day-badge.active {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: var(--sonar-green);
       color: black;
     }
-    .alarm-controls {
+
+    .control-group {
       display: flex;
       gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
     }
+
     .toggle-switch {
       width: 56px;
       height: 30px;
-      background: #1e2a32;
-      border: 2px solid var(--border);
-      border-radius: 30px;
+      background: #0a2a30;
+      border: 1px solid #3a7a6a;
       position: relative;
       cursor: pointer;
     }
+
     .toggle-switch.active {
-      background: #004466;
-      border-color: var(--accent);
+      background: #1a6a52;
     }
+
     .toggle-switch::after {
       content: '';
-      position: absolute;
       width: 24px;
       height: 24px;
-      background: #aaccff;
-      border-radius: 24px;
-      top: 1px;
-      left: 2px;
-      transition: 0.1s;
+      background: #c0ffdd;
+      position: absolute;
+      top: 2px;
+      left: 3px;
+      transition: 0.08s;
     }
+
     .toggle-switch.active::after {
       left: 28px;
-      background: var(--accent);
     }
+
     .btn-icon {
-      width: 42px;
-      height: 42px;
-      background: transparent;
-      border: 2px solid var(--border);
-      border-radius: 20px;
-      color: var(--text);
-      font-size: 1.2rem;
+      width: 44px;
+      height: 44px;
+      background: #03121c;
+      border: 1px solid #2a6a62;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
-    .btn-icon:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
+
     .btn-icon.delete:hover {
-      border-color: var(--danger);
-      color: var(--danger);
+      border-color: var(--battleship-red);
+      color: var(--battleship-red);
     }
+
     #permissionBanner {
-      background: #1f2c35;
-      border: 2px solid var(--warn);
-      border-radius: 50px;
-      padding: 14px 20px;
+      background: #0a2828;
+      border: 1.5px solid #ccaa44;
       display: none;
       align-items: center;
       justify-content: space-between;
-      font-size: clamp(0.8rem, 4vw, 1rem);
-      gap: 12px;
-      flex-wrap: wrap;
+      padding: 12px 20px;
     }
-    #permissionBanner button {
-      background: var(--warn);
-      border: none;
-      padding: 8px 24px;
-      border-radius: 60px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      color: black;
-    }
-    #alarmModal {
+
+    /* OVERRIDE PANEL - NO GLOW, FLAT RED */
+    .alert-bunker {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.97);
+      background: #000b0f;
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 5000;
-      padding: 16px;
+      z-index: 20001;
     }
-    .modal-content {
-      background: #0e141a;
-      border: 3px solid var(--accent);
-      border-radius: 48px;
-      padding: 24px 20px;
-      max-width: 500px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
+
+    .alert-mil {
+      background: #0a0e0c;
+      border: 5px solid var(--battleship-red);
+      padding: 32px;
+      text-align: center;
+      width: 92%;
+      max-width: 540px;
     }
-    .modal-content h2 { font-size: clamp(1.5rem, 6vw, 2rem); margin-bottom: 20px; text-align: center; }
-    .time-picker { display: flex; gap: 6px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
-    .time-picker input {
-      width: 80px; background: black; border: 2px solid var(--border); color: var(--accent);
-      font-family: var(--font-mono); font-size: clamp(1.8rem, 6vw, 2.5rem); text-align: center; padding: 6px; border-radius: 28px;
+
+    .alert-mil i {
+      font-size: 4rem;
+      color: var(--battleship-red);
+      animation: none;
     }
-    .time-picker span { font-size: 2rem; color: gray; }
-    .time-picker select {
-      background: black; border: 2px solid var(--border); color: var(--accent);
-      font-size: 1.3rem; padding: 6px 12px; border-radius: 30px;
+
+    .alert-mil button {
+      background: #142020;
+      border: 1.5px solid white;
+      padding: 10px 24px;
+      margin: 6px;
+      font-weight: 700;
+      cursor: pointer;
     }
-    .label-input { width:100%; background:black; border:2px solid var(--border); color:white; font-size:1rem; padding:14px; border-radius:40px; margin-bottom:20px; }
-    .days-selector { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:24px; }
-    .day-btn {
-      background:black; border:2px solid var(--border); color:var(--text); padding:12px 0; border-radius:28px;
-      font-size:clamp(0.8rem, 3.5vw, 1rem); cursor:pointer;
-    }
-    .day-btn.active { background:var(--accent); color:black; border-color:var(--accent); }
-    .modal-buttons { display:flex; gap:12px; }
-    .modal-buttons button {
-      flex:1; padding:14px; background:black; border:2px solid var(--accent); color:var(--accent);
-      border-radius:60px; font-size:1rem; font-weight:bold; cursor:pointer;
-    }
-    .modal-buttons button.save { background:var(--accent); color:black; }
-    #alarmAlert {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.98); display: none; align-items: center; justify-content: center; z-index: 6000; padding: 16px;
-    }
-    .alert-content {
-      background: #111b22; border: 4px solid var(--danger); border-radius: 60px; padding: 30px 20px;
-      text-align: center; max-width: 550px; width: 100%;
-    }
-    .alert-content i { font-size: clamp(3rem, 12vw, 5rem); color: var(--danger); margin-bottom: 16px; animation: pulse 1s infinite; }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
-    .alert-content h2 { font-size: clamp(2rem, 8vw, 3rem); color: var(--danger); }
-    .alert-content p { font-size: clamp(1rem, 5vw, 1.6rem); margin: 16px 0 24px; word-break: break-word; }
-    .button-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .alert-content button {
-      padding: 14px 20px; background: var(--danger); border: none; color: black; font-weight: 900;
-      border-radius: 60px; font-size: clamp(0.9rem, 4vw, 1.2rem); min-width: 120px; border: 2px solid white; cursor: pointer;
-    }
-    .alert-content button.snooze { background: var(--warn); color: black; }
-    #data-footer {
+
+    footer {
       grid-area: footer;
-      background: var(--surface);
-      border-top: 3px solid var(--border);
+      background: #030c10;
+      border-top: 2px solid #2a5a5a;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 10px 16px;
-      font-family: var(--font-mono);
-      font-size: clamp(0.7rem, 3.5vw, 1rem);
-      font-weight: 500;
-      color: var(--accent);
-      gap: 8px;
       flex-wrap: wrap;
-      min-height: var(--footer-h);
+      padding: 10px 24px;
+      font-family: monospace;
+      font-size: 0.75rem;
     }
-    .live-indicator {
-      background: #00aa44;
+
+    .live-led {
       width: 10px;
       height: 10px;
-      border-radius: 10px;
+      background: var(--battleship-red);
       display: inline-block;
-      margin-right: 6px;
-      animation: blink 1s step-start infinite;
     }
-    @keyframes blink { 50% { opacity: 0.3; } }
-    
-    @media (max-width: 550px) {
+
+    @media (max-width: 560px) {
       .alarm-item { flex-direction: column; align-items: flex-start; }
-      .alarm-controls { align-self: flex-end; }
-      .day-badge { width: 28px; height: 28px; font-size: 0.7rem; }
-      .sound-selector-panel { flex-direction: column; align-items: stretch; }
-      .sound-options { justify-content: center; }
-      .modal-content { padding: 20px 16px; }
-      .time-picker input { width: 70px; font-size: 1.8rem; }
+      .day-badge { width: 30px; height: 30px; }
     }
-    
-    @media (max-width: 380px) {
-      .day-badge { width: 26px; height: 26px; }
-      .btn-icon { width: 38px; height: 38px; }
-      .toggle-switch { width: 50px; height: 28px; }
-      .toggle-switch::after { width: 22px; height: 22px; }
-      .toggle-switch.active::after { left: 24px; }
-    }
-
-    /* VAULT CONTAINER - Wrap entire page */
-    body {
-      background-color: #0a0a0a;
-      position: relative;
-    }
-    
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        repeating-linear-gradient(
-          45deg,
-          rgba(30, 30, 40, 0.3) 0px,
-          rgba(30, 30, 40, 0.3) 2px,
-          transparent 2px,
-          transparent 8px
-        ),
-        radial-gradient(circle at 20% 30%, rgba(20, 20, 30, 0.4) 0%, rgba(0, 0, 0, 0.95) 100%);
-      pointer-events: none;
-      z-index: 9998;
-    }
-    
-    body > * {
-      position: relative;
-      z-index: 1;
-    }
-    
-    /* Main vault container wrapper */
-    .vault-container {
-      position: relative;
-      max-width: 1400px;
-      margin: 20px auto;
-      background: linear-gradient(135deg, #0f0f12 0%, #050508 100%);
-      border: 3px solid #3a3a4a;
-      border-radius: 32px;
-      box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.8),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 0 0 2px rgba(80, 80, 100, 0.3) inset;
-      backdrop-filter: blur(2px);
-    }
-    
-    /* Vault door effect - subtle gradient overlay */
-    .vault-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(ellipse at 30% 40%, rgba(100, 100, 130, 0.08) 0%, transparent 70%);
-      pointer-events: none;
-      border-radius: 30px;
-      z-index: 0;
-    }
-    
-    /* Vault rivets/studs decoration */
-    .vault-container::after {
-      content: '';
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      right: 20px;
-      bottom: 20px;
-      background: 
-        radial-gradient(circle at 10px 10px, rgba(80, 80, 100, 0.6) 1px, transparent 1px),
-        radial-gradient(circle at calc(100% - 10px) 10px, rgba(80, 80, 100, 0.6) 1px, transparent 1px),
-        radial-gradient(circle at 10px calc(100% - 10px), rgba(80, 80, 100, 0.6) 1px, transparent 1px),
-        radial-gradient(circle at calc(100% - 10px) calc(100% - 10px), rgba(80, 80, 100, 0.6) 1px, transparent 1px);
-      background-size: 20px 20px, 20px 20px, 20px 20px, 20px 20px;
-      background-repeat: no-repeat;
-      pointer-events: none;
-      border-radius: 20px;
-      opacity: 0.4;
-    }
-    
-    /* Adjust inner elements for vault container */
-    .vault-container header,
-    .vault-container .main,
-    .vault-container #data-footer {
-      position: relative;
-      z-index: 2;
-    }
-    
-    /* Override body grid to work within vault */
-    .vault-container body {
-      background: transparent;
-      display: block;
-      padding: 0;
-      margin: 0;
-    }
-    
-    /* Ensure content styling remains */
-    .vault-container .main {
-      padding: 16px 24px 24px 24px;
-    }
-    
-    /* Metal texture effect on cards */
-    .vault-container .card,
-    .vault-container .alarm-item,
-    .vault-container .sound-selector-panel {
-      background: linear-gradient(135deg, #0e1117 0%, #080a0e 100%);
-      border-color: #4a4a5a;
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
-    
-    /* Vault handle style for header */
-    .vault-container header {
-      border-bottom: 3px solid #5a5a6e;
-      position: relative;
-    }
-    
-    .vault-container header::before {
-      content: '⨀';
-      position: absolute;
-      left: 30px;
-      font-size: 24px;
-      color: #6a6a7e;
-      text-shadow: 0 0 5px rgba(100, 100, 130, 0.5);
-    }
-    
-    .vault-container header::after {
-      content: '⨀';
-      position: absolute;
-      right: 30px;
-      font-size: 24px;
-      color: #6a6a7e;
-      text-shadow: 0 0 5px rgba(100, 100, 130, 0.5);
-    }
-    
-    /* Heavy metal lock icon effect */
-    .vault-container .header-title::before {
-      content: '🔒 ';
-      font-size: 1.2em;
-      filter: drop-shadow(0 0 3px rgba(0, 234, 255, 0.5));
-    }
-    
-    /* Footer vault-like */
-    .vault-container #data-footer {
-      border-top: 3px solid #5a5a6e;
-      background: linear-gradient(180deg, #0e1117 0%, #06080c 100%);
-      font-family: 'Roboto Mono', monospace;
-      letter-spacing: 1px;
-    }
-    
   </style>
-  
 </head>
-  
 <body>
+<div class="ocean-mantle"></div>
+<div class="depth-layers">
+  <div class="seaweed-field"></div>
+  <div class="bubble-stream"></div>
+  <div class="bubble-stream"></div>
+  <div class="bubble-stream"></div>
+  <div class="bubble-stream"></div>
+  <div class="bubble-stream"></div>
+  <div class="current-wave"></div>
+  <div class="current-wave" style="top: 65%; opacity: 0.25; animation-duration: 22s;"></div>
+</div>
 
-<header>
-  <div class="header-title" title="Alarm System Auto">ALARM SYSTEM AUTOMATION</div>
+<header id="homeHeader">
+  <div class="header-title"><i class="fas fa-submarine"></i> SA NAVY • ALARM SYSTEM AUTOMATION <i class="fas fa-water"></i></div>
+  <div class="navy-badge">SONAR ACTIVE • TACTICAL CORE</div>
 </header>
 
 <div class="main">
-  <div id="permissionBanner" title="Enable notifications and audio permissions for full alarm auto experience">
-    <span>🔔 ALLOW NOTIFICATIONS + CUSTOM MP3</span>
-    <button onclick="requestFullPermissions()">ENABLE</button>
+  <div id="permissionBanner">
+    <span><i class="fas fa-bell"></i> AUTHORIZE NOTIFICATIONS & AUDIO — SUBMARINE ALERT PROTOCOL</span>
+    <button onclick="requestMilAccess()">GRANT ACCESS</button>
   </div>
 
-  <div class="card current-time-card" title="current live time and date synchronized with your device">
-    <div class="current-label"><i class="fas fa-globe"></i> REAL-TIME SYNC</div>
-    <div class="current-time" id="currentTime">00:00:00</div>
+  <div class="card current-time-card">
+    <div class="current-label"><i class="fas fa-globe"></i> DEEP SEA CHRONO • ZULU</div>
+    <div class="current-time" id="currentTime">--:--:--</div>
     <div class="current-date" id="currentDate"></div>
   </div>
 
-  <div class="quick-add" title="Type HH:MM and click + to quickly add alarm with weekdays preset">
-    <input type="text" id="quickTime" placeholder="HH:MM" maxlength="5" title="Enter time in 24h format e.g., 07:30">
-    <button onclick="openAddModal()" title="Open full alarm editor to create new alarm"><i class="fas fa-plus"></i></button>
+  <div class="quick-add">
+    <input type="text" id="quickTime" placeholder="HH:MM (24H TACTICAL)" maxlength="5">
+    <button onclick="quickAddWar()"><i class="fas fa-plus"></i></button>
   </div>
 
-  <div class="sound-selector-panel" title="Choose between two different alarm ringtones">
-    <span><i class="fas fa-headphones"></i> ALARM SOUND (MP3)</span>
-    <div class="sound-options">
-      <div class="sound-option" onclick="document.getElementById('sound1').checked = true; window.selectedSound='alarm1.mp3'" title="Classic beeper sound">
-        <input type="radio" name="alarmSound" id="sound1" value="alarm1.mp3" checked> <label for="sound1">BEEPER 1</label>
-      </div>
-      <div class="sound-option" onclick="document.getElementById('sound2').checked = true; window.selectedSound='alarm2.mp3'" title="Alternative electronic sound">
-        <input type="radio" name="alarmSound" id="sound2" value="alarm2.mp3"> <label for="sound2">BEEPER 2</label>
-      </div>
+  <div class="sound-panel" style="display: flex; justify-content: space-between; flex-wrap:wrap; gap:12px;">
+    <span><i class="fas fa-ear-listen"></i> ALARM TONES (EEPING)</span>
+    <div style="display: flex; gap: 20px;">
+      <label style="display:flex; gap:6px;"><input type="radio" name="tacticalTone" id="toneEep1" checked> BEEPER-1</label>
+      <label style="display:flex; gap:6px;"><input type="radio" name="tacticalTone" id="toneEep2"> BEEPER-2</label>
     </div>
   </div>
 
-  <div class="section-title" title="All your custom alarms, drag to reorder"><i class="fas fa-bell"></i> YOUR ALARMS (DRAG TO REORDER)</div>
+  <div class="chatter-panel" style="display: flex; justify-content: space-between; flex-wrap:wrap; align-items:center;">
+    <span><i class="fas fa-radio"></i> UNDERWATER AMBIENT SONAR (LOOP)</span>
+    <button id="toggleAmbientBtn" class="btn-icon" style="width: auto; padding: 0 20px;"><i class="fas fa-play"></i> ACTIVATE AMBIENT SOUND</button>
+  </div>
+
+  <div class="section-title"><i class="fas fa-list-ul"></i> ACTIVE ALARMS (DRAG REORDER)</div>
   <div class="alarms-list" id="alarmsList"></div>
 
-  <div class="section-title" title="Quick start preset - Only Wake Up preset available"><i class="fas fa-star"></i> QUICK PRESET (WAKE UP)</div>
-  <div class="alarms-list" id="presetsList"></div>
+  <div class="section-title"><i class="fas fa-bolt"></i> FAST PRESET — NAVY WATCH</div>
+  <div class="alarms-list" id="presetContainer"></div>
 </div>
 
-<div id="data-footer">
-  <span title="Total active alarms count"><span class="live-indicator"></span> <span id="alarmCount">0</span> ACTIVE</span>
-  <span title="Current system time"><i class="far fa-clock"></i> <span id="footerClock"></span></span>
-  <span title="Next scheduled alarm time">⏩ NEXT <span id="nextAlarm">--:--</span></span>
-</div>
+<footer>
+  <span><span class="live-led"></span> ACTIVE: <span id="activeCount">0</span></span>
+  <span><i class="far fa-clock"></i> SHIP TIME: <span id="footClock"></span></span>
+  <span><i class="fas fa-chart-line"></i> NEXT: <span id="nextAlarmDisplay">--:--</span></span>
+  <span>🔒 LOCAL VAULT • PERSISTENT</span>
+</footer>
 
-<div id="alarmModal">
-  <div class="modal-content">
-    <h2 id="modalTitle">➕ ADD ALARM</h2>
-    <div class="time-picker">
-      <input type="number" id="alarmHour" min="1" max="12" value="7" title="Hour (1-12)">
-      <span>:</span>
-      <input type="number" id="alarmMinute" min="0" max="59" value="0" step="5" title="Minute (0-59)">
-      <select id="alarmPeriod" title="AM or PM"><option value="AM">AM</option><option value="PM">PM</option></select>
-    </div>
-    <input type="text" id="alarmLabel" class="label-input" placeholder="Label" value="My Alarm" title="Custom name for this alarm">
-    <div class="days-selector" id="daysSelector" title="Select repeating days">
-      <button class="day-btn" data-day="0" title="Sunday">S</button><button class="day-btn" data-day="1" title="Monday">M</button><button class="day-btn" data-day="2" title="Tuesday">T</button>
-      <button class="day-btn" data-day="3" title="Wednesday">W</button><button class="day-btn" data-day="4" title="Thursday">T</button><button class="day-btn" data-day="5" title="Friday">F</button>
-      <button class="day-btn" data-day="6" title="Saturday">S</button>
-    </div>
-    <div class="modal-buttons"><button class="save" onclick="saveAlarm()" title="Save alarm to local storage">SAVE</button><button onclick="closeModal()" title="Cancel and close">CANCEL</button></div>
+<div id="alertTheatre" class="alert-bunker">
+  <div class="alert-mil">
+    <i class="fas fa-broadcast-tower"></i>
+    <h2 style="color:#dd5555; margin: 12px 0;">⚠️ GENERAL QUARTERS ⚠️</h2>
+    <div id="alertMessageText" style="font-size: 1.6rem; font-weight: 800; margin: 12px 0;">ALARM ACTIVE</div>
+    <div><button id="snooze5BtnMil">SNOOZE +5</button><button id="snooze10BtnMil">SNOOZE +10</button><button id="dismissBtnMil">STAND DOWN</button></div>
   </div>
 </div>
 
-<div id="alarmAlert">
-  <div class="alert-content">
-    <i class="fas fa-bell fa-shake"></i>
-    <h2 id="alertTitle">🔊 TIME'S UP!</h2>
-    <p id="alertMessage">alarm</p>
-    <div class="button-group">
-      <button onclick="snoozeAlarm(5)" class="snooze" title="Snooze for 5 minutes">SNOOZE 5</button>
-      <button onclick="snoozeAlarm(10)" title="Snooze for 10 minutes">SNOOZE 10</button>
-      <button onclick="dismissAlarm()" title="Dismiss alarm completely">DISMISS</button>
-    </div>
-  </div>
-</div>
-
-<audio id="customAlarm1" loop preload="auto" style="display:none">
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-</audio>
-<audio id="customAlarm2" loop preload="auto" style="display:none">
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
-</audio>
+<audio id="alarmToneOne" loop preload="auto"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
+<audio id="alarmToneTwo" loop preload="auto"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
+<audio id="ambientSonar" loop preload="auto"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg"></audio>
 
 <script>
-  
-  (function() {
-    const alarmMp3_1 = document.getElementById('customAlarm1');
-    const alarmMp3_2 = document.getElementById('customAlarm2');
-    window.selectedSound = 'alarm1.mp3';
-    document.getElementById('sound1').addEventListener('change', (e) => { if(e.target.checked) window.selectedSound = 'alarm1.mp3'; });
-    document.getElementById('sound2').addEventListener('change', (e) => { if(e.target.checked) window.selectedSound = 'alarm2.mp3'; });
+  (function(){
+    // ========== SA NAVY ALARM CORE - NO GLOWS, MAX TACTICAL ==========
+    let alarmsDatabase = [];
+    let activeAlarmInstance = null;
+    let snoozeTimerHandle = null;
+    let ambientActive = false;
+    let ambientAudio = document.getElementById('ambientSonar');
+    let currentAlarmSoundProfile = "eep1";
+    const alarmSnd1 = document.getElementById('alarmToneOne');
+    const alarmSnd2 = document.getElementById('alarmToneTwo');
 
-    function playSelectedAlarm() {
-      alarmMp3_1.pause(); alarmMp3_1.currentTime = 0;
-      alarmMp3_2.pause(); alarmMp3_2.currentTime = 0;
-      if (window.selectedSound === 'alarm1.mp3') {
-        alarmMp3_1.volume = 1.0;
-        alarmMp3_1.play().catch(e => console.log('MP3 1 fallback'));
+    // SOUND HANDLERS
+    function haltAllAlarmSounds() { alarmSnd1.pause(); alarmSnd1.currentTime = 0; alarmSnd2.pause(); alarmSnd2.currentTime = 0; }
+    function playAlertTone() {
+      haltAllAlarmSounds();
+      const player = currentAlarmSoundProfile === "eep1" ? alarmSnd1 : alarmSnd2;
+      player.volume = 0.98;
+      player.play().catch(e => console.warn("audio need interaction"));
+      if (navigator.vibrate) navigator.vibrate([700, 400, 700]);
+    }
+
+    // AMBIENT UNDERWATER SOUND (infinite, smooth)
+    function initAmbient() { ambientAudio.loop = true; ambientAudio.volume = 0.28; }
+    window.toggleAmbient = () => {
+      initAmbient();
+      if (!ambientActive) {
+        ambientAudio.play().catch(e=>console.log);
+        ambientActive = true;
+        document.getElementById('toggleAmbientBtn').innerHTML = '<i class="fas fa-stop"></i> MUTE AMBIENT';
       } else {
-        alarmMp3_2.volume = 1.0;
-        alarmMp3_2.play().catch(e => console.log('MP3 2 fallback'));
+        ambientAudio.pause();
+        ambientActive = false;
+        document.getElementById('toggleAmbientBtn').innerHTML = '<i class="fas fa-play"></i> ACTIVATE AMBIENT SOUND';
       }
-      if ('vibrate' in navigator) navigator.vibrate([600, 200, 600, 200, 600]);
-    }
-    function stopAlarmSound() {
-      alarmMp3_1.pause(); alarmMp3_1.currentTime = 0;
-      alarmMp3_2.pause(); alarmMp3_2.currentTime = 0;
-      if ('vibrate' in navigator) navigator.vibrate(0);
-    }
-    window.requestFullPermissions = () => {
-      if ('Notification' in window) Notification.requestPermission().then(p => { if (p === 'granted') document.getElementById('permissionBanner').style.display = 'none'; });
-      alarmMp3_1.play().then(() => { alarmMp3_1.pause(); alarmMp3_1.currentTime = 0; }).catch(()=>{});
-      alarmMp3_2.play().then(() => { alarmMp3_2.pause(); alarmMp3_2.currentTime = 0; }).catch(()=>{});
     };
+    document.getElementById('toggleAmbientBtn').addEventListener('click', toggleAmbient);
 
-    let alarms = [];
-    const wakeUpPreset = {
-      id: 'wake_preset_unique',
-      time: '07:00',
-      period: 'AM',
-      label: '🌅 WAKE UP PRESET',
-      days: [1, 2, 3, 4, 5],
-      enabled: true,
-      snooze: 5
-    };
+    // TONE SELECTOR
+    document.getElementById('toneEep1').addEventListener('change', () => { currentAlarmSoundProfile = "eep1"; });
+    document.getElementById('toneEep2').addEventListener('change', () => { currentAlarmSoundProfile = "eep2"; });
 
-    function loadFromStorage() {
-      const stored = localStorage.getItem('AlarmSystemAutomation');
-      if (stored) { 
-        try { 
-          alarms = JSON.parse(stored); 
-          if (!Array.isArray(alarms)) alarms = [];
-        } catch { alarms = []; }
-      }
-      if (!alarms.length) {
-        alarms = [
-          { id:'a1_' + Date.now(), time:'07:30', period:'AM', label:'MORNING ROUTINE', days:[1,2,3,4,5], enabled:true, snooze:5 },
-          { id:'a2_' + Date.now()+1, time:'21:00', period:'PM', label:'EVENING REMINDER', days:[0,1,2,3,4,5,6], enabled:false, snooze:5 }
+    // LOCAL STORAGE PERSISTENCE
+    function persistAlarms() { localStorage.setItem('submarine_alarms_sa', JSON.stringify(alarmsDatabase)); renderAlarmList(); updateStatsAndNext(); }
+    function loadAlarms() {
+      const raw = localStorage.getItem('submarine_alarms_sa');
+      if (raw) { try { alarmsDatabase = JSON.parse(raw); if(!Array.isArray(alarmsDatabase)) alarmsDatabase = []; } catch(e) { alarmsDatabase = []; } }
+      if (!alarmsDatabase.length) {
+        alarmsDatabase = [
+          { id: crypto.randomUUID?.() || 'a1_' + Date.now(), time: '06:00', period: 'AM', label: '🌊 MORNING DIVE', days: [1,2,3,4,5], enabled: true },
+          { id: crypto.randomUUID?.() || 'a2_' + Date.now(), time: '13:00', period: 'PM', label: '📡 AFTERNOON BRIEF', days: [1,2,3,4,5], enabled: false },
+          { id: crypto.randomUUID?.() || 'a3_' + Date.now(), time: '20:30', period: 'PM', label: '🌙 NIGHT PATROL', days: [0,1,2,3,4,5,6], enabled: true }
         ];
-        saveToStorage();
+        persistAlarms();
       }
-    }
-    function saveToStorage() { 
-      localStorage.setItem('AlarmSystemAutomation', JSON.stringify(alarms)); 
-      renderAlarms();
-      updateFooterStats();
-      checkNextAlarm();
+      renderAlarmList();
+      updateStatsAndNext();
     }
 
-    function renderDays(days) {
-      const d = ['S','M','T','W','T','F','S'];
-      return d.map((l,i)=>`<div class="day-badge ${days.includes(i)?'active':''}" title="${l}${days.includes(i)?' (active)':' (inactive)'}">${l}</div>`).join('');
+    function renderDayBadges(daysSelection) {
+      const week = ['S','M','T','W','T','F','S'];
+      return week.map((l, idx) => `<div class="day-badge ${daysSelection.includes(idx) ? 'active' : ''}">${l}</div>`).join('');
     }
-    
-    function renderAlarms() {
+    function escapeHtmlTxt(str) { return str.replace(/[&<>]/g, m => m==='&'?'&amp;': m==='<'?'&lt;':'&gt;'); }
+
+    function renderAlarmList() {
       const container = document.getElementById('alarmsList');
-      container.innerHTML = alarms.map(a => `
-        <div class="alarm-item ${a.enabled?'active':''}" data-id="${a.id}" draggable="true" title="Drag to reorder | ${a.label} at ${a.time} ${a.period}">
-          <div><div class="alarm-time-block"><span class="alarm-time">${a.time}</span><span class="alarm-period">${a.period}</span></div>
-          <div class="alarm-label"><i class="fas fa-tag"></i> ${escapeHtml(a.label)}</div><div class="alarm-days">${renderDays(a.days)}</div></div>
-          <div class="alarm-controls">
-            <div class="toggle-switch ${a.enabled?'active':''}" onclick="window.toggleAlarm('${a.id}')" title="${a.enabled?'Disable alarm':'Enable alarm'}"></div>
-            <button class="btn-icon" onclick="window.editAlarm('${a.id}')" title="Edit this alarm"><i class="fas fa-pen"></i></button>
-            <button class="btn-icon delete" onclick="window.deleteAlarm('${a.id}')" title="Delete alarm permanently"><i class="fas fa-trash"></i></button>
-          </div>
-        </div>`).join('');
-      attachDragEvents();
+      container.innerHTML = alarmsDatabase.map(a => `
+        <div class="alarm-item ${a.enabled ? 'active' : ''}" data-id="${a.id}" draggable="true">
+          <div><div><span class="alarm-time">${a.time}</span> <span>${a.period}</span></div>
+          <div class="alarm-label"><i class="fas fa-ship"></i> ${escapeHtmlTxt(a.label)}</div><div class="alarm-days">${renderDayBadges(a.days)}</div></div>
+          <div class="control-group"><div class="toggle-switch ${a.enabled ? 'active' : ''}" onclick="window.toggleAlarm('${a.id}')"></div>
+          <button class="btn-icon" onclick="window.editAlarm('${a.id}')"><i class="fas fa-pen"></i></button><button class="btn-icon delete" onclick="window.deleteAlarm('${a.id}')"><i class="fas fa-trash"></i></button></div>
+        </div>
+      `).join('');
+      attachDragSort();
     }
 
-    function renderPresets() {
-      const container = document.getElementById('presetsList');
-      container.innerHTML = `
-        <div class="alarm-item" title="Add default Wake Up preset (Mon-Fri, 07:00 AM)">
-          <div><div class="alarm-time-block"><span class="alarm-time">${wakeUpPreset.time}</span><span class="alarm-period">${wakeUpPreset.period}</span></div>
-          <div class="alarm-label">${wakeUpPreset.label}</div><div class="alarm-days">${renderDays(wakeUpPreset.days)}</div></div>
-          <div><button class="btn-icon" onclick="window.useWakeUpPreset()" title="Add WAKE UP alarm to your list"><i class="fas fa-plus-circle"></i> ADD</button></div>
-        </div>`;
-    }
-
-    window.useWakeUpPreset = () => {
-      const newAlarm = { 
-        ...wakeUpPreset, 
-        id: Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-        enabled: true 
-      };
-      alarms.push(newAlarm);
-      saveToStorage();
-      renderAlarms();
-      checkNextAlarm();
-    };
-
-    function escapeHtml(str) {
-      return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-      });
-    }
-
-    window.toggleAlarm = (id) => { 
-      let i = alarms.findIndex(a=>a.id===id); 
-      if(i>=0) { alarms[i].enabled = !alarms[i].enabled; saveToStorage(); renderAlarms(); checkNextAlarm(); } 
-    };
-    window.deleteAlarm = (id) => { 
-      alarms = alarms.filter(a=>a.id!==id); 
-      saveToStorage(); 
-      renderAlarms(); 
-      checkNextAlarm(); 
-    };
-    
-    let editingId = null;
+    window.toggleAlarm = (id) => { let idx = alarmsDatabase.findIndex(a=>a.id===id); if(idx!==-1) { alarmsDatabase[idx].enabled = !alarmsDatabase[idx].enabled; persistAlarms(); } };
+    window.deleteAlarm = (id) => { alarmsDatabase = alarmsDatabase.filter(a=>a.id!==id); persistAlarms(); };
+    let editingTargetId = null;
     window.editAlarm = (id) => {
-      let a = alarms.find(a=>a.id===id); if(!a) return;
-      editingId = id; 
-      let [h,m] = a.time.split(':'); 
-      document.getElementById('alarmHour').value = parseInt(h,10); 
-      document.getElementById('alarmMinute').value = parseInt(m,10);
-      document.getElementById('alarmPeriod').value = a.period; 
-      document.getElementById('alarmLabel').value = a.label;
-      document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
-      a.days.forEach(d => document.querySelector(`.day-btn[data-day="${d}"]`).classList.add('active'));
-      document.getElementById('modalTitle').innerText = '✏️ EDIT ALARM'; 
-      document.getElementById('alarmModal').style.display = 'flex';
+      const target = alarmsDatabase.find(a=>a.id===id); if(!target) return; editingTargetId = id;
+      let [hh, mm] = target.time.split(':');
+      document.getElementById('modalHour').value = parseInt(hh); document.getElementById('modalMin').value = parseInt(mm);
+      document.getElementById('modalPeriod').value = target.period; document.getElementById('modalLabel').value = target.label;
+      document.querySelectorAll('.dayModalBtn').forEach(btn=>btn.classList.remove('active'));
+      target.days.forEach(d => { let btn = document.querySelector(`.dayModalBtn[data-day="${d}"]`); if(btn) btn.classList.add('active'); });
+      document.getElementById('modalTitleSpan').innerText = '✏️ EDIT ALARM'; document.getElementById('alarmModalBox').style.display = 'flex';
     };
-    
-    window.openAddModal = () => {
-      editingId=null; 
-      document.getElementById('alarmHour').value=7; 
-      document.getElementById('alarmMinute').value=0; 
-      document.getElementById('alarmPeriod').value='AM';
-      document.getElementById('alarmLabel').value='New Alarm'; 
-      document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
-      document.getElementById('modalTitle').innerText = '➕ ADD ALARM'; 
-      document.getElementById('alarmModal').style.display = 'flex';
-    };
-    window.closeModal = () => { document.getElementById('alarmModal').style.display = 'none'; };
-    
-    window.saveAlarm = () => {
-      let hour = parseInt(document.getElementById('alarmHour').value,10);
-      let min = parseInt(document.getElementById('alarmMinute').value,10);
-      if(isNaN(hour)) hour=7; if(isNaN(min)) min=0;
-      let hourStr = hour.toString().padStart(2,'0');
-      let minStr = min.toString().padStart(2,'0');
-      const period = document.getElementById('alarmPeriod').value; 
-      const label = document.getElementById('alarmLabel').value.trim() || "Alarm";
-      const days = Array.from(document.querySelectorAll('.day-btn.active')).map(b=>parseInt(b.dataset.day));
-      if(days.length===0) { alert('Select at least one day'); return; }
-      const alarmData = { 
-        id: editingId || (Date.now().toString() + '_' + Math.random()), 
-        time:`${hourStr}:${minStr}`, 
-        period, 
-        label, 
-        days, 
-        enabled: true, 
-        snooze: 5 
-      };
-      if(editingId) alarms = alarms.map(a=>a.id===editingId ? alarmData : a); 
-      else alarms.push(alarmData);
-      saveToStorage();
-      closeModal();
-    };
-    
-    document.querySelectorAll('.day-btn').forEach(b=>b.addEventListener('click', function(){ this.classList.toggle('active'); }));
 
-    function updateClock() {
-      const n = new Date();
-      let h = n.getHours().toString().padStart(2,'0'), m = n.getMinutes().toString().padStart(2,'0'), s = n.getSeconds().toString().padStart(2,'0');
-      document.getElementById('currentTime').innerText = `${h}:${m}:${s}`;
-      document.getElementById('currentDate').innerHTML = n.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-      document.getElementById('footerClock').innerHTML = n.toLocaleTimeString();
-      checkAlarms(n);
-    }
-    setInterval(updateClock,200); updateClock();
+    window.quickAddWar = () => {
+      const qv = document.getElementById('quickTime').value.trim();
+      if (qv && /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(qv)) {
+        let [h24, min] = qv.split(':').map(Number);
+        let hour12 = ((h24+11)%12)+1; let period = h24>=12 ? 'PM' : 'AM';
+        document.getElementById('modalHour').value = hour12; document.getElementById('modalMin').value = min;
+        document.getElementById('modalPeriod').value = period; document.getElementById('modalLabel').value = 'TACTICAL ALERT';
+        document.querySelectorAll('.dayModalBtn').forEach(btn=>btn.classList.remove('active'));
+        [1,2,3,4,5].forEach(d => { let btn = document.querySelector(`.dayModalBtn[data-day="${d}"]`); if(btn) btn.classList.add('active'); });
+        editingTargetId = null; document.getElementById('modalTitleSpan').innerText = '➕ DEPLOY ALARM'; document.getElementById('alarmModalBox').style.display = 'flex';
+        document.getElementById('quickTime').value = '';
+      } else {
+        editingTargetId = null; document.getElementById('modalHour').value = 7; document.getElementById('modalMin').value = 0;
+        document.getElementById('modalPeriod').value = 'AM'; document.getElementById('modalLabel').value = 'NEW ALARM';
+        document.querySelectorAll('.dayModalBtn').forEach(btn=>btn.classList.remove('active'));
+        [1,2,3,4,5].forEach(d => { let btn = document.querySelector(`.dayModalBtn[data-day="${d}"]`); if(btn) btn.classList.add('active'); });
+        document.getElementById('modalTitleSpan').innerText = '➕ DEPLOY ALARM'; document.getElementById('alarmModalBox').style.display = 'flex';
+      }
+    };
 
-    const triggerLog = {};
-    function checkAlarms(now) {
-      const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), day = now.getDay();
-      alarms.filter(a=>a.enabled).forEach(a => {
-        if(!a.days.includes(day)) return;
-        let [ah, am] = a.time.split(':').map(Number);
-        let hour24 = ah;
-        if(a.period==='PM' && ah!==12) hour24 = ah+12;
-        if(a.period==='AM' && ah===12) hour24 = 0;
-        if(hour24===h && am===m && s<3) {
-          let key = a.id+now.toDateString();
-          if(triggerLog[key] && Date.now()-triggerLog[key] < 60000) return;
-          triggerLog[key] = Date.now();
-          triggerAlarm(a);
+    window.saveAlarmModalCmd = () => {
+      let hour = parseInt(document.getElementById('modalHour').value); let minute = parseInt(document.getElementById('modalMin').value);
+      if(isNaN(hour)) hour=7; if(isNaN(minute)) minute=0;
+      const period = document.getElementById('modalPeriod').value; let label = document.getElementById('modalLabel').value.trim() || 'STATION CALL';
+      const days = Array.from(document.querySelectorAll('.dayModalBtn.active')).map(btn => parseInt(btn.dataset.day));
+      if(days.length===0) { alert("ERROR: select at least one day (tactical failure)"); return; }
+      const timeStr = `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
+      const newAlarm = { id: editingTargetId || (crypto.randomUUID?.() || Date.now()+'_'+Math.random()), time: timeStr, period, label, days, enabled: true };
+      if(editingTargetId) alarmsDatabase = alarmsDatabase.map(a=>a.id===editingTargetId ? newAlarm : a);
+      else alarmsDatabase.push(newAlarm);
+      persistAlarms(); closeModalWar();
+    };
+    function closeModalWar() { document.getElementById('alarmModalBox').style.display = 'none'; editingTargetId = null; }
+    window.closeModalWar = closeModalWar;
+    // MODAL HTML injection (minimal)
+    const modalHtml = `<div id="alarmModalBox" style="position:fixed; inset:0; background:#010b10; display:none; align-items:center; justify-content:center; z-index:10002;"><div style="background:#071a24; border:2px solid #44ffaa; padding:28px; width:92%; max-width:460px;"><h2 id="modalTitleSpan">➕ ALARM</h2><div style="display:flex; gap:12px; margin:20px 0;"><input type="number" id="modalHour" min="1" max="12" value="7" style="background:#02121c; border:1px solid #2a6a62; padding:8px; width:80px; text-align:center; color:#44ffaa;"><span>:</span><input type="number" id="modalMin" min="0" max="59" value="0" step="5" style="background:#02121c; border:1px solid #2a6a62; padding:8px; width:80px; text-align:center; color:#44ffaa;"><select id="modalPeriod" style="background:#02121c; border:1px solid #2a6a62;"><option value="AM">AM</option><option value="PM">PM</option></select></div><input type="text" id="modalLabel" placeholder="Label" value="DUTY" style="width:100%; background:#02121c; border:1px solid #2a6a62; padding:12px; margin-bottom:20px;"><div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:24px;" id="modalDaysGroup"></div><div style="display:flex; gap:12px;"><button id="modalSaveBtn" style="background:#44ffaa; color:black; padding:12px;">SAVE</button><button onclick="closeModalWar()" style="background:#1a3a3a;">CANCEL</button></div></div></div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    const daysContainer = document.getElementById('modalDaysGroup');
+    if(daysContainer) { for(let i=0;i<=6;i++) { const btn=document.createElement('button'); btn.innerText=['S','M','T','W','T','F','S'][i]; btn.classList.add('dayModalBtn'); btn.setAttribute('data-day',i); btn.style.background='black'; btn.style.border='1px solid #2a6a62'; btn.style.padding='8px'; btn.style.margin='2px'; btn.onclick=function(){ this.classList.toggle('active'); }; daysContainer.appendChild(btn); } }
+    document.getElementById('modalSaveBtn')?.addEventListener('click', saveAlarmModalCmd);
+    
+    // DRAG REORDER
+    let dragOrigin = null;
+    function attachDragSort() { document.querySelectorAll('.alarm-item').forEach(el => { el.setAttribute('draggable','true'); el.removeEventListener('dragstart', dragStartFn); el.removeEventListener('dragend', dragEndFn); el.addEventListener('dragstart', dragStartFn); el.addEventListener('dragend', dragEndFn); }); }
+    function dragStartFn(e) { dragOrigin = this; e.dataTransfer.setData('text/plain',''); this.style.opacity='0.7'; }
+    function dragEndFn(e) { if(dragOrigin) dragOrigin.style.opacity = ''; dragOrigin = null; }
+    document.body.addEventListener('dragover', e=>e.preventDefault());
+    document.body.addEventListener('drop', e=>{ e.preventDefault(); if(!dragOrigin) return; const targetAlarm = e.target.closest('.alarm-item'); if(targetAlarm && targetAlarm !== dragOrigin){ const dragId = dragOrigin.getAttribute('data-id'); const targetId = targetAlarm.getAttribute('data-id'); const idxDrag = alarmsDatabase.findIndex(a=>a.id===dragId); const idxTarget = alarmsDatabase.findIndex(a=>a.id===targetId); if(idxDrag!==-1 && idxTarget!==-1){ const [removed] = alarmsDatabase.splice(idxDrag,1); alarmsDatabase.splice(idxTarget,0,removed); persistAlarms(); } } });
+
+    // ALARM TRIGGER ENGINE (no fail)
+    let alarmTriggerCache = {};
+    function checkAlerts(now) {
+      const curHour = now.getHours(), curMin = now.getMinutes(), curSec = now.getSeconds(), dayOfWeek = now.getDay();
+      alarmsDatabase.forEach(alarm => {
+        if(!alarm.enabled) return;
+        if(!alarm.days.includes(dayOfWeek)) return;
+        let [ah, am] = alarm.time.split(':').map(Number);
+        let alarmH24 = ah;
+        if(alarm.period === 'PM' && ah !== 12) alarmH24 = ah+12;
+        if(alarm.period === 'AM' && ah === 12) alarmH24 = 0;
+        if(alarmH24 === curHour && am === curMin && curSec < 3) {
+          const key = alarm.id + '_' + now.toDateString();
+          if(alarmTriggerCache[key] && (Date.now() - alarmTriggerCache[key] < 58000)) return;
+          alarmTriggerCache[key] = Date.now();
+          raiseNavalAlert(alarm);
         }
       });
     }
-
-    let activeAlarm = null; let snoozeTimer = null;
-    function triggerAlarm(alarm) {
-      if(activeAlarm) { setTimeout(()=>triggerAlarm(alarm), 12000); return; }
-      activeAlarm = alarm;
-      document.getElementById('alertTitle').innerHTML = '🔊 ALARM!';
-      document.getElementById('alertMessage').innerHTML = `<strong>${escapeHtml(alarm.label)}</strong> · ${alarm.time} ${alarm.period}`;
-      document.getElementById('alarmAlert').style.display = 'flex';
-      playSelectedAlarm();
-      if('Notification' in window && Notification.permission==='granted') {
-        new Notification('⏰ ALARM SYSTEM', { body: `${alarm.label} ${alarm.time} ${alarm.period}`, requireInteraction: true });
+    
+    function raiseNavalAlert(alarm) {
+      if(activeAlarmInstance) { setTimeout(() => raiseNavalAlert(alarm), 7000); return; }
+      activeAlarmInstance = alarm;
+      playAlertTone();
+      document.getElementById('alertMessageText').innerHTML = `<strong>${escapeHtmlTxt(alarm.label)}</strong><br>${alarm.time} ${alarm.period}`;
+      document.getElementById('alertTheatre').style.display = 'flex';
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('⚓ SA NAVY ALARM ⚓', { body: `${alarm.label} at ${alarm.time} ${alarm.period}`, requireInteraction: true, silent: false });
+        setTimeout(() => { if(activeAlarmInstance === alarm) new Notification('‼️ OVERRIDE ACTIVE ‼️', { body: 'ALARM STILL SOUNDING', requireInteraction: true }); }, 1800);
       }
     }
-    window.dismissAlarm = () => { document.getElementById('alarmAlert').style.display = 'none'; stopAlarmSound(); if(snoozeTimer) clearTimeout(snoozeTimer); activeAlarm = null; };
-    window.snoozeAlarm = (mins) => {
-      if(!activeAlarm) return; document.getElementById('alarmAlert').style.display = 'none'; stopAlarmSound();
-      if(snoozeTimer) clearTimeout(snoozeTimer);
-      snoozeTimer = setTimeout(() => { if(activeAlarm) triggerAlarm(activeAlarm); }, mins*60*1000);
-      activeAlarm = null;
-    };
-
-    function checkNextAlarm() {
-      let now = new Date(); let nextText = '--:--'; let minDiff = Infinity;
-      alarms.filter(a=>a.enabled).forEach(a => {
-        a.days.forEach(d => {
-          let cand = new Date(); let diffDays = (d - now.getDay() + 7) % 7;
-          cand.setDate(now.getDate() + diffDays);
-          let [hour,minute] = a.time.split(':').map(Number);
-          let hour24 = hour;
-          if(a.period==='PM' && hour!==12) hour24 = hour+12;
-          if(a.period==='AM' && hour===12) hour24 = 0;
-          cand.setHours(hour24, minute, 0, 0);
-          if(diffDays===0 && cand<=now) cand.setDate(cand.getDate()+7);
-          let diff = cand-now;
-          if(diff>0 && diff<minDiff) { minDiff = diff; nextText = `${a.time} ${a.period}`; }
+    
+    function dismissAlertGlobal() { document.getElementById('alertTheatre').style.display = 'none'; haltAllAlarmSounds(); if(snoozeTimerHandle) clearTimeout(snoozeTimerHandle); activeAlarmInstance = null; if(navigator.vibrate) navigator.vibrate(0); }
+    function snoozeAlertMinutes(minutes) { if(!activeAlarmInstance) return; document.getElementById('alertTheatre').style.display = 'none'; haltAllAlarmSounds(); if(snoozeTimerHandle) clearTimeout(snoozeTimerHandle); const alarmCopy = activeAlarmInstance; snoozeTimerHandle = setTimeout(() => { if(alarmCopy) raiseNavalAlert(alarmCopy); }, minutes * 60 * 1000); activeAlarmInstance = null; }
+    document.getElementById('snooze5BtnMil').onclick = () => snoozeAlertMinutes(5);
+    document.getElementById('snooze10BtnMil').onclick = () => snoozeAlertMinutes(10);
+    document.getElementById('dismissBtnMil').onclick = () => dismissAlertGlobal();
+    
+    function updateStatsAndNext() {
+      const activeTotal = alarmsDatabase.filter(a=>a.enabled).length;
+      document.getElementById('activeCount').innerText = activeTotal;
+      let now = new Date(); let closest = Infinity; let nextAlarmStr = '--:--';
+      alarmsDatabase.filter(a=>a.enabled).forEach(a => {
+        a.days.forEach(day => {
+          let cand = new Date(); let dayOffset = (day - now.getDay() + 7) % 7;
+          cand.setDate(now.getDate() + dayOffset);
+          let [hh, mm] = a.time.split(':').map(Number);
+          let hr24 = hh; if(a.period === 'PM' && hh !== 12) hr24 = hh+12; if(a.period === 'AM' && hh === 12) hr24 = 0;
+          cand.setHours(hr24, mm, 0, 0);
+          if(dayOffset === 0 && cand <= now) cand.setDate(cand.getDate()+7);
+          let diff = cand - now;
+          if(diff > 0 && diff < closest) { closest = diff; nextAlarmStr = `${a.time} ${a.period}`; }
         });
       });
-      document.getElementById('nextAlarm').innerText = nextText;
+      document.getElementById('nextAlarmDisplay').innerText = nextAlarmStr;
     }
-    function updateFooterStats() {
-      document.getElementById('alarmCount').innerText = alarms.filter(a=>a.enabled).length;
+    
+    function refreshClockAndScan() {
+      const nowDate = new Date();
+      document.getElementById('currentTime').innerText = nowDate.toLocaleTimeString('en-GB', { hour12: false });
+      document.getElementById('currentDate').innerHTML = nowDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('footClock').innerHTML = nowDate.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+      checkAlerts(nowDate);
     }
-
-    let draggedItem = null;
-    function attachDragEvents() {
-      document.querySelectorAll('.alarm-item').forEach(el => {
-        el.removeEventListener('dragstart', dragStartHandler);
-        el.removeEventListener('dragend', dragEndHandler);
-        el.addEventListener('dragstart', dragStartHandler);
-        el.addEventListener('dragend', dragEndHandler);
-      });
+    
+    // PRESET DEPLOY
+    function renderPresetRow() {
+      const presetDiv = document.getElementById('presetContainer');
+      presetDiv.innerHTML = `<div class="alarm-item"><div><span class="alarm-time">06:45</span> <span>AM</span><div class="alarm-label">⚓ WATCH RELIEF (MON-FRI)</div><div class="alarm-days">${renderDayBadges([1,2,3,4,5])}</div></div><div><button class="btn-icon" onclick="addPresetWatch()"><i class="fas fa-plus"></i> DEPLOY</button></div></div>`;
     }
-    function dragStartHandler(e) { draggedItem = e.target.closest('.alarm-item'); if(draggedItem) { e.dataTransfer.setData('text/plain', ''); e.target.style.opacity = '0.5'; } }
-    function dragEndHandler(e) { if(e.target.closest('.alarm-item')) e.target.style.opacity = '1'; draggedItem = null; }
-    document.addEventListener('dragover', e=>e.preventDefault());
-    document.addEventListener('drop', e=>{
-      e.preventDefault();
-      if(draggedItem && e.target.closest('.alarm-item')) {
-        let target = e.target.closest('.alarm-item');
-        let draggedId = draggedItem.dataset.id, targetId = target.dataset.id;
-        if(draggedId && targetId && draggedId!==targetId) {
-          let i1 = alarms.findIndex(a=>a.id===draggedId), i2 = alarms.findIndex(a=>a.id===targetId);
-          if(i1>=0 && i2>=0) { let [removed] = alarms.splice(i1,1); alarms.splice(i2,0,removed); saveToStorage(); renderAlarms(); }
-        }
-      }
-    });
-
-    document.getElementById('quickTime').addEventListener('keypress', (e)=>{
-      if(e.key==='Enter') {
-        let v = e.target.value.trim(); 
-        if(!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(v)) { alert("Use HH:MM 24h format"); return; }
-        let [h,mi] = v.split(':'); 
-        let hourInt = parseInt(h,10);
-        let hour12 = ((hourInt+11)%12+1).toString().padStart(2,'0');
-        let per = hourInt>=12 ? 'PM' : 'AM';
-        document.getElementById('alarmHour').value = hour12; 
-        document.getElementById('alarmMinute').value = mi;
-        document.getElementById('alarmPeriod').value = per; 
-        document.getElementById('alarmLabel').value = 'Quick Alarm';
-        document.querySelectorAll('.day-btn').forEach(b=>b.classList.toggle('active', [1,2,3,4,5].includes(+b.dataset.day)));
-        openAddModal();
-        e.target.value = '';
-      }
-    });
-
-    loadFromStorage(); 
-    renderAlarms(); 
-    renderPresets(); 
-    updateFooterStats();
-    checkNextAlarm();
-    if('Notification' in window && Notification.permission==='default') document.getElementById('permissionBanner').style.display = 'flex';
-    setInterval(checkNextAlarm, 30000);
+    window.addPresetWatch = () => { alarmsDatabase.push({ id: crypto.randomUUID?.() || 'p_'+Date.now(), time:'06:45', period:'AM', label:'WATCH RELIEF', days:[1,2,3,4,5], enabled:true }); persistAlarms(); };
+    
+    window.requestMilAccess = () => { if('Notification' in window) Notification.requestPermission(); alarmSnd1.play().then(()=>{alarmSnd1.pause(); alarmSnd1.currentTime=0;}).catch(()=>{}); alarmSnd2.play().then(()=>{alarmSnd2.pause(); alarmSnd2.currentTime=0;}).catch(()=>{}); document.getElementById('permissionBanner').style.display = 'none'; };
+    
+    document.getElementById('homeHeader').addEventListener('click', () => { window.location.reload(); });
+    
+    loadAlarms(); renderPresetRow(); setInterval(refreshClockAndScan, 200); setInterval(updateStatsAndNext, 30000);
+    if('Notification' in window && Notification.permission === 'default') document.getElementById('permissionBanner').style.display = 'flex';
+    window.addEventListener('load', () => { initAmbient(); });
   })();
-  
 </script>
-  
 </body>
-  
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
