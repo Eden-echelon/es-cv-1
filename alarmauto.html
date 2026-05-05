@@ -1,17 +1,37 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>SA NAVY | SUBMARINE ALARM SYSTEM AUTOMATION</title>
+
+  <title>ALARM AUTO</title>
+
+  <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
+
+  <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
+  
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="favicon.png">
+  
+  <meta name="msapplication-TileImage" content="favicon.png">
+  <meta name="msapplication-TileColor" content="#000000">
+
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="theme-color" content="#000c1a">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    /* ========== TACTICAL SA NAVY - NO GLOWS, NO SHADOWS, HARD EDGES ========== */
+
     * {
       margin: 0;
       padding: 0;
@@ -37,7 +57,6 @@
       overflow-x: hidden;
     }
 
-    /* UNDERWATER INFINITE ANIMATION - NO GLOWS, PURE MOVEMENT */
     .ocean-mantle {
       position: fixed;
       inset: 0;
@@ -109,7 +128,6 @@
       100% { transform: translateX(20%); }
     }
 
-    /* MAIN GRID - MILITARY */
     body {
       display: grid;
       grid-template-rows: auto 1fr auto;
@@ -158,7 +176,6 @@
       gap: 20px;
     }
 
-    /* FLAT CARDS - NO GLOW */
     .card, .alarm-item, .sound-panel, .chatter-panel {
       background: #07161f;
       border: 1.5px solid #2a5a5a;
@@ -316,7 +333,6 @@
       padding: 12px 20px;
     }
 
-    /* OVERRIDE PANEL - NO GLOW, FLAT RED */
     .alert-bunker {
       position: fixed;
       inset: 0;
@@ -374,9 +390,13 @@
       .alarm-item { flex-direction: column; align-items: flex-start; }
       .day-badge { width: 30px; height: 30px; }
     }
+
   </style>
+
 </head>
+
 <body>
+
 <div class="ocean-mantle"></div>
 <div class="depth-layers">
   <div class="seaweed-field"></div>
@@ -390,18 +410,18 @@
 </div>
 
 <header id="homeHeader">
-  <div class="header-title"><i class="fas fa-submarine"></i> SA NAVY • ALARM SYSTEM AUTOMATION <i class="fas fa-water"></i></div>
-  <div class="navy-badge">SONAR ACTIVE • TACTICAL CORE</div>
+  <div class="header-title"><i class="fas fa-submarine"></i> ALARM AUTO <i class="fas fa-water"></i></div>
+  <div class="navy-badge">ACTIVE • TACTICAL</div>
 </header>
 
 <div class="main">
   <div id="permissionBanner">
-    <span><i class="fas fa-bell"></i> AUTHORIZE NOTIFICATIONS & AUDIO — SUBMARINE ALERT PROTOCOL</span>
+    <span><i class="fas fa-bell"></i> AUTHORIZE NOTIFICATIONS & AUDIO — ALERT PROTOCOL</span>
     <button onclick="requestMilAccess()">GRANT ACCESS</button>
   </div>
 
   <div class="card current-time-card">
-    <div class="current-label"><i class="fas fa-globe"></i> DEEP SEA CHRONO • ZULU</div>
+    <div class="current-label"><i class="fas fa-globe"></i> DEEP SEA CHRONO • LIMA</div>
     <div class="current-time" id="currentTime">--:--:--</div>
     <div class="current-date" id="currentDate"></div>
   </div>
@@ -452,8 +472,9 @@
 <audio id="ambientSonar" loop preload="auto"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg"></audio>
 
 <script>
+
   (function(){
-    // ========== SA NAVY ALARM CORE - NO GLOWS, MAX TACTICAL ==========
+
     let alarmsDatabase = [];
     let activeAlarmInstance = null;
     let snoozeTimerHandle = null;
@@ -463,7 +484,6 @@
     const alarmSnd1 = document.getElementById('alarmToneOne');
     const alarmSnd2 = document.getElementById('alarmToneTwo');
 
-    // SOUND HANDLERS
     function haltAllAlarmSounds() { alarmSnd1.pause(); alarmSnd1.currentTime = 0; alarmSnd2.pause(); alarmSnd2.currentTime = 0; }
     function playAlertTone() {
       haltAllAlarmSounds();
@@ -473,7 +493,6 @@
       if (navigator.vibrate) navigator.vibrate([700, 400, 700]);
     }
 
-    // AMBIENT UNDERWATER SOUND (infinite, smooth)
     function initAmbient() { ambientAudio.loop = true; ambientAudio.volume = 0.28; }
     window.toggleAmbient = () => {
       initAmbient();
@@ -493,7 +512,6 @@
     document.getElementById('toneEep1').addEventListener('change', () => { currentAlarmSoundProfile = "eep1"; });
     document.getElementById('toneEep2').addEventListener('change', () => { currentAlarmSoundProfile = "eep2"; });
 
-    // LOCAL STORAGE PERSISTENCE
     function persistAlarms() { localStorage.setItem('submarine_alarms_sa', JSON.stringify(alarmsDatabase)); renderAlarmList(); updateStatsAndNext(); }
     function loadAlarms() {
       const raw = localStorage.getItem('submarine_alarms_sa');
@@ -576,14 +594,13 @@
     };
     function closeModalWar() { document.getElementById('alarmModalBox').style.display = 'none'; editingTargetId = null; }
     window.closeModalWar = closeModalWar;
-    // MODAL HTML injection (minimal)
+
     const modalHtml = `<div id="alarmModalBox" style="position:fixed; inset:0; background:#010b10; display:none; align-items:center; justify-content:center; z-index:10002;"><div style="background:#071a24; border:2px solid #44ffaa; padding:28px; width:92%; max-width:460px;"><h2 id="modalTitleSpan">➕ ALARM</h2><div style="display:flex; gap:12px; margin:20px 0;"><input type="number" id="modalHour" min="1" max="12" value="7" style="background:#02121c; border:1px solid #2a6a62; padding:8px; width:80px; text-align:center; color:#44ffaa;"><span>:</span><input type="number" id="modalMin" min="0" max="59" value="0" step="5" style="background:#02121c; border:1px solid #2a6a62; padding:8px; width:80px; text-align:center; color:#44ffaa;"><select id="modalPeriod" style="background:#02121c; border:1px solid #2a6a62;"><option value="AM">AM</option><option value="PM">PM</option></select></div><input type="text" id="modalLabel" placeholder="Label" value="DUTY" style="width:100%; background:#02121c; border:1px solid #2a6a62; padding:12px; margin-bottom:20px;"><div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:24px;" id="modalDaysGroup"></div><div style="display:flex; gap:12px;"><button id="modalSaveBtn" style="background:#44ffaa; color:black; padding:12px;">SAVE</button><button onclick="closeModalWar()" style="background:#1a3a3a;">CANCEL</button></div></div></div>`;
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     const daysContainer = document.getElementById('modalDaysGroup');
     if(daysContainer) { for(let i=0;i<=6;i++) { const btn=document.createElement('button'); btn.innerText=['S','M','T','W','T','F','S'][i]; btn.classList.add('dayModalBtn'); btn.setAttribute('data-day',i); btn.style.background='black'; btn.style.border='1px solid #2a6a62'; btn.style.padding='8px'; btn.style.margin='2px'; btn.onclick=function(){ this.classList.toggle('active'); }; daysContainer.appendChild(btn); } }
     document.getElementById('modalSaveBtn')?.addEventListener('click', saveAlarmModalCmd);
     
-    // DRAG REORDER
     let dragOrigin = null;
     function attachDragSort() { document.querySelectorAll('.alarm-item').forEach(el => { el.setAttribute('draggable','true'); el.removeEventListener('dragstart', dragStartFn); el.removeEventListener('dragend', dragEndFn); el.addEventListener('dragstart', dragStartFn); el.addEventListener('dragend', dragEndFn); }); }
     function dragStartFn(e) { dragOrigin = this; e.dataTransfer.setData('text/plain',''); this.style.opacity='0.7'; }
@@ -591,7 +608,6 @@
     document.body.addEventListener('dragover', e=>e.preventDefault());
     document.body.addEventListener('drop', e=>{ e.preventDefault(); if(!dragOrigin) return; const targetAlarm = e.target.closest('.alarm-item'); if(targetAlarm && targetAlarm !== dragOrigin){ const dragId = dragOrigin.getAttribute('data-id'); const targetId = targetAlarm.getAttribute('data-id'); const idxDrag = alarmsDatabase.findIndex(a=>a.id===dragId); const idxTarget = alarmsDatabase.findIndex(a=>a.id===targetId); if(idxDrag!==-1 && idxTarget!==-1){ const [removed] = alarmsDatabase.splice(idxDrag,1); alarmsDatabase.splice(idxTarget,0,removed); persistAlarms(); } } });
 
-    // ALARM TRIGGER ENGINE (no fail)
     let alarmTriggerCache = {};
     function checkAlerts(now) {
       const curHour = now.getHours(), curMin = now.getMinutes(), curSec = now.getSeconds(), dayOfWeek = now.getDay();
@@ -656,7 +672,6 @@
       checkAlerts(nowDate);
     }
     
-    // PRESET DEPLOY
     function renderPresetRow() {
       const presetDiv = document.getElementById('presetContainer');
       presetDiv.innerHTML = `<div class="alarm-item"><div><span class="alarm-time">06:45</span> <span>AM</span><div class="alarm-label">⚓ WATCH RELIEF (MON-FRI)</div><div class="alarm-days">${renderDayBadges([1,2,3,4,5])}</div></div><div><button class="btn-icon" onclick="addPresetWatch()"><i class="fas fa-plus"></i> DEPLOY</button></div></div>`;
@@ -671,6 +686,58 @@
     if('Notification' in window && Notification.permission === 'default') document.getElementById('permissionBanner').style.display = 'flex';
     window.addEventListener('load', () => { initAmbient(); });
   })();
+
 </script>
+
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
