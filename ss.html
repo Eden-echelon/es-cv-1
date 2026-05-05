@@ -14,7 +14,18 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="icon" type="image/png" href="logo_tr.png">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
+
+  <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
+  
+  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="favicon.png">
+  
+  <meta name="msapplication-TileImage" content="favicon.png">
+  <meta name="msapplication-TileColor" content="#000000">
   
   <style>
     
@@ -470,8 +481,11 @@
     .stat, .operation, .operator {
       backdrop-filter: blur(1px);
     }
+
   </style>
+
 </head>
+
 <body>
 
 <header>
@@ -586,7 +600,7 @@
 <script>
   
   (function() {
-    // Add subtle console logging to reflect "tactical" nature, no intrusive alerts.
+ 
     const btns = document.querySelectorAll('.btn');
     btns.forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -600,7 +614,7 @@
             terminalDiv.style.backgroundColor = '#1a2a1a';
             setTimeout(() => { terminalDiv.style.backgroundColor = '#050505'; }, 200);
           }
-          // Small non-intrusive UI hint
+
           const fakeNotify = document.createElement('div');
           fakeNotify.innerText = '🔒 COMMAND RECEIVED • SECURE CHANNEL ACTIVE';
           fakeNotify.style.position = 'fixed';
@@ -619,7 +633,7 @@
         }
       });
     });
-    // Also operators interaction: dynamic log for readiness
+  
     const operators = document.querySelectorAll('.operator');
     operators.forEach(op => {
       op.addEventListener('click', () => {
@@ -652,7 +666,6 @@
         }
     };
     
-    // ========== ANTI-DEBUGGING ==========
     setInterval(() => {
         const start = performance.now();
         debugger;
@@ -667,7 +680,6 @@
     });
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     
-    // ========== CODE HARDENING ==========
     window.eval = function() { lockdown(); return null; };
     window.Function = function() { lockdown(); return () => {}; };
     
@@ -679,8 +691,7 @@
         }
         return el;
     };
-    
-    // ========== INPUT SANITIZATION ==========
+
     const sanitize = (str) => {
         if (typeof str !== 'string') return str;
         return str.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
@@ -704,7 +715,6 @@
         }
     });
     
-    // ========== CSRF PROTECTION ==========
     let csrfToken = null;
     crypto.getRandomValues(new Uint8Array(32)).forEach(b => csrfToken = (csrfToken || '') + b.toString(16));
     
@@ -717,8 +727,7 @@
         }
         return originalFetch.call(this, url, opts);
     };
-    
-    // ========== DATA LEAK PREVENTION ==========
+
     document.addEventListener('copy', (e) => {
         if (window.getSelection().toString().length > 200) {
             e.preventDefault();
@@ -728,7 +737,6 @@
     document.addEventListener('cut', (e) => e.preventDefault());
     window.print = () => false;
     
-    // ========== SESSION FINGERPRINT ==========
     const getFP = async () => {
         const components = [navigator.userAgent, screen.width, screen.height, navigator.language].join('|');
         return await computeHash(components);
@@ -749,19 +757,16 @@
         }, 3000);
     })();
     
-    // ========== CSP HEADERS ==========
     const meta = document.createElement('meta');
     meta.httpEquiv = 'Content-Security-Policy';
     meta.content = "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline'; frame-ancestors 'none';";
     document.head.appendChild(meta);
     
-    // ========== INIT COMPLETE ==========
     console.log('🔒 SECURITY ACTIVE | Lockdown Engaged');
     
     return { status: 'PROTECTED', violations: () => violations };
 }
 
-// AUTO-INITIALIZE
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', secureApplication);
 else secureApplication();
   
