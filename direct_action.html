@@ -389,10 +389,9 @@
 </div>
 
 <script>
+  
   (function() {
-    // ============================================================
-    // 1. INFINITE BINARY BATTLEFIELD (millions digits, electric)
-    // ============================================================
+
     const canvas = document.getElementById('binaryBattleCanvas');
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -436,9 +435,6 @@
     }
     drawBinaryRush();
 
-    // ============================================================
-    // 2. LIVE DEV TOOLS OUTPUT (real JS output, errors, logs)
-    // ============================================================
     const consoleOutputSpan = document.getElementById('consoleOutput');
     const consoleMetricsSpan = document.getElementById('consoleMetrics');
     
@@ -451,25 +447,20 @@
         const mem = performance.memory ? `${Math.round(performance.memory.usedJSHeapSize / 1048576)}MB` : 'N/A';
         consoleMetricsSpan.innerHTML = `⚙️ heap: ${mem} | frame: steady`;
       }
-      // also mirror to real console for devs
+
       if(type === 'log') console.log(`[LIVE] ${msg}`);
       else if(type === 'warn') console.warn(`[LIVE] ${msg}`);
     }
 
-    // override console methods? just for show
     window.addEventListener('load', () => {
       pushToLiveConsole('SYSTEM OVERWATCH ACTIVE // DIRECT ACTION READY', 'log');
     });
 
-    // simulate real-time CPU ticks
     setInterval(() => {
       const memInfo = performance.memory ? ` | JS heap: ${Math.round(performance.memory.usedJSHeapSize / 1048576)}MB` : '';
       if(consoleMetricsSpan) consoleMetricsSpan.innerHTML = `⚡ ticks: ${Math.floor(Math.random() * 999)} ops ${memInfo}`;
     }, 1800);
 
-    // ============================================================
-    // 3. OVERWATCH AUTHENTICATION — ACCESS CODE = 111
-    // ============================================================
     const systemCodeInput = document.getElementById('systemAccessCode');
     const overwatchStatusDiv = document.getElementById('overwatchStatus');
     const submitBtn = document.getElementById('submitOverwatchBtn');
@@ -486,12 +477,12 @@
         threatLed.className = 'threat-safe';
         threatLed.innerText = '◇ THREAT: NULL ◇';
         pushToLiveConsole('ACCESS GRANTED: system override complete. Dept grid unlocked.', 'log');
-        // enable department grid rendering
+
         renderDepartmentGrid();
         systemCodeInput.disabled = true;
         submitBtn.innerText = 'UNLOCKED';
         submitBtn.style.opacity = '0.6';
-        // also remove hero blur / spark
+
       } else {
         overwatchStatusDiv.style.color = '#ff3366';
         overwatchStatusDiv.innerHTML = '✘ ACCESS DENIED — IDENTITY MISMATCH. THREAT ELEVATED.';
@@ -500,7 +491,7 @@
         pushToLiveConsole(`ACCESS DENIED: invalid code "${enteredCode}"`, 'warn');
         systemCodeInput.value = '';
         systemCodeInput.focus();
-        // electric jitter
+
         systemCodeInput.style.transform = 'translateX(2px)';
         setTimeout(() => { systemCodeInput.style.transform = ''; }, 100);
       }
@@ -509,9 +500,6 @@
     submitBtn.addEventListener('click', authenticateOverwatch);
     systemCodeInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') authenticateOverwatch(); });
 
-    // ============================================================
-    // 4. DEPARTMENTS GRID (only if overwatch unlocked)
-    // ============================================================
     const DEPARTMENTS = [
       { id: 'innov', name: '01. INNOVATIONS CORE', icon: 'fa-microchip', code: 'CIO01', file: 'innovations.html' },
       { id: 'compl', name: '02. COMPLIANCE DIV', icon: 'fa-gavel', code: 'LAW02', file: 'compliance.html' },
@@ -611,12 +599,8 @@
     });
     overlay.addEventListener('click', (e) => { if(e.target === overlay) closeAuthModal(); });
 
-    // initially grid shows locked until overwatch auth
     renderDepartmentGrid();
 
-    // ============================================================
-    // 5. CLOCK + additional realtime metrics
-    // ============================================================
     function updateClock() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', second:'2-digit', hour12: false });
@@ -626,12 +610,10 @@
     updateClock();
     setInterval(updateClock, 500);
 
-    // fade-out transition
     const styleFade = document.createElement('style');
     styleFade.textContent = `body.fade-out { opacity: 0; transition: opacity 0.35s cubic-bezier(0.2, 0.9, 0.4, 1); }`;
     document.head.appendChild(styleFade);
 
-    // extra live JS monitoring: display every error-like event
     window.addEventListener('error', (e) => {
       pushToLiveConsole(`[ERROR] ${e.message}`, 'warn');
     });

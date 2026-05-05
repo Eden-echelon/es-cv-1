@@ -10,7 +10,6 @@ app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
-// Create users table if it doesn't exist
 pool.query(`
   CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,

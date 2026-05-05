@@ -32,6 +32,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
+
             --cyan: #00ffff;
             --cyan-dim: #00aaaa;
             --bg: #000;
@@ -43,9 +44,11 @@
             --font-body: 'Electrolize', sans-serif;
             --font-mono: 'VT323', monospace;
             --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
         }
 
         html, body {
+
             height: 100%;
             background: var(--bg);
             font-family: var(--font-body);
@@ -53,9 +56,11 @@
             overflow-x: hidden;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+
         }
 
         canvas#rain {
+
             position: fixed;
             inset: 0;
             width: 100%;
@@ -64,9 +69,11 @@
             pointer-events: none;
             opacity: 0.8;
             will-change: transform;
+
         }
 
         .main {
+
             position: relative;
             z-index: 2;
             padding: clamp(1rem, 5vw, 3rem);
@@ -76,24 +83,30 @@
             max-width: 1400px;
             margin: 0 auto;
             width: 100%;
+
         }
         
         .header {
+
             text-align: center;
             margin-bottom: clamp(1.5rem, 4vh, 3rem);
             position: relative;
+
         }
 
         .header h1 {
+
             font-family: var(--font-tactical);
             font-size: clamp(1.8rem, 6vw, 3.5rem);
             font-weight: 900;
             letter-spacing: 8px;
             text-transform: uppercase;
             line-height: 1.2;
+
         }
 
         .header span {
+
             font-family: var(--font-mono);
             opacity: 0.7;
             font-size: clamp(0.9rem, 2.5vw, 1.2rem);
@@ -101,14 +114,17 @@
             display: block;
             margin-top: 0.5rem;
             color: var(--cyan-dim);
+
         }
 
         .controls {
+
             display: flex;
             gap: clamp(0.75rem, 2vw, 1.5rem);
             justify-content: center;
             flex-wrap: wrap;
             margin-bottom: 2rem;
+            
         }
 
         .btn {

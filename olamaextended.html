@@ -8,7 +8,18 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
 
-    <link rel="icon" type="image/png" href="logo_tr1.png">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
+
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
+    
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="favicon.png">
+    
+    <meta name="msapplication-TileImage" content="favicon.png">
+    <meta name="msapplication-TileColor" content="#000000">
 
     <title>SMU-7 • CDR KEMELE • TIER-1 OMEGA</title>
 
@@ -281,19 +292,23 @@
         }
 
         .dossier-split {
+
             display: flex;
             flex-direction: column;
             gap: 18px;
             margin-bottom: 20px;
+
         }
 
         .quick-facts-panel {
+
             background: rgba(5,0,0,0.7);
             backdrop-filter: blur(1px);
             border: 1px solid rgba(170,50,50,0.6);
             padding: 16px 14px;
             position: relative;
             width: 100%;
+
         }
         .quick-facts-panel::before {
             
@@ -380,46 +395,58 @@
         }
         
         .quick-fact-label {
+
             font-weight: 800;
             font-size: 0.6rem;
             text-transform: uppercase;
             color: #bb7777;
             letter-spacing: 0.5px;
+
         }
         .quick-fact-value {
+
             font-size: 0.7rem;
             color: #dd9999;
             word-break: break-word;
+
         }
         .security-badge {
+
             background: #1f0404;
             margin-top: 10px;
             padding: 6px;
             font-size: 0.55rem;
             text-align: center;
             border-left: 2px solid #cc5555;
+
         }
 
-        /* main profile panel */
         .main-profile-panel {
+
             background: rgba(5,0,0,0.65);
             border: 1px solid rgba(170,50,50,0.5);
             padding: 16px;
             width: 100%;
+
         }
         .deep-card {
+
             background: rgba(10,2,2,0.6);
             border: 1px solid rgba(130,50,50,0.5);
             padding: 12px;
             margin-bottom: 16px;
+
         }
+
         .deep-title {
+
             color: #cc7777;
             font-size: 0.8rem;
             border-left: 3px solid #cc5555;
             padding-left: 8px;
             margin-bottom: 10px;
             font-weight: bold;
+
         }
         .cert-item {
             background: rgba(20,5,5,0.6);
@@ -687,7 +714,7 @@
 </div>
 
 <script>
-    // Live time update
+
     function updateLiveTime() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('en-GB', { timeZone: 'Africa/Johannesburg' });

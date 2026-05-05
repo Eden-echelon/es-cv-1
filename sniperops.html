@@ -8,43 +8,48 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-    <title>GHOST CELL: DIRECT ACTION SNIPER OPS</title>
+    <title>SNIPER OPS VIDEO GAME</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Chakra+Petch:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
 
-  <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
-  <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
-  <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
-  
-  <link rel="apple-touch-icon" href="favicon.png">
-  <link rel="apple-touch-icon-precomposed" href="favicon.png">
-  
-  <meta name="msapplication-TileImage" content="favicon.png">
-  <meta name="msapplication-TileColor" content="#000000">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
+    
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="favicon.png">
+    
+    <meta name="msapplication-TileImage" content="favicon.png">
+    <meta name="msapplication-TileColor" content="#000000">
 
     <style>
 
         * {
+
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+
         }
 
         body {
+
             background: #000000;
             overflow: hidden;
             font-family: 'Share Tech Mono', monospace;
             height: 100vh;
             width: 100vw;
+
         }
 
         #gameCanvas {
+
             position: absolute;
             top: 0;
             left: 0;
@@ -53,10 +58,11 @@
             display: block;
             cursor: crosshair;
             z-index: 1;
+
         }
 
-        /* TACTICAL GLASS HUD - ZERO GLOWS, ZERO SHADOWS (pure matte) */
         .hud-container {
+
             position: absolute;
             top: 0;
             left: 0;
@@ -66,9 +72,11 @@
             padding: 1rem 1.5rem;
             font-family: 'Orbitron', monospace;
             text-transform: uppercase;
+
         }
 
         .hud-row {
+
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
@@ -77,33 +85,41 @@
             padding-bottom: 10px;
             background: rgba(0,0,0,0.65);
             backdrop-filter: blur(2px);
+
         }
 
         .hud-card {
+            
             background: #050505cc;
             padding: 6px 16px;
             border-left: 3px solid #ff2a2a;
             font-weight: bold;
             font-size: 0.8rem;
+
         }
 
         .hud-value {
+
             font-size: 1.6rem;
             font-family: 'Chakra Petch', monospace;
             color: #ff5566;
             margin-left: 8px;
+
         }
 
         .ammo-panel {
+
             background: #000000aa;
             border: 1px solid #ff2a2a;
             padding: 6px 18px;
             font-size: 1.5rem;
             font-weight: 900;
             letter-spacing: 2px;
+
         }
 
         .difficulty-selector {
+
             position: absolute;
             top: 20px;
             right: 20px;
@@ -116,9 +132,11 @@
             font-size: 0.8rem;
             cursor: pointer;
             color: #ffaabb;
+
         }
 
         .crosshair-static {
+
             position: absolute;
             top: 50%;
             left: 50%;
@@ -127,6 +145,7 @@
             transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 18;
+
         }
 
         .crosshair-static::before,
@@ -162,6 +181,7 @@
         }
 
         .kill-log {
+
             position: absolute;
             bottom: 20px;
             right: 20px;
@@ -170,15 +190,18 @@
             pointer-events: none;
             text-align: right;
             font-family: 'Share Tech Mono', monospace;
+
         }
 
         .kill-entry {
+
             background: #020202dd;
             border-right: 3px solid #ff2a2a;
             padding: 5px 12px;
             margin-top: 6px;
             font-size: 0.8rem;
             animation: fadeKill 3s forwards;
+
         }
 
         @keyframes fadeKill {
@@ -188,6 +211,7 @@
         }
 
         .mission-brief {
+
             position: absolute;
             bottom: 20px;
             left: 20px;
@@ -197,9 +221,11 @@
             backdrop-filter: blur(3px);
             z-index: 20;
             pointer-events: none;
+
         }
 
         .reload-overlay {
+
             position: absolute;
             bottom: 35%;
             left: 50%;
@@ -215,6 +241,7 @@
             pointer-events: none;
             font-family: 'Orbitron', monospace;
             animation: pulseAlert 0.7s infinite;
+
         }
 
         @keyframes pulseAlert {
@@ -223,6 +250,7 @@
         }
 
         .weather-tag {
+
             position: absolute;
             top: 100px;
             right: 20px;
@@ -232,6 +260,7 @@
             border-left: 2px solid #ff2a2a;
             z-index: 22;
             pointer-events: none;
+            
         }
 
         @media (max-width: 700px) {
@@ -239,9 +268,13 @@
             .hud-value { font-size: 1.2rem; }
             .ammo-panel { font-size: 1.2rem; padding: 3px 12px; }
         }
+
     </style>
+
 </head>
+
 <body>
+
 <canvas id="gameCanvas"></canvas>
 
 <div class="hud-container">
@@ -277,9 +310,8 @@
 <div id="weatherDisplay" class="weather-tag">🌙 CLEAR NIGHT</div>
 
 <script>
+
     (function(){
-        // =================  ADVANCED SNIPER OPS : NO GLOWS, REALISTIC BALLISTICS, WEATHER, DIFFICULTY ============
-        // FULLY OPTIMIZED FOR ANY RESOLUTION + ORIENTATION, MANUAL RELOAD, RANDOM THREATS, ENEMY AI VARIANTS
 
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -323,7 +355,6 @@
         
         let animationFrame = null;
         
-        // ---- resize & orientation fully dynamic ----
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -332,7 +363,6 @@
         window.addEventListener('resize', () => { resizeCanvas(); drawScene(); });
         window.addEventListener('orientationchange', () => { setTimeout(() => { resizeCanvas(); drawScene(); }, 20); });
         
-        // =================  ENEMY SYSTEM: ADVANCED REAL-TIME TACTICAL UNIT =================
         class HostileUnit {
             constructor(x, y, distance, difficultyMod) {
                 this.x = x;
@@ -417,7 +447,6 @@
             }
         }
         
-        // --- weather & environmental randomization ---
         function generateRandomWeather() {
             const weathers = ["CLEAR NIGHT", "LIGHT FOG", "DRIZZLE", "WIND GUSTS", "HEAVY MIST"];
             const idx = Math.floor(Math.random() * weathers.length);
@@ -430,7 +459,6 @@
             document.getElementById("weatherDisplay").innerHTML = `<i class="fas fa-cloud-moon"></i> ${weatherType}`;
         }
         
-        // enemy spawn with random distances
         function spawnWave() {
             enemies = [];
             const w = canvas.width;
@@ -487,7 +515,6 @@
             setTimeout(() => { if(entry.parentNode) entry.remove(); }, 2800);
         }
         
-        // weapon fire: ballistics, wind, difficulty modifies sway penalty
         function fireWeapon(clickCanvasX, clickCanvasY) {
             if(!gameActive) return;
             if(isReloading) { addKillLog("RELOAD IN PROGRESS", false); return; }
@@ -555,8 +582,7 @@
                 drawScene();
             }, 1050);
         }
-        
-        // Breathing and sway logic
+
         function updateBreathMechanics() {
             if(isHoldingBreath && gameActive && !isReloading) {
                 if(currentBreath > 0) currentBreath -= 1.55;
@@ -582,14 +608,12 @@
             swayX = Math.min(Math.max(swayX, -38), 38);
             swayY = Math.min(Math.max(swayY, -30), 30);
         }
-        
-        // update advanced AI movement (only hard/extreme)
+
         function updateEnemyMovement() {
             let time = Date.now() / 1000;
             for(let e of enemies) if(e.alive) e.updatePosition(time);
         }
-        
-        // DRAW ENTIRE TACTICAL ENVIRONMENT
+
         function drawScene(complete = false) {
             if(!ctx) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -675,8 +699,7 @@
                 setTimeout(() => { resetGame(); }, 100);
             }
         }
-        
-        // EVENT HANDLERS
+
         function handleCanvasClick(e) {
             if(!gameActive) return;
             let rect = canvas.getBoundingClientRect();
@@ -721,6 +744,44 @@
         
         init();
     })();
+
 </script>
+
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

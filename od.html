@@ -385,9 +385,13 @@
             .vault-header { flex-direction: column; text-align: center; }
         }
         button:active { transform: scale(0.97); }
+
     </style>
+
 </head>
+
 <body>
+
 <div class="scanlines"></div>
 <div id="offline-banner">⚠️ OFFLINE MODE — CACHED DOCUMENTS ACCESSIBLE</div>
 
@@ -436,11 +440,7 @@
 <div id="toastMsg" class="toast-msg"></div>
 
 <script>
-    // --------------------------------------------------------------
-    // ENHANCED DOCUMENT REGISTRY – PLACEHOLDER PDFs WITH DEMO FALLBACKS
-    // For PRODUCTION: replace pdfFile with real filenames inside your folders.
-    // Structure matches branch basePath. All assets must be inside /documents/...
-    // --------------------------------------------------------------
+
     const DOCUMENT_REGISTRY = {
         eden_conglomerate: {
             branchDisplay: "EDEN CONGLOMERATE",
@@ -498,7 +498,6 @@
         setTimeout(() => { if (toast) toast.style.display = 'none'; }, 3000);
     }
 
-    // Intelligent fetch with fallback for demo – if file missing, generate placeholder PDF info
     async function fetchPDFBlob(pdfPath) {
         try {
             const response = await fetch(pdfPath, { cache: "force-cache" });
@@ -616,7 +615,6 @@
             grid.appendChild(card);
         });
 
-        // attach event listeners after render
         document.querySelectorAll('.btn-view').forEach(btn => {
             btn.removeEventListener('click', viewHandler);
             btn.addEventListener('click', viewHandler);
@@ -666,7 +664,6 @@
         }
     }
 
-    // Security hardening for Play Store compliance
     document.addEventListener('contextmenu', (e) => e.preventDefault());
     document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 'I' || e.key === 'J' || e.key === 'C' || e.key === 'S')) || e.key === 'F12') {
@@ -690,7 +687,6 @@
         });
     }
 
-    // Register service worker for offline capabilities (optional but Play Store ready)
     if ('serviceWorker' in navigator && location.protocol === 'https:' || location.hostname === 'localhost') {
         navigator.serviceWorker.register('/sw.js').catch(e => console.log("SW optional"));
     }
@@ -706,6 +702,49 @@
     });
 
     window.closePDFModal = closePDFModal;
+
 </script>
+
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
