@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <title>CUSTOM CARTOONS | SA MILITANT PENCIL SKETCH | SECURE PRIVATE UNIT</title>
+    <title>TOON-UP</title>
 
     <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
 
@@ -23,27 +23,27 @@
     <meta name="msapplication-TileColor" content="#000000">
 
     <style>
-        
-        /* -------------------------------
-           RESET & GLOBAL - NO GLOWS, NO SHADOWS
-           CLEAN SPACING, PERFECT READABILITY
-        ------------------------------- */
+
         * {
+
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+
         }
 
         body {
+
             background: #0a0e14;
             font-family: 'Courier New', 'Fira Code', 'SF Mono', monospace;
             line-height: 1.5;
             padding: 2rem;
             min-height: 100vh;
+
         }
 
-        /* main container - max width for largest screens */
         .cartoon-universe {
+
             max-width: 1600px;
             width: 100%;
             margin: 0 auto;
@@ -51,10 +51,11 @@
             border: 2px solid #2a4b2f;
             border-radius: 28px;
             padding: 2rem;
+
         }
 
-        /* header section - spaced */
         .top-bar {
+
             display: flex;
             justify-content: space-between;
             align-items: baseline;
@@ -63,22 +64,28 @@
             padding-bottom: 1.5rem;
             margin-bottom: 2.5rem;
             border-bottom: 2px solid #2e5536;
+
         }
 
         .title-area h1 {
+
             font-size: 2rem;
             letter-spacing: 2px;
             color: #b7efb0;
             font-weight: 700;
+
         }
 
         .title-area p {
+
             font-size: 0.75rem;
             color: #7b9f7a;
             margin-top: 0.25rem;
+
         }
 
         .security-tag {
+
             background: #121a22;
             border: 1px solid #3b6e42;
             padding: 0.5rem 1rem;
@@ -86,18 +93,21 @@
             font-size: 0.7rem;
             color: #b0d6a8;
             font-weight: bold;
+
         }
 
-        /* quick scroll buttons - clean, no shadows */
         .scroll-nav {
+
             display: flex;
             justify-content: center;
             gap: 1.2rem;
             margin-bottom: 2.5rem;
             flex-wrap: wrap;
+
         }
 
         .scroll-btn {
+
             background: #1b262f;
             border: 1.5px solid #3f7a49;
             color: #d2f0ca;
@@ -109,54 +119,63 @@
             border-radius: 60px;
             transition: 0.1s linear;
             letter-spacing: 1px;
+
         }
 
         .scroll-btn:hover {
+
             background: #2d4635;
             border-color: #6eae6e;
+
         }
 
-        /* cartoon grid - spacious, responsive */
         .cartoon-master-grid {
+
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 2.2rem;
             margin: 2rem 0 2.5rem;
+
         }
 
-        /* individual cartoon card - NO GLOW, NO SHADOW, clean borders */
         .cartoon-card-item {
+
             background: #11161f;
             border: 1.5px solid #2c5a34;
             border-radius: 24px;
             overflow: hidden;
             transition: 0.15s linear;
+
         }
 
         .cartoon-card-item:hover {
+
             border-color: #5faa5f;
             background: #121b21;
+
         }
 
-        /* canvas container */
         .canvas-zone {
+
             padding: 1.5rem;
             display: flex;
             justify-content: center;
             background: #0c1018;
             border-bottom: 1px solid #2a5032;
+
         }
 
         canvas.custom-sketch-canvas {
+
             display: block;
             width: 100%;
             height: auto;
             background: #0f131e;
             border-radius: 20px;
             border: 1px solid #2e643a;
+
         }
 
-        /* info zone */
         .cartoon-info {
             padding: 1.2rem 1.2rem 1.5rem 1.2rem;
         }
@@ -349,20 +368,13 @@
 
 <script>
     (function() {
-        // --------------------------------------------------------------
-        //  ADVANCED PENCIL SKETCH ENGINE - NO GLOWS, NO SHADOWS
-        //  SOUTH AFRICAN MILITANT / SOLDIER CARTOONS WITH UNIQUE HAND-DRAWN STYLE
-        //  PERFECT STRUCTURE & SPACING
-        // --------------------------------------------------------------
 
-        // ----- Helper: draw pencil sketch militant (clean lines, no glow) -----
         function drawPencilSketchCartoon(ctx, width, height, customAttrs) {
-            // clear with dark paper tone
+
             ctx.clearRect(0, 0, width, height);
             ctx.fillStyle = "#0f131e";
             ctx.fillRect(0, 0, width, height);
             
-            // add subtle graphite texture (very light noise, no glow)
             for(let i = 0; i < 180; i++) {
                 ctx.fillStyle = `rgba(110, 150, 100, 0.04)`;
                 ctx.fillRect(Math.random() * width, Math.random() * height, 1.2, 1.2);
@@ -371,8 +383,7 @@
             const cx = width / 2;
             const bodyBaseY = height * 0.64;
             const headY = height * 0.4;
-            
-            // ---- pencil line function with slight sketch roughness ----
+
             function pencilLine(x1, y1, x2, y2, lineW, opacity = 0.85) {
                 ctx.save();
                 ctx.beginPath();
@@ -395,13 +406,11 @@
                 ctx.restore();
             }
             
-            // ---- draw torso & gear (basic fighter shape) ----
             pencilLine(cx - 30, bodyBaseY - 22, cx - 16, bodyBaseY + 24, 1.5);
             pencilLine(cx + 30, bodyBaseY - 22, cx + 16, bodyBaseY + 24, 1.5);
             pencilLine(cx - 15, bodyBaseY + 24, cx, bodyBaseY + 40, 1.4);
             pencilLine(cx + 15, bodyBaseY + 24, cx, bodyBaseY + 40, 1.4);
             
-            // Head (rough circle)
             ctx.beginPath();
             for(let ang = 0; ang <= Math.PI * 2; ang += 0.35) {
                 let xOff = Math.cos(ang) * 23;
@@ -415,7 +424,6 @@
             ctx.lineWidth = 1.2;
             ctx.stroke();
             
-            // Helmet style based on call sign hash (boonie or tactical)
             let useBoonie = (customAttrs.callsign.length % 2 === 0) ? true : false;
             if(customAttrs.weaponType === "LMG") useBoonie = false;
             if(useBoonie) {
@@ -429,7 +437,6 @@
                 ctx.stroke();
             }
             
-            // Face details: eyes, mouth (sharp, no glow)
             ctx.fillStyle = "#c8f0b0";
             ctx.beginPath();
             ctx.arc(cx - 11, headY - 2, 2.8, 0, Math.PI * 2);
@@ -439,7 +446,6 @@
             ctx.fill();
             pencilLine(cx - 9, headY + 8, cx + 9, headY + 8, 1.0);
             
-            // Weapon profile
             let isLMG = (customAttrs.weaponType === "LMG");
             if(isLMG) {
                 pencilLine(cx + 24, bodyBaseY - 2, cx + 72, bodyBaseY + 3, 2.2);
@@ -449,15 +455,13 @@
                 pencilLine(cx + 74, bodyBaseY - 16, cx + 82, bodyBaseY - 7, 1.3);
             }
             
-            // Tactical vest / armour zone (clean rectangle, no shadow)
             ctx.strokeStyle = "#86b47a";
             ctx.lineWidth = 1.2;
             ctx.strokeRect(cx - 29, bodyBaseY - 19, 58, 42);
             for(let i=0;i<8;i++) {
                 pencilLine(cx - 25 + i * 8, bodyBaseY - 12, cx - 23 + i * 8, bodyBaseY + 12, 0.8);
             }
-            
-            // South African Flag patch (simple rectangle combo)
+
             ctx.fillStyle = "#2f6a3a";
             ctx.fillRect(cx + 34, bodyBaseY - 24, 20, 14);
             ctx.fillStyle = "#e6c34a";
@@ -476,17 +480,14 @@
             ctx.font = `9px monospace`;
             ctx.fillText("SOUTH AFRICAN PRIVATE UNIT", 12, height - 6);
             
-            // Optional extra sketch hatching on chest region (no glow)
             for(let s=0; s<32; s++) {
                 ctx.fillStyle = `rgba(150, 190, 120, 0.2)`;
                 ctx.fillRect(cx - 20 + (s*7) % 55, bodyBaseY - 10 + (s%24), 1.2, 1);
             }
         }
-        
-        // ---- Data Management ----
-        let allCartoonCards = []; // store metadata for updates
-        
-        // function to generate new card DOM & canvas
+
+        let allCartoonCards = [];
+
         function buildCartoonCard(customData) {
             const container = document.getElementById('cartoonGridContainer');
             if(!container) return null;
@@ -526,8 +527,7 @@
             cardDiv.appendChild(canvasZone);
             cardDiv.appendChild(infoZone);
             container.appendChild(cardDiv);
-            
-            // drawing attributes
+
             const drawAttributes = {
                 callsign: customData.callsign.slice(0, 20),
                 specialMark: customData.specialMark.slice(0, 28),
@@ -553,7 +553,6 @@
             return cardDiv;
         }
         
-        // helper escape
         function escapeHtml(str) {
             return str.replace(/[&<>]/g, function(m) {
                 if(m === '&') return '&amp;';
@@ -563,7 +562,6 @@
             });
         }
         
-        // predefined high-quality south african militant pencil cartoons
         const presetSoldiers = [
             { callsign: "RECCE-32 BN", specialMark: "BUSH WAR VETERAN • CAPE", weaponType: "R4" },
             { callsign: "IRON ANTEATER", specialMark: "PRIVATE SECURITY FORCE", weaponType: "LMG" },
@@ -585,7 +583,7 @@
                     weaponType: preset.weaponType
                 });
             }
-            // add one extra advanced custom to demonstrate flexibility
+
             buildCartoonCard({
                 callsign: "PRIVATE OPS-ZA",
                 specialMark: "TACTICAL PENCIL DIVISION",
@@ -593,7 +591,6 @@
             });
         }
         
-        // generate fully custom cartoon from user input
         function generateCustomCartoonFromInput() {
             let rawName = document.getElementById('operatorNameInput').value.trim();
             let rawMark = document.getElementById('specialMarkInput').value.trim();
@@ -606,14 +603,13 @@
                 specialMark: rawMark.slice(0, 30),
                 weaponType: weaponChoice
             });
-            // auto-scroll to the new cartoon
+
             setTimeout(() => {
                 const lastCard = document.querySelector('.cartoon-card-item:last-child');
                 if(lastCard) lastCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 50);
         }
         
-        // responsive handling: when window resizes, update canvases to keep sharpness
         function handleResizeUpdate() {
             for(let card of allCartoonCards) {
                 const canvasElem = document.getElementById(card.canvasId);
@@ -623,7 +619,6 @@
             }
         }
         
-        // ----- SCROLL BUTTONS: TOP, MIDDLE, DOWN (smooth, precise) -----
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -636,10 +631,8 @@
             window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
         }
         
-        // ----- initialization -----
         loadInitialCartoons();
         
-        // attach event listeners for scroll nav
         const topBtn = document.getElementById('scrollTopBtn');
         const midBtn = document.getElementById('scrollMiddleBtn');
         const downBtn = document.getElementById('scrollDownBtn');
@@ -657,11 +650,62 @@
             handleResizeUpdate();
         });
         
-        // Additional key: right click protect but only context menu (optional tech)
         document.addEventListener('contextmenu', (e) => e.preventDefault());
         
         console.log("✅ CARTOON SYSTEM ACTIVE : NO GLOWS, PERFECT SPACING, ADVANCED PENCIL RENDER, QUICK SCROLL READY");
     })();
+
 </script>
+
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

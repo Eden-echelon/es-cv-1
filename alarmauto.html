@@ -7,7 +7,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
 
-  <title>ALARM AUTO</title>
+  <title>ALARM-AUTO</title>
 
   <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
 
@@ -33,13 +33,16 @@
   <style>
 
     * {
+
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
+
     }
 
     :root {
+
       --abyss: #010a0f;
       --deep-sea: #031a24;
       --sonar-green: #44ffaa;
@@ -47,24 +50,30 @@
       --hull-gray: #2a3a3a;
       --sonar-dim: #1a5a5a;
       --text-hard: #cceeff;
+
     }
 
     html, body {
+
       height: 100%;
       background: var(--abyss);
       color: var(--text-hard);
       font-family: 'Inter', system-ui, sans-serif;
       overflow-x: hidden;
+
     }
 
     .ocean-mantle {
+
       position: fixed;
       inset: 0;
       z-index: -2;
       background: linear-gradient(145deg, #010a0f 0%, #021a24 45%, #010e14 100%);
+
     }
 
     .depth-layers {
+
       position: fixed;
       bottom: 0;
       left: 0;
@@ -72,9 +81,11 @@
       height: 100%;
       pointer-events: none;
       z-index: -1;
+
     }
 
     .seaweed-field {
+
       position: absolute;
       bottom: 0;
       left: 0;
@@ -83,15 +94,19 @@
       background: repeating-linear-gradient(transparent 0px, transparent 28px, #14342e 28px, #0a2824 32px);
       opacity: 0.5;
       animation: swayWeed 18s infinite linear;
+
     }
 
     @keyframes swayWeed {
+
       0% { background-position: 0 0; opacity: 0.4; }
       50% { background-position: 40px 10px; opacity: 0.7; }
       100% { background-position: 0 0; opacity: 0.4; }
+
     }
 
     .bubble-stream {
+
       position: absolute;
       bottom: -20px;
       left: 15%;
@@ -100,6 +115,7 @@
       background: rgba(100, 200, 180, 0.4);
       border-radius: 50%;
       animation: bubbleRise 12s infinite ease-in;
+
     }
 
     .bubble-stream:nth-child(2) { left: 65%; width: 12px; height: 12px; animation-duration: 18s; animation-delay: 2s; opacity: 0.3; }
@@ -108,11 +124,14 @@
     .bubble-stream:nth-child(5) { left: 50%; width: 7px; height: 7px; animation-duration: 16s; animation-delay: 0s; }
 
     @keyframes bubbleRise {
+
       0% { bottom: -20px; opacity: 0.6; transform: translateX(0); }
       100% { bottom: 110%; opacity: 0; transform: translateX(30px); }
+
     }
 
     .current-wave {
+
       position: absolute;
       top: 40%;
       left: -10%;
@@ -121,22 +140,28 @@
       background: repeating-linear-gradient(90deg, transparent, transparent 80px, #2a7a6a 80px, #3eaa8a 120px);
       animation: driftLine 14s infinite linear;
       opacity: 0.35;
+
     }
 
     @keyframes driftLine {
+
       0% { transform: translateX(-20%); }
       100% { transform: translateX(20%); }
+
     }
 
     body {
+
       display: grid;
       grid-template-rows: auto 1fr auto;
       grid-template-columns: 1fr min(96%, 880px) 1fr;
       grid-template-areas: "header header header" ". main ." "footer footer footer";
       position: relative;
+
     }
 
     header {
+
       grid-area: header;
       background: #030f18;
       border-bottom: 3px solid var(--sonar-dim);
@@ -147,9 +172,11 @@
       flex-wrap: wrap;
       gap: 12px;
       cursor: pointer;
+
     }
 
     .header-title {
+
       font-size: clamp(0.9rem, 5vw, 1.6rem);
       font-weight: 800;
       font-family: 'Roboto Mono', monospace;
@@ -158,50 +185,64 @@
       display: flex;
       align-items: center;
       gap: 12px;
+
     }
 
     .navy-badge {
+
       background: #02121c;
       border: 1px solid var(--sonar-dim);
       padding: 5px 14px;
       font-family: monospace;
       font-size: 0.7rem;
+
     }
 
     .main {
+
       grid-area: main;
       padding: 24px 0 32px;
       display: flex;
       flex-direction: column;
       gap: 20px;
+
     }
 
     .card, .alarm-item, .sound-panel, .chatter-panel {
+
       background: #07161f;
       border: 1.5px solid #2a5a5a;
       padding: 18px 22px;
+
     }
 
     .current-time-card {
+
       border-left: 6px solid var(--sonar-green);
       text-align: center;
+
     }
 
     .current-time {
+
       font-family: 'Roboto Mono', monospace;
       font-size: clamp(2.8rem, 14vw, 5.4rem);
       font-weight: 800;
       color: var(--sonar-green);
       letter-spacing: 4px;
+
     }
 
     .quick-add {
+
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+
     }
 
     .quick-add input {
+
       flex: 3;
       background: #020e16;
       border: 1.5px solid #2a6a62;
@@ -210,59 +251,75 @@
       font-size: 1.3rem;
       color: var(--sonar-green);
       text-align: center;
+
     }
 
     .quick-add button {
+
       width: 74px;
       background: #041e2a;
       border: 1.5px solid var(--sonar-green);
       font-size: 2rem;
       cursor: pointer;
+
     }
 
     .section-title {
+
       font-size: 1.2rem;
       font-weight: 700;
       font-family: monospace;
       border-left: 5px solid var(--sonar-green);
       padding-left: 14px;
+
     }
 
     .alarms-list {
+
       display: flex;
       flex-direction: column;
       gap: 12px;
+
     }
 
     .alarm-item {
+
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 14px;
       cursor: grab;
+
     }
 
     .alarm-item.active {
+
       border-right: 4px solid var(--sonar-green);
       background: #09222e;
+
     }
 
     .alarm-time {
+
       font-family: monospace;
       font-size: clamp(1.5rem, 6vw, 2.2rem);
       font-weight: 800;
       color: var(--sonar-green);
+
     }
 
     .alarm-days {
+
       display: flex;
       gap: 6px;
       margin-top: 6px;
       flex-wrap: wrap;
+
     }
 
     .day-badge {
+
       width: 34px;
       height: 34px;
       background: #02121c;
@@ -271,32 +328,42 @@
       align-items: center;
       justify-content: center;
       font-weight: 600;
+
     }
 
     .day-badge.active {
+
       background: var(--sonar-green);
       color: black;
+
     }
 
     .control-group {
+
       display: flex;
       gap: 10px;
+
     }
 
     .toggle-switch {
+
       width: 56px;
       height: 30px;
       background: #0a2a30;
       border: 1px solid #3a7a6a;
       position: relative;
       cursor: pointer;
+
     }
 
     .toggle-switch.active {
+
       background: #1a6a52;
+
     }
 
     .toggle-switch::after {
+
       content: '';
       width: 24px;
       height: 24px;
@@ -305,35 +372,45 @@
       top: 2px;
       left: 3px;
       transition: 0.08s;
+
     }
 
     .toggle-switch.active::after {
+
       left: 28px;
+
     }
 
     .btn-icon {
+
       width: 44px;
       height: 44px;
       background: #03121c;
       border: 1px solid #2a6a62;
       cursor: pointer;
+
     }
 
     .btn-icon.delete:hover {
+
       border-color: var(--battleship-red);
       color: var(--battleship-red);
+
     }
 
     #permissionBanner {
+
       background: #0a2828;
       border: 1.5px solid #ccaa44;
       display: none;
       align-items: center;
       justify-content: space-between;
       padding: 12px 20px;
+
     }
 
     .alert-bunker {
+
       position: fixed;
       inset: 0;
       background: #000b0f;
@@ -341,33 +418,41 @@
       align-items: center;
       justify-content: center;
       z-index: 20001;
+
     }
 
     .alert-mil {
+
       background: #0a0e0c;
       border: 5px solid var(--battleship-red);
       padding: 32px;
       text-align: center;
       width: 92%;
       max-width: 540px;
+
     }
 
     .alert-mil i {
+
       font-size: 4rem;
       color: var(--battleship-red);
       animation: none;
+
     }
 
     .alert-mil button {
+
       background: #142020;
       border: 1.5px solid white;
       padding: 10px 24px;
       margin: 6px;
       font-weight: 700;
       cursor: pointer;
+
     }
 
     footer {
+
       grid-area: footer;
       background: #030c10;
       border-top: 2px solid #2a5a5a;
@@ -377,18 +462,23 @@
       padding: 10px 24px;
       font-family: monospace;
       font-size: 0.75rem;
+
     }
 
     .live-led {
+
       width: 10px;
       height: 10px;
       background: var(--battleship-red);
       display: inline-block;
+      
     }
 
     @media (max-width: 560px) {
+
       .alarm-item { flex-direction: column; align-items: flex-start; }
       .day-badge { width: 30px; height: 30px; }
+
     }
 
   </style>
@@ -410,7 +500,7 @@
 </div>
 
 <header id="homeHeader">
-  <div class="header-title"><i class="fas fa-submarine"></i> ALARM AUTO <i class="fas fa-water"></i></div>
+  <div class="header-title"><i class="fas fa-submarine"></i> ALARM-AUTO <i class="fas fa-water"></i></div>
   <div class="navy-badge">ACTIVE • TACTICAL</div>
 </header>
 
@@ -508,7 +598,6 @@
     };
     document.getElementById('toggleAmbientBtn').addEventListener('click', toggleAmbient);
 
-    // TONE SELECTOR
     document.getElementById('toneEep1').addEventListener('change', () => { currentAlarmSoundProfile = "eep1"; });
     document.getElementById('toneEep2').addEventListener('change', () => { currentAlarmSoundProfile = "eep2"; });
 

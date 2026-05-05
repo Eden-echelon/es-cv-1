@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
 
-    <title>PROTOCOL-7 · RADIO + SURVEILLANCE · INDEXEDDB VAULT</title>
+    <title>ALPHA PROTOCOL-7</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -99,16 +99,24 @@
         footer { background: var(--bg-card); border-top: 1px solid var(--border-subtle); padding: 0.8rem; text-align: center; font-size: 0.6rem; }
         @media (max-width: 800px) { .dual-panel { grid-template-columns: 1fr; } .scroll-nav { right: 0.5rem; top: 70px; } .recording-banner { font-size: 0.65rem; gap: 0.3rem; } }
         .storage-warning { position: fixed; bottom: 10px; right: 10px; background: #1a1a00; border-left: 4px solid #ffcc00; padding: 6px 12px; font-size: 0.7rem; z-index: 1000; font-family: monospace; }
+
     </style>
+
 </head>
+
 <body>
 
 <div class="recording-banner">
-    <div class="rec-badge"><div class="pulse-red"></div><span>🟢 PROTOCOL-7 · INDEXEDDB VAULT</span></div>
+
+    <div class="rec-badge"><div class="pulse-red"></div><span>🟢 ALPHA PROTOCOL-7</span></div>
+
     <span>⚠️ REAL WebRTC RADIO · PERPETUAL RECORDING</span>
+
     <div class="rec-badge"><i class="fas fa-database"></i><span>INDEXEDDB · UNLIMITED STORAGE</span></div>
 </div>
+
 <div class="scroll-nav"><div class="scroll-btn" id="scrollTopBtn">▲</div><div class="scroll-btn" id="scrollMidBtn">◉</div><div class="scroll-btn" id="scrollDownBtn">▼</div></div>
+
 <div class="protocol-grid">
     <div class="stats-dashboard">
         <div class="stat-tile"><div class="stat-number-big" id="totalRecs">0</div><div>TOTAL RECS</div></div>
@@ -118,6 +126,7 @@
         <div class="stat-tile"><div class="stat-number-big" id="txEvents">0</div><div>PTT EVENTS</div></div>
         <div class="stat-tile"><div class="stat-number-big" id="peerCount">0</div><div>PEERS ONLINE</div></div>
     </div>
+
     <div class="dual-panel">
         <div class="panel">
             <div class="panel-title"><i class="fas fa-broadcast-tower"></i> TACTICAL RADIO · SHARED FREQ</div>
@@ -156,8 +165,9 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
 <script>
-    // ==================== INDEXEDDB MANAGER ====================
+
     class RecordingVaultDB {
         constructor() { this.dbName = 'Protocol7Vault'; this.storeName = 'recordings'; this.dbVersion = 2; this.db = null; this.maxRecordings = 2000; }
         async init() {
@@ -254,7 +264,6 @@
         }
     }
 
-    // ==================== RING BUFFER CHUNK MANAGER ====================
     class RingBufferChunkManager {
         constructor(maxSeconds = 120) {
             this.chunks = [];          // each chunk: { blob, timestamp, duration }
@@ -288,7 +297,6 @@
         clear() { this.chunks = []; this.totalDuration = 0; }
     }
 
-    // ==================== GLOBALS ====================
     let vaultDB = null;
     let mediaStream = null, mediaRecorder = null;
     let ringBuffer = new RingBufferChunkManager(120);  // keep last 120 seconds
@@ -463,7 +471,6 @@
     async function terminateRadio() { if(heartbeatInterval) clearInterval(heartbeatInterval); if(presenceUnsub) presenceUnsub(); if(lockUnsub) lockUnsub(); if(signalUnsub) signalUnsub(); if(peerConnection) peerConnection.close(); if(db && deviceId) await db.collection('p7_presence').doc(`${currentChannel}_${deviceId}`).delete().catch(()=>{}); await releaseTxLock(); activePeers.clear(); renderPeerList(); addLog(`📡 RADIO TERMINATED`); }
     async function changeChannel() { let newRaw = channelInput.value.trim(); if(!newRaw) newRaw='4625625'; let newChan=sanitizeChannel(newRaw), newDisplay=newRaw.replace(/_/g,'.'); if(newChan===currentChannel) return; addLog(`🔁 Switching ${displayChannel} → ${newDisplay}`); await terminateRadio(); currentChannel=newChan; displayChannel=newDisplay; await initRadio(); addLog(`📡 Now on FREQ: ${displayChannel}`); }
 
-    // ========== CAMERA ==========
     async function initCameraSurveillance() {
         const camContainer = document.createElement('div'); camContainer.className='panel'; camContainer.style.marginTop='1rem';
         camContainer.innerHTML=`<div class="panel-title"><i class="fas fa-video"></i> CCTV SURVEILLANCE</div><div style="position:relative;"><video id="surveillanceCam" autoplay playsinline muted style="width:100%; background:#000; border:1px solid var(--border-primary); border-radius:4px;"></video><div style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.7); padding:4px 8px; font-family:monospace; font-size:0.7rem;" id="camStatus">📷 INIT</div></div><div class="button-fleet"><button id="snapshotBtn" class="tact-btn"><i class="fas fa-camera"></i> SNAPSHOT</button><button id="startVideoRecBtn" class="tact-btn"><i class="fas fa-record-vinyl"></i> START VIDEO</button><button id="stopVideoRecBtn" class="tact-btn danger-btn"><i class="fas fa-stop"></i> STOP</button><button id="toggleCamBtn" class="tact-btn"><i class="fas fa-sync-alt"></i> SWITCH</button></div><div><span id="videoRecStatus">⚪ STANDBY</span> | <span id="snapshotCount">📸 0</span></div>`;
@@ -479,7 +486,6 @@
         await startCamera();
     }
 
-    // ========== BOOT ==========
     window.addEventListener('load', async () => {
         vaultDB = new RecordingVaultDB();
         await vaultDB.init();
@@ -513,6 +519,25 @@
     setChannel.addEventListener('click', changeChannel);
     channelInput.addEventListener('keypress',(e)=>{ if(e.key==='Enter') changeChannel(); });
     if('mediaSession' in navigator) { navigator.mediaSession.setActionHandler('play',()=>pttBtn.dispatchEvent(new Event('mousedown'))); navigator.mediaSession.setActionHandler('pause',()=>pttBtn.dispatchEvent(new Event('mouseup'))); addLog("🎧 Earphone button = PTT"); }
+
 </script>
+
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
