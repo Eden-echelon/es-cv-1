@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ES-CV-1 | PROTOCOL-2: GENERAL EMERGENCY EVACUATION</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* Military feel, prevent casual text selection */
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            font-family: 'Courier New', 'Fira Code', 'Monaco', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            counter-reset: section;
+        }
+
+        /* TOP-SECURITY OVERLAY GRID */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* MAIN SECURE CONTAINER */
+        .secure-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 780px;
+            background: rgba(8, 12, 25, 0.75);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(0, 255, 255, 0.45);
+            border-radius: 32px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.08);
+            padding: 1.8rem;
+            transition: all 0.2s ease;
+        }
+
+        /* TERMINAL HEADER */
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 2px solid #0ff;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.6rem;
+            flex-wrap: wrap;
+        }
+
+        .protocol-badge {
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #0ff;
+            text-shadow: 0 0 4px #0ff;
+            background: #00000055;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .timestamp {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #7fdbff;
+            background: #0a1020;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            border: 1px solid #2c6e9e;
+        }
+
+        /* STATUS ALERT */
+        .evac-alert {
+            background: #330000cc;
+            border-left: 6px solid #ff3333;
+            padding: 1rem;
+            margin-bottom: 1.8rem;
+            backdrop-filter: blur(4px);
+            border-radius: 12px;
+            color: #ffaaaa;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alert-text {
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .alert-text strong {
+            color: #ff6666;
+            font-size: 1.2rem;
+        }
+
+        .clearance-level {
+            background: #000000aa;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid #ff4444;
+        }
+
+        /* PIN GATE SECTION */
+        .gate-section {
+            background: #03060ed9;
+            border-radius: 24px;
+            border: 1px solid #0ff88a66;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            transition: 0.2s;
+        }
+
+        .gate-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+            color: #88ffcc;
+            font-weight: bold;
+        }
+
+        .gate-header span {
+            font-size: 1.6rem;
+        }
+
+        .pin-input-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 1rem 0 0.5rem;
+        }
+
+        #pinInput {
+            flex: 2;
+            background: #010a12;
+            border: 2px solid #2a7f6e;
+            padding: 14px 18px;
+            font-size: 1.3rem;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #0ff;
+            letter-spacing: 4px;
+            border-radius: 18px;
+            outline: none;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        #pinInput:focus {
+            border-color: #0ff;
+            box-shadow: 0 0 12px #0ff8;
+            background: #021018;
+        }
+
+        .gate-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            background: #101e2c;
+            border: none;
+            padding: 8px 20px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 0.85rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.15s linear;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: #0a504a;
+            color: #e0fffa;
+            border: 1px solid #4effd0;
+            box-shadow: 0 2px 6px #0ff3;
+        }
+
+        .btn-primary:hover {
+            background: #0f7a70;
+            transform: scale(0.98);
+            box-shadow: 0 0 10px #0ffa;
+        }
+
+        .btn-danger {
+            background: #5e1b1b;
+            color: #ffbcbc;
+            border: 1px solid #ff7c7c;
+        }
+
+        .btn-danger:hover {
+            background: #8f2a2a;
+        }
+
+        .access-feedback {
+            font-size: 0.8rem;
+            margin-top: 12px;
+            color: #ffaa88;
+            padding-left: 5px;
+        }
+
+        /* EVACUATION PANEL (PROTOCOL-2 CORE) */
+        .evac-core {
+            background: #02060ce0;
+            border-radius: 28px;
+            border: 1px solid #ff8844;
+            padding: 1.5rem;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .evac-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #ff8822;
+            padding-bottom: 10px;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .command-channel {
+            font-size: 0.8rem;
+            color: #ffaa66;
+            background: #1f1b0a;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .evac-details p {
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #dddddd;
+        }
+
+        .coord-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 1rem 0;
+        }
+
+        .coord-card {
+            background: #0a121faa;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border-left: 4px solid #ff8844;
+        }
+
+        .emergency-action {
+            margin: 1.4rem 0 0.6rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        #evacTriggerBtn {
+            background: #c2410c;
+            color: #fff;
+            padding: 14px 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 60px;
+            border: none;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            transition: 0.1s linear;
+            cursor: pointer;
+            box-shadow: 0 0 12px #ff6600aa;
+        }
+
+        #evacTriggerBtn:active {
+            transform: scale(0.97);
+        }
+
+        #evacTriggerBtn.disabled-btn, #evacTriggerBtn:disabled {
+            background: #42200e;
+            color: #a06e54;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .evac-log {
+            margin-top: 1.8rem;
+            background: #00000099;
+            border-radius: 20px;
+            padding: 0.8rem;
+            font-size: 0.7rem;
+            font-family: monospace;
+            color: #99ddbb;
+            border: 1px solid #2a734e;
+            max-height: 110px;
+            overflow-y: auto;
+        }
+
+        .log-line {
+            border-bottom: 1px dotted #2a6b4e;
+            padding: 5px 4px;
+            font-family: monospace;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.65rem;
+            color: #2f7a6e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="secure-container" id="secureContainer">
+    <div class="terminal-header">
+        <div class="protocol-badge">🔒 ES-CV-1 | PROTOCOL-2</div>
+        <div class="timestamp" id="liveTimestamp">--:--:-- UTC</div>
+    </div>
+
+    <!-- EVAC STATUS Banner -->
+    <div class="evac-alert">
+        <div class="alert-text">⚡ <strong>GENERAL EMERGENCY EVACUATION</strong> ⚡<br> SINGULARITY POINT ACTIVE · COMMAND CHANNEL 6</div>
+        <div class="clearanceLevel">OMEGA CLEARANCE ONLY</div>
+    </div>
+
+    <!-- PIN GATE ACCESS (MANDATORY) -->
+    <div class="gate-section" id="gateSection">
+        <div class="gate-header">
+            <span>🔐</span> <span>GATE ACCESS: BIOMETRIC OVERRIDE / PIN AUTH</span>
+        </div>
+        <div class="pin-input-group">
+            <input type="password" id="pinInput" placeholder="ENTER 8-DIGIT ACCESS PIN" maxlength="8" inputmode="numeric" autocomplete="off">
+            <div class="gate-buttons">
+                <button id="verifyPinBtn" class="btn-primary">AUTHENTICATE</button>
+                <button id="resetPinBtn" class="btn-danger">RESET</button>
+            </div>
+        </div>
+        <div class="access-feedback" id="pinFeedback">🔒 [SECURE TERMINAL] AWAITING COMMANDER PIN · PROTOCOL LOCK</div>
+    </div>
+
+    <!-- EVACUATION CORE (initially locked/hidden? No, but critical actions disabled) -->
+    <div class="evac-core" id="evacCore">
+        <div class="evac-header">
+            <span>🚨 PROTOCOL-2 · EVACUATION DIRECTIVE 🚨</span>
+            <div class="command-channel">ES-CV-1 :: CH6 :: MAIN SINGULARITY NODE</div>
+        </div>
+        <div class="evac-details">
+            <p><strong>*** CLASSIFIED GENERAL ORDER ***</strong> — Due to imminent catastrophic event, all military & civilian defense personnel must execute GENERAL EMERGENCY EVACUATION. Priority assets: command staff, high-value data cores, & essential combat systems.</p>
+            <div class="coord-grid">
+                <div class="coord-card">📍 PRIMARY ASSEMBLY: SECTOR-7 / HANGAR DELTA<br>🔑 CODE: ECHO-9-XRAY</div>
+                <div class="coord-card">🛡️ FALLBACK COMMS: VHF 78.90 MHz · ENCRYPTION: AES-256<br>🚁 AIRLIFT: "IRON DAWN"</div>
+            </div>
+        </div>
+        
+        <!-- MAIN EVACUATION TRIGGER (disabled until gate PIN cleared) -->
+        <div class="emergency-action">
+            <button id="evacTriggerBtn" disabled>🔻 INITIATE GENERAL EVACUATION (PIN LOCKED) 🔻</button>
+        </div>
+        
+        <!-- SECURE LOG / audit trail -->
+        <div class="evac-log" id="auditLog">
+            <div class="log-line">⏺ [SYSTEM] ES-CV-1 terminal online. Protocol-2 standby. Gate PIN required.</div>
+        </div>
+        <div class="footer-note">
+            ⚡ SECURE CHANNEL · UNAUTHORIZED ACCESS TRIALS WILL BE LOGGED · ⚡
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========================
+    // MILITARY GRADE PIN PROTOCOL
+    // Hardcoded GATE PIN (Secure/Protected) - 8-digit alphanumeric military standard: 2287-1945 (but numeric)
+    // For highest realism we create a OTP-like verification but static for demo: "07121945" (symbolic)
+    // According to "Gate access pin protected", we set an 8-digit numeric code: 4488-ES? Actually we set  "26241944"
+    const REQUIRED_PIN = "26241944";   // Strategic code (D-Day symbolic + unity)
+    let isGateUnlocked = false;
+    
+    // DOM elements
+    const pinInput = document.getElementById('pinInput');
+    const verifyBtn = document.getElementById('verifyPinBtn');
+    const resetPinBtn = document.getElementById('resetPinBtn');
+    const pinFeedback = document.getElementById('pinFeedback');
+    const evacTrigger = document.getElementById('evacTriggerBtn');
+    const auditLogDiv = document.getElementById('auditLog');
+    const liveTimestampSpan = document.getElementById('liveTimestamp');
+    
+    // EVAC status flags (to prevent spam)
+    let evacuationInitiated = false;
+    
+    // Function to add secure log message (with timestamp)
+    function addLogEntry(message, isError = false) {
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-line';
+        const now = new Date();
+        const timeString = now.toISOString().slice(11, 19) + 'Z';
+        const prefix = isError ? '⚠️ [SECURITY]' : '📡 [PROTOCOL]';
+        logEntry.innerHTML = `${prefix} ${timeString} :: ${message}`;
+        auditLogDiv.appendChild(logEntry);
+        auditLogDiv.scrollTop = auditLogDiv.scrollHeight;
+        // keep last 30 logs max for cleanliness
+        while (auditLogDiv.children.length > 30) {
+            auditLogDiv.removeChild(auditLogDiv.firstChild);
+        }
+    }
+    
+    // update live UTC timestamp
+    function updateTimestamp() {
+        const now = new Date();
+        const utcStr = now.toUTCString().split(' ')[4] + ' UTC';
+        liveTimestampSpan.textContent = utcStr;
+    }
+    setInterval(updateTimestamp, 1000);
+    updateTimestamp();
+    
+    // Clear PIN field and set focused
+    function resetPinField() {
+        pinInput.value = '';
+        pinInput.focus();
+        if (!isGateUnlocked) {
+            pinFeedback.innerHTML = '🔒 [SECURE TERMINAL] Enter 8-digit access PIN. Authentication required.';
+            pinFeedback.style.color = '#ffaa88';
+        } else {
+            pinFeedback.innerHTML = '✅ [AUTHENTICATED] Gate Access Granted · PROTOCOL-2 UNLOCKED.';
+            pinFeedback.style.color = '#aaffdd';
+        }
+    }
+    
+    // VERIFY PIN GATE
+    function verifyPin() {
+        if (evacuationInitiated) {
+            pinFeedback.innerHTML = '⛔ EVACUATION ALREADY EXECUTED. No further PIN changes.';
+            pinFeedback.style.color = '#ff7777';
+            addLogEntry('PIN re-entry rejected: evacuation already in progress.', true);
+            return;
+        }
+        
+        const enteredPin = pinInput.value.trim();
+        if (enteredPin === "") {
+            pinFeedback.innerHTML = '❌ ACCESS DENIED: PIN cannot be empty.';
+            pinFeedback.style.color = '#ff8888';
+            addLogEntry('Empty PIN authentication attempt rejected.', true);
+            return;
+        }
+        
+        if (enteredPin === REQUIRED_PIN) {
+            if (!isGateUnlocked) {
+                isGateUnlocked = true;
+                pinFeedback.innerHTML = '✅ ✅ COMMANDER AUTHENTICATED: Gate Access PIN verified. Evacuation controls UNLOCKED.';
+                pinFeedback.style.color = '#b0ffcc';
+                addLogEntry('GATE ACCESS: PIN authentication successful. Protocol-2 armed.');
+                // Enable the Evac button with full access
+                evacTrigger.disabled = false;
+                evacTrigger.innerHTML = '🔴🔴 INITIATE GENERAL EMERGENCY EVACUATION (AUTHORIZED) 🔴🔴';
+                evacTrigger.classList.remove('disabled-btn');
+                // Also change visual of gate section if needed
+                document.querySelector('.gate-section').style.borderColor = '#0ff88a';
+                // Additional logging: clear any warning
+                pinInput.disabled = false; // don't disable but user can still type, but won't affect unlock
+                // to indicate ready status
+            } else {
+                pinFeedback.innerHTML = '⏺ GATE already unlocked. Protocol ready.';
+                pinFeedback.style.color = '#99ffcc';
+            }
+        } else {
+            pinFeedback.innerHTML = `⛔ ACCESS VIOLATION: Invalid PIN (Attempt logged). Remaining attempts: unlimited but traceable.`;
+            pinFeedback.style.color = '#ff7777';
+            addLogEntry(`INVALID PIN ATTEMPT: [REDACTED] — UNAUTHORIZED access blocked.`, true);
+            // Also if previously unlocked (should not happen) but if someone spams, maintain lock but no change in actual locked state
+            if (isGateUnlocked) {
+                // This scenario is weird but we keep gate unlocked unless the system would revoke? but protocol says PIN protected -> after valid still valid.
+                // But for security we do NOT revoke on bad attempts after unlock but add critical alert
+                addLogEntry(`⚠️ UNLOCKED terminal received bad PIN attempt — Additional surveillance initiated.`, true);
+            }
+            // make sure evac stays disabled if not unlocked
+            if (!isGateUnlocked) {
+                evacTrigger.disabled = true;
+                evacTrigger.innerHTML = '🔻 INITIATE GENERAL EVACUATION (PIN LOCKED) 🔻';
+            }
+        }
+    }
+    
+    // LOG & EMERGENCY EVACUATION SEQUENCE (PROTOCOL-2 FINAL)
+    function executeEvacuation() {
+        if (!isGateUnlocked) {
+            addLogEntry('🚫 UNAUTHORIZED EVACUATION ATTEMPT: Gate PIN not validated. Lockout triggered.', true);
+            pinFeedback.innerHTML = '❌ VIOLATION: Evacuation requires valid Gate PIN authentication.';
+            pinFeedback.style.color = '#ff5555';
+            // mimic system jitter
+            evacTrigger.style.transform = 'shake 0.2s';
+            return;
+        }
+        
+        if (evacuationInitiated) {
+            addLogEntry('EVACUATION PROTOCOL ALREADY ACTIVATED. No duplicate command allowed.', true);
+            pinFeedback.innerHTML = '⚠️ EVAC sequence already broadcasted. Stand by for confirmation.';
+            return;
+        }
+        
+        // ***** FINAL PROTOCOL-2 EXECUTION *****
+        evacuationInitiated = true;
+        addLogEntry('***** PROTOCOL-2 ACTIVATED: GENERAL EMERGENCY EVACUATION INITIATED *****');
+        addLogEntry('ES-CV-1 :: Command Channel 6 :: Singularity Point broadcast active.');
+        addLogEntry('ALL UNITS: PROCEED TO ASSEMBLY SECTOR-7. EXTRACT IMMEDIATE. Operation IRON SHIELD.');
+        
+        // Modify UI to reflect total emergency state
+        evacTrigger.disabled = true;
+        evacTrigger.style.background = '#fa3e0c';
+        evacTrigger.innerHTML = '🚨🚨 EVACUATION ORDER SENT — Protocol-2 EXECUTED 🚨🚨';
+        pinInput.disabled = true;
+        verifyBtn.disabled = true;
+        resetPinBtn.disabled = false;   // keep reset but disabled effect? we'll disable manual changes
+        resetPinBtn.style.opacity = '0.5';
+        resetPinBtn.disabled = true;
+        // change gate section to COMPLETE
+        pinFeedback.innerHTML = '🔴 EVACUATION PROTOCOL ACTIVE — GATE STATUS: EMERGENCY OVERRIDE.';
+        pinFeedback.style.color = '#ffaa77';
+        
+        // Add high-priority evac banner dynamic
+        const evacAlertDiv = document.querySelector('.evac-alert');
+        evacAlertDiv.style.background = "#8b0000dd";
+        evacAlertDiv.style.borderLeftColor = "#ffaa22";
+        const alertTextSpan = evacAlertDiv.querySelector('.alert-text');
+        alertTextSpan.innerHTML = "💀💀 <strong>GENERAL ORDER 66 - EVACUATION IN PROGRESS</strong> 💀💀<br> ALL PERSONNEL: EVAC IMMEDIATELY. CLEARANCE DELTA.";
+        
+        // Additional visual security details: broadcast coordinates
+        const extraMsg = document.createElement('div');
+        extraMsg.style.marginTop = '10px';
+        extraMsg.style.fontSize = '0.8rem';
+        extraMsg.style.background = '#000000aa';
+        extraMsg.style.padding = '8px';
+        extraMsg.style.borderRadius = '20px';
+        extraMsg.style.border = '1px solid #ffcc88';
+        extraMsg.innerHTML = '📢 <strong>COMMAND TRANSMISSION:</strong> All military assets switch to encrypted channel 6. ZULU time HVY. Execute EXODUS-7.';
+        document.querySelector('.evac-details').appendChild(extraMsg);
+        
+        // Simulate a remote beacon / confirmation sound effect (optional but advanced)
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.frequency.value = 880;
+            gainNode.gain.value = 0.3;
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 1.2);
+            oscillator.stop(audioCtx.currentTime + 1.2);
+            addLogEntry('🔊 Audio alert signal broadcast (TACTICAL ALERT).');
+        } catch (e) { /* silent fallback */ }
+        
+        // Additional log: generate emergency QR-style command (just visual)
+        addLogEntry('✅ EVACUATION DIRECTIVE TRANSMITTED to all regional commands via ES-CV-1 SATCOM.');
+        addLogEntry('⚠️ EMERGENCY DECONTAMINATION & Muster points active. Authentication token: DELTA-ECHO-7.');
+        
+        // lock pinfield entirely and finalize
+        pinInput.disabled = true;
+    }
+    
+    // Master reset for gate (only before evac, if required for re-auth on same session before launch)
+    function resetGateAccess() {
+        if (evacuationInitiated) {
+            addLogEntry('Reset denied: Evacuation already executed. Full lockdown engaged.', true);
+            pinFeedback.innerHTML = '⛔ Cannot reset — EVACUATION protocol final.';
+            return;
+        }
+        if (isGateUnlocked) {
+            addLogEntry('⚠️ Gate reset by commander: authentication revoked. Re-enter PIN to rearm.', true);
+            isGateUnlocked = false;
+            evacTrigger.disabled = true;
+            evacTrigger.innerHTML = '🔻 INITIATE GENERAL EVACUATION (PIN LOCKED) 🔻';
+            pinFeedback.innerHTML = '🔄 Gate access reset. Please re-enter valid 8-digit PIN.';
+            pinFeedback.style.color = '#ffaa88';
+            pinInput.value = '';
+            pinInput.disabled = false;
+            verifyBtn.disabled = false;
+            resetPinBtn.disabled = false;
+            resetPinBtn.style.opacity = '1';
+            document.querySelector('.gate-section').style.borderColor = '#0ff88a66';
+            addLogEntry('System reset: PIN requirement enforced again.');
+        } else {
+            // still locked, just clear field
+            pinInput.value = '';
+            pinFeedback.innerHTML = 'Gate still locked. Enter PIN to authenticate.';
+            pinFeedback.style.color = '#ffaa88';
+            addLogEntry('Reset PIN field (session remains locked).');
+        }
+    }
+    
+    // Additional security - prevent dev tools right click simple message but not overkill, but add stealth effect
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        addLogEntry('⚠️ Attempted right-click inspection. Event logged.', true);
+        return false;
+    });
+    
+    // keyboard shortcut simulation for military: hitting Enter on PIN input triggers verification
+    pinInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            verifyPin();
+        }
+    });
+    
+    // add additional session protection: logging window blur/focus (just opsec)
+    let focusLostCount = 0;
+    window.addEventListener('blur', () => {
+        focusLostCount++;
+        if (focusLostCount % 2 === 1) addLogEntry('Terminal focus lost - security check.', true);
+    });
+    
+    // init all event listeners
+    verifyBtn.addEventListener('click', verifyPin);
+    resetPinBtn.addEventListener('click', resetGateAccess);
+    evacTrigger.addEventListener('click', executeEvacuation);
+    
+    // initial style update: ensure disabled state
+    evacTrigger.disabled = true;
+    isGateUnlocked = false;
+    pinInput.value = '';
+    pinInput.focus();
+    addLogEntry('ES-CV-1 terminal ready. Protocol-2 awaiting Commander PIN. Strict gatekeeper active.');
+    addLogEntry('CHANNEL 6 · MAIN SINGULARITY POINT · SECURE LAYER ENABLED.');
+</script>
+</body>
+</html>
