@@ -7,10 +7,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <title>TOON-UP</title>
+    <title>ToonBlack</title>
 
     <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
-
     <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
     <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
     <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
@@ -177,46 +176,56 @@
         }
 
         .cartoon-info {
+            
             padding: 1.2rem 1.2rem 1.5rem 1.2rem;
+            
         }
 
         .cartoon-title {
+            
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 0.5rem;
             margin-bottom: 0.8rem;
+            
         }
 
         .callsign-badge {
+            
             font-size: 1.2rem;
             font-weight: bold;
             color: #c5f0bc;
             font-family: monospace;
             letter-spacing: 0.5px;
+            
         }
 
         .rank-chip {
+            
             background: #1a2d22;
             padding: 0.2rem 0.8rem;
             border-radius: 50px;
             font-size: 0.65rem;
             color: #acdba4;
             border: 0.5px solid #447a4a;
+            
         }
 
         .desc-text {
+            
             font-size: 0.7rem;
             color: #9bbf92;
             border-left: 3px solid #428a47;
             padding-left: 0.75rem;
             margin-top: 0.65rem;
             line-height: 1.4;
+            
         }
-
-        /* control panel - clean spacing */
+        
         .creation-panel {
+            
             background: #0e141d;
             border: 1.5px solid #2f643b;
             border-radius: 30px;
@@ -227,15 +236,19 @@
             justify-content: space-between;
             align-items: center;
             gap: 1.5rem;
+            
         }
 
         .input-group {
+            
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            
         }
 
         .input-group input {
+            
             background: #10161f;
             border: 1px solid #407548;
             padding: 0.7rem 1.2rem;
@@ -245,13 +258,17 @@
             border-radius: 48px;
             outline: none;
             width: 180px;
+            
         }
 
         .input-group input:focus {
+            
             border-color: #7acf7a;
+            
         }
 
         .create-btn {
+            
             background: #1f2e28;
             border: 1.5px solid #499154;
             padding: 0.7rem 1.8rem;
@@ -262,41 +279,44 @@
             cursor: pointer;
             font-size: 0.8rem;
             transition: 0.08s linear;
+            
         }
 
         .create-btn:hover {
+            
             background: #2f5940;
             border-color: #7ccf7c;
+            
         }
 
         .stats-note {
+            
             font-size: 0.7rem;
             color: #7cac7a;
             background: #0a121a;
             padding: 0.4rem 1rem;
             border-radius: 30px;
             letter-spacing: 0.5px;
+            
         }
 
-        /* footer */
         .footer-meta {
+            
             margin-top: 2rem;
             padding-top: 1.3rem;
             text-align: center;
             font-size: 0.6rem;
             color: #5b885b;
             border-top: 1px solid #2a5332;
+            
         }
 
-        /* ========== RESPONSIVE ========== */
-        /* Largest screens (default up to 1600px) */
         @media (min-width: 1400px) {
             .cartoon-universe { padding: 2.5rem; }
             .cartoon-master-grid { gap: 2.5rem; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
             .title-area h1 { font-size: 2.3rem; }
         }
 
-        /* Desktop large to medium */
         @media (max-width: 1200px) {
             body { padding: 1.5rem; }
             .cartoon-master-grid { gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
@@ -324,33 +344,29 @@
             .cartoon-info { padding: 1rem; }
             .callsign-badge { font-size: 1rem; }
         }
+        
     </style>
+    
 </head>
+    
 <body>
 
 <div class="cartoon-universe">
-    <!-- top section with secure branding -->
+
     <div class="top-bar">
         <div class="title-area">
-            <h1>✏️ CUSTOM CARTOONS • PENCIL SKETCH</h1>
-            <p>TECHNICAL | SECURE | PRIVATE MILITARY SOLDIER | SOUTH AFRICAN DIVISION</p>
-        </div>
-        <div class="security-tag">
-            🔒 ZA-ALPHA // NO GLOW // STRUCTURED
+            <h1>✏️ ToonBlack</h1>
         </div>
     </div>
 
-    <!-- quick scroll buttons: TOP, MIDDLE, DOWN -->
     <div class="scroll-nav">
         <button class="scroll-btn" id="scrollTopBtn">▲ TOP ▲</button>
         <button class="scroll-btn" id="scrollMiddleBtn">● MIDDLE ●</button>
         <button class="scroll-btn" id="scrollDownBtn">▼ BOTTOM ▼</button>
     </div>
 
-    <!-- dynamic cartoon grid (inject via js) -->
     <div id="cartoonGridContainer" class="cartoon-master-grid"></div>
 
-    <!-- creation panel - custom operator -->
     <div class="creation-panel">
         <div class="input-group">
             <input type="text" id="operatorNameInput" placeholder="CALLSIGN" value="SPRINGBOK-1">
@@ -367,6 +383,7 @@
 </div>
 
 <script>
+    
     (function() {
 
         function drawPencilSketchCartoon(ctx, width, height, customAttrs) {
@@ -469,7 +486,6 @@
             ctx.fillStyle = "#1c752c";
             ctx.fillRect(cx + 34, bodyBaseY - 16, 20, 5);
             
-            // Callsign text and insignia (no glow, plain)
             ctx.font = `bold 13px "Courier New", monospace`;
             ctx.fillStyle = "#bae8aa";
             ctx.fillText(`${customAttrs.callsign.slice(0, 18)}`, cx - 54, headY - 36);
