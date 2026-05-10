@@ -36,31 +36,40 @@
     <style>
         
         * {
+            
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            
         }
 
         body {
+            
             font-family: 'Inter', sans-serif;
             background: linear-gradient(145deg, #0b1219 0%, #0f1724 100%);
             color: #eef2ff;
             line-height: 1.5;
             padding: 2rem 1.5rem;
             min-height: 100vh;
+            
         }
 
         .app-container {
+            
             max-width: 1440px;
             margin: 0 auto;
+            
         }
 
         .hero {
+            
             text-align: center;
             margin-bottom: 2.5rem;
+            
         }
         
         .hero h1 {
+            
             font-size: 3rem;
             font-weight: 700;
             background: linear-gradient(135deg, #8bcb6e, #3b9e5c);
@@ -71,15 +80,19 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
+            
         }
         
         .hero h1 i {
+            
             background: none;
             color: #68c87c;
             font-size: 2.5rem;
+            
         }
         
         .hero p {
+            
             font-size: 1.2rem;
             color: #9aaebf;
             max-width: 720px;
@@ -88,9 +101,11 @@
             gap: 12px;
             justify-content: center;
             flex-wrap: wrap;
+            
         }
         
         .badge {
+            
             display: inline-block;
             background: #1e2a3a;
             padding: 0.2rem 0.8rem;
@@ -99,16 +114,20 @@
             font-weight: 500;
             color: #b9e6b3;
             margin-top: 0.75rem;
+            
         }
 
         .dashboard {
+            
             display: grid;
             grid-template-columns: 1fr 1.1fr;
             gap: 1.8rem;
             margin-top: 0.5rem;
+            
         }
 
         .card {
+            
             background: rgba(18, 25, 40, 0.7);
             backdrop-filter: blur(2px);
             border-radius: 2rem;
@@ -116,9 +135,11 @@
             overflow: hidden;
             transition: all 0.2s ease;
             box-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
+            
         }
         
         .card-header {
+            
             padding: 1.2rem 1.5rem;
             background: rgba(10, 20, 30, 0.6);
             border-bottom: 1px solid #2a3a48;
@@ -127,26 +148,34 @@
             gap: 10px;
             font-weight: 600;
             font-size: 1.25rem;
+            
         }
         
         .card-header i {
+            
             color: #5fcb7a;
             font-size: 1.4rem;
+            
         }
         
         .card-body {
+            
             padding: 1.5rem;
+            
         }
 
         .code-editor {
+            
             background: #0a0f1a;
             border-radius: 1.2rem;
             border: 1px solid #2c3f33;
             overflow: hidden;
             font-family: 'Menlo', 'Fira Code', monospace;
+            
         }
         
         .editor-header {
+            
             background: #111822;
             padding: 0.6rem 1rem;
             display: flex;
@@ -154,13 +183,17 @@
             border-bottom: 1px solid #2c3f33;
             font-size: 0.8rem;
             color: #86a9c2;
+            
         }
         
         .editor-header span i {
+            
             margin-right: 6px;
+            
         }
         
         textarea {
+            
             width: 100%;
             background: #0a0f1a;
             border: none;
@@ -173,22 +206,28 @@
             outline: none;
             white-space: pre-wrap;
             tab-size: 2;
+            
         }
         
         textarea:focus {
+            
             background: #0e1422;
+            
         }
         
         .action-bar {
+            
             display: flex;
             gap: 12px;
             margin-top: 1rem;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            
         }
         
         .btn {
+            
             background: #202a36;
             border: none;
             padding: 0.6rem 1.2rem;
@@ -202,44 +241,58 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            
         }
         
         .btn-primary {
+            
             background: #2c7840;
             box-shadow: 0 2px 6px rgba(44, 120, 64, 0.3);
+            
         }
         
         .btn-primary:hover {
+            
             background: #3e9a57;
             transform: translateY(-2px);
+            
         }
         
         .btn-secondary {
+            
             background: #2a3649;
+            
         }
         
         .btn-secondary:hover {
+            
             background: #3f4d64;
+            
         }
         
         .output-area {
+            
             margin-top: 1.5rem;
             background: #07121c;
             border-radius: 1rem;
             border-left: 3px solid #4caf6e;
             padding: 1rem;
+            
         }
         
         .output-label {
+            
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
             color: #84b78c;
             margin-bottom: 0.5rem;
+            
         }
         
         .output-content {
+            
             font-family: monospace;
             font-size: 0.85rem;
             background: #03080f;
@@ -250,20 +303,26 @@
             color: #cbdde9;
             max-height: 200px;
             overflow-y: auto;
+            
         }
         
         .error-output {
+            
             border-left-color: #e55;
+            
         }
 
         .snippet-list {
+            
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
             margin-bottom: 1.8rem;
+            
         }
         
         .snippet-btn {
+            
             background: #0f1724;
             border: 1px solid #2a3a48;
             border-radius: 1rem;
@@ -275,52 +334,68 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            
         }
         
         .snippet-btn i {
+            
             font-size: 1.2rem;
             color: #5fcb7a;
             width: 24px;
+            
         }
         
         .snippet-btn:hover {
+            
             background: #1a2538;
             border-color: #4caf6e;
             transform: translateX(4px);
+            
         }
         
         .doc-card {
+            
             background: #0b111e;
             border-radius: 1.2rem;
             padding: 1rem 1.2rem;
             margin-top: 1rem;
             border: 1px solid #2c3f33;
+            
         }
         
         .doc-card h4 {
+            
             font-size: 1rem;
             margin-bottom: 0.5rem;
             color: #c3e0c7;
+            
         }
         
         .doc-card p, .doc-card li {
+            
             font-size: 0.85rem;
             color: #b8cee4;
+            
         }
         
         .doc-card ul {
+            
             padding-left: 1.2rem;
             margin-top: 0.5rem;
+            
         }
         
         .footer-note {
+            
             text-align: center;
             font-size: 0.75rem;
             margin-top: 2.5rem;
             color: #5f7f9a;
+            
         }
 
         @media (max-width: 880px) {
+            
             .dashboard {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -331,9 +406,11 @@
             .hero h1 {
                 font-size: 2rem;
             }
+            
         }
         
         .async-popup-btn {
+            
             background: #2c7840;
             border: none;
             padding: 0.5rem 1.2rem;
@@ -347,14 +424,18 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.85rem;
             transition: all 0.2s;
+            
         }
         
         .async-popup-btn:hover {
+            
             background: #3e9a57;
             transform: translateY(-2px);
+            
         }
         
         .modal-overlay {
+            
             display: none;
             position: fixed;
             top: 0;
@@ -366,9 +447,11 @@
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(4px);
+            
         }
         
         .modal-content {
+            
             background: #0f1724;
             border-radius: 2rem;
             border: 1px solid #4caf6e;
@@ -377,6 +460,7 @@
             width: 90%;
             position: relative;
             animation: modalFadeIn 0.2s ease;
+            
         }
         
         @keyframes modalFadeIn {
@@ -385,6 +469,7 @@
         }
         
         .modal-close {
+            
             position: absolute;
             top: 1rem;
             right: 1.2rem;
@@ -394,20 +479,26 @@
             cursor: pointer;
             color: #9aaebf;
             transition: color 0.2s;
+            
         }
         
         .modal-close:hover {
+            
             color: white;
+            
         }
         
         .modal-icon {
+            
             text-align: center;
             margin-bottom: 1rem;
             font-size: 3rem;
             color: #8fef9b;
+            
         }
         
         .modal-title {
+            
             font-size: 1.8rem;
             font-weight: 700;
             background: linear-gradient(135deg, #8bcb6e, #3b9e5c);
@@ -416,16 +507,20 @@
             color: transparent;
             text-align: center;
             margin-bottom: 1rem;
+            
         }
         
         .modal-text {
+            
             color: #cbdde9;
             line-height: 1.5;
             margin-bottom: 1rem;
             text-align: center;
+            
         }
         
         .modal-code {
+            
             background: #07121c;
             border-radius: 1rem;
             padding: 1rem;
@@ -434,20 +529,26 @@
             font-size: 0.8rem;
             border-left: 3px solid #4caf6e;
             overflow-x: auto;
+            
         }
         
         .modal-list {
+            
             margin: 1rem 0;
             padding-left: 1.5rem;
             color: #b8cee4;
             font-size: 0.9rem;
+            
         }
         
         .modal-list li {
+            
             margin-bottom: 8px;
+            
         }
         
         .modal-footer {
+            
             background: #1a2a2f;
             border-radius: 0.8rem;
             padding: 0.7rem;
@@ -455,6 +556,7 @@
             text-align: center;
             font-size: 0.8rem;
             color: #b9e6b3;
+            
         }
         
     </style>
@@ -475,7 +577,7 @@
             <button class="async-popup-btn" id="eventModalBtn"><i class="fas fa-bolt"></i> Event-Driven</button>
             <button class="async-popup-btn" id="serverModalBtn"><i class="fas fa-server"></i> Server-Side JS</button>
         </p>
-        <div class="badge"><i class="fas fa-code"></i> Live Sandbox &nbsp;|&nbsp; Core Modules &nbsp;|&nbsp; No Simulation — Real Node.js Behavior</div>
+        <div class="badge"><i class="fas fa-code"></i> Live Sandbox &nbsp;|&nbsp; Core Modules &nbsp;</div>
     </div>
 
     <div class="dashboard">
@@ -568,6 +670,8 @@ console.log("Ready for more — try fs, path, promises!");
     </div>
     <div class="footer-note">
         <i class="fab fa-node-js"></i> Node.js Interactive Hub — production-grade educational environment. Write Node.js code, see async flows, event emitters, core modules.
+        <br>
+        Maintained by S'phe Jeza & Olama
     </div>
 </div>
 
@@ -718,7 +822,6 @@ console.log("Ready for more — try fs, path, promises!");
         });
     }
     
-    // DOM elements
     const codeTextarea = document.getElementById('codeInput');
     const runBtn = document.getElementById('runBtn');
     const resetBtn = document.getElementById('resetBtn');
@@ -779,7 +882,6 @@ console.log("Ready for more — try fs, path, promises!");
         displayOutput("// Reset to default production-ready Node.js example. Click Run to execute.", false);
     }
     
-    // Snippets
     const snippets = {
         os: `// OS Module - System Information
 const os = require("os");
@@ -843,7 +945,6 @@ console.log(serverMessage);`
     });
     resetToDefault();
     
-    // ---------- MODAL MANAGER (Production-ready Popups) ----------
     const modalOverlay = document.getElementById('dynamicModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
     
@@ -863,7 +964,6 @@ console.log(serverMessage);`
     modalOverlay.onclick = (e) => { if (e.target === modalOverlay) closeModal(); };
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.style.display === 'flex') closeModal(); });
     
-    // Async Modal
     document.getElementById('asyncModalBtn').onclick = () => {
         showModal({
             icon: '<i class="fas fa-hourglass-half" style="font-size:3rem;"></i>',
@@ -877,7 +977,6 @@ console.log("I run first → event loop handles rest");`,
         });
     };
     
-    // Event-Driven Modal
     document.getElementById('eventModalBtn').onclick = () => {
         showModal({
             icon: '<i class="fas fa-bolt" style="font-size:3rem;"></i>',
@@ -892,7 +991,6 @@ emitter.emit("data", "Event-Driven Power!");`,
         });
     };
     
-    // Server-Side JS Modal
     document.getElementById('serverModalBtn').onclick = () => {
         showModal({
             icon: '<i class="fas fa-server" style="font-size:3rem;"></i>',
@@ -913,7 +1011,7 @@ server.listen(3000); // Real production backend`,
     <script>
         
         (function(){
-            // Create and inject settings button
+
             const settingsBtn = document.createElement('button');
             settingsBtn.id = 'globalSettingsBtn';
             settingsBtn.innerHTML = '<i class="fas fa-cog"></i> Settings';
@@ -951,7 +1049,6 @@ server.listen(3000); // Real production backend`,
             };
             document.body.appendChild(settingsBtn);
         
-            // Create Settings Modal (fully functional)
             const settingsModal = document.createElement('div');
             settingsModal.id = 'settingsModal';
             settingsModal.style.cssText = `
@@ -982,7 +1079,6 @@ server.listen(3000); // Real production backend`,
                 animation: settingsFadeIn 0.2s ease;
             `;
             
-            // add keyframes for animation
             const styleSheet = document.createElement('style');
             styleSheet.textContent = `
                 @keyframes settingsFadeIn {
@@ -1035,7 +1131,6 @@ server.listen(3000); // Real production backend`,
             settingsModal.appendChild(modalCard);
             document.body.appendChild(settingsModal);
             
-            // Helper: Load settings from localStorage
             function loadSettings() {
                 const autoRun = localStorage.getItem('node_sandbox_autoRun') === 'true';
                 const darkOutput = localStorage.getItem('node_sandbox_darkOutput') === 'true';
@@ -1049,7 +1144,6 @@ server.listen(3000); // Real production backend`,
                 if (darkOutputCheck) darkOutputCheck.checked = darkOutput;
                 if (clearOutputCheck) clearOutputCheck.checked = clearOutput;
                 
-                // apply dark output style
                 const outputContentDiv = document.getElementById('outputContent');
                 if (outputContentDiv) {
                     if (darkOutput) {
@@ -1063,7 +1157,6 @@ server.listen(3000); // Real production backend`,
                     }
                 }
                 
-                // store global flag for auto-run mechanism (attached to window)
                 window.__sandboxSettings = {
                     autoRun,
                     darkOutput,
@@ -1080,7 +1173,6 @@ server.listen(3000); // Real production backend`,
                 localStorage.setItem('node_sandbox_darkOutput', darkOutput);
                 localStorage.setItem('node_sandbox_clearOutput', clearOutput);
                 
-                // apply to UI
                 const outputContentDiv = document.getElementById('outputContent');
                 if (outputContentDiv) {
                     if (darkOutput) {
@@ -1097,7 +1189,6 @@ server.listen(3000); // Real production backend`,
                 window.__sandboxSettings = { autoRun, darkOutput, clearOutput };
                 settingsModal.style.display = 'none';
                 
-                // optional visual feedback
                 const toastMsg = document.createElement('div');
                 toastMsg.innerText = '⚙️ Settings applied';
                 toastMsg.style.cssText = 'position:fixed; bottom:90px; right:30px; background:#2c7840; color:white; padding:8px 18px; border-radius:40px; font-size:0.8rem; z-index:10001; font-family:monospace; box-shadow:0 2px 8px black;';
@@ -1105,13 +1196,11 @@ server.listen(3000); // Real production backend`,
                 setTimeout(() => toastMsg.remove(), 1800);
             }
             
-            // open modal
             settingsBtn.onclick = () => {
-                loadSettings(); // sync checkboxes & visual state before showing
+                loadSettings();
                 settingsModal.style.display = 'flex';
             };
             
-            // close handlers
             document.getElementById('closeSettingsBtn').onclick = () => { settingsModal.style.display = 'none'; };
             document.getElementById('applySettingsBtn').onclick = saveAndApply;
             document.getElementById('resetSettingsBtn').onclick = () => {
@@ -1119,7 +1208,7 @@ server.listen(3000); // Real production backend`,
                 localStorage.setItem('node_sandbox_darkOutput', false);
                 localStorage.setItem('node_sandbox_clearOutput', true);
                 loadSettings();
-                // also re-apply settings
+
                 const darkOut = localStorage.getItem('node_sandbox_darkOutput') === 'true';
                 const outputDiv = document.getElementById('outputContent');
                 if (outputDiv) {
@@ -1148,8 +1237,6 @@ server.listen(3000); // Real production backend`,
             settingsModal.onclick = (e) => { if (e.target === settingsModal) settingsModal.style.display = 'none'; };
             document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && settingsModal.style.display === 'flex') settingsModal.style.display = 'none'; });
             
-            // ---- INTEGRATE WITH EXISTING SANDBOX (snippet loader + run behavior) ----
-            // Intercept snippet loading to respect auto-run setting and clear-output
             const originalLoadSnippet = window.loadSnippet;
             if (typeof originalLoadSnippet === 'function') {
                 window.loadSnippet = function(key) {
@@ -1166,7 +1253,7 @@ server.listen(3000); // Real production backend`,
                     }
                 };
             } else {
-                // fallback: override snippet buttons manually
+
                 const snippetBtns = document.querySelectorAll('.snippet-btn');
                 snippetBtns.forEach(btn => {
                     const originalClick = btn.onclick;
@@ -1185,7 +1272,6 @@ server.listen(3000); // Real production backend`,
                 });
             }
             
-            // Intercept Run Code to clear if needed
             const originalRunCode = window.runCode;
             if (typeof originalRunCode === 'function') {
                 window.runCode = async function() {
@@ -1199,10 +1285,8 @@ server.listen(3000); // Real production backend`,
                 document.getElementById('runBtn').addEventListener('click', () => window.runCode());
             }
             
-            // load initial settings
             loadSettings();
             
-            // ensure that run button respects clearOutput flag (direct redefinition if needed)
             const existingRunBtn = document.getElementById('runBtn');
             if (existingRunBtn && !existingRunBtn._patched) {
                 const oldHandler = existingRunBtn.onclick;
