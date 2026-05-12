@@ -1274,6 +1274,311 @@ Structural analysis → will it hold.
 Manufacturing → build it without screwing up 1-4.
 
     </p>
+
+    <!-- ATPL MODULE – FOUNDATIONAL TO FINAL -->
+    
+    <div class="atpl-master-section" style="margin: 3rem 0 2rem;">
+        <div class="section-header" style="display: flex; align-items: center; gap: 12px; border-left: 5px solid #dc2626; padding-left: 20px; margin-bottom: 1.5rem;">
+            <i class="fas fa-graduation-cap" style="font-size: 2rem; color: #dc2626;"></i>
+            <h2 style="font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #fff, #f97316); -webkit-background-clip: text; background-clip: text; color: transparent;">ATPL | AIRLINE TRANSPORT PILOT LICENSE</h2>
+            <span class="badge" style="margin-left: auto;">FULL SYLLABUS · FOUNDATION → LINE TRAINING</span>
+        </div>
+    
+        <!-- PROGRESS TRACKER -->
+        <div class="atpl-progress-container" style="background: rgba(0,0,0,0.6); border-radius: 28px; padding: 1.2rem; margin-bottom: 2rem; border: 1px solid rgba(220,38,38,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;">
+                <span style="font-family: 'JetBrains Mono'; font-size: 0.8rem;"><i class="fas fa-chalkboard"></i> ATPL PROGRESS (THEORETICAL → PRACTICAL)</span>
+                <span id="atplPercentLabel" style="color: #f97316; font-weight: 600;">0% COMPLETE</span>
+            </div>
+            <div style="background: #1f1f2f; border-radius: 40px; overflow: hidden;">
+                <div id="atplProgressFill" style="width: 0%; height: 10px; background: linear-gradient(90deg, #dc2626, #f97316); border-radius: 40px; transition: width 0.3s ease;"></div>
+            </div>
+            <p style="font-size: 0.7rem; color: #9ca3af; margin-top: 0.6rem;"><i class="fas fa-check-circle"></i> Mark stages as completed — your journey from zero to airline ready</p>
+        </div>
+    
+        <!-- ATPL JOURNEY: 5 PILLARS (FOUNDATION --> FINAL) -->
+        <div class="atpl-timeline" style="display: flex; flex-direction: column; gap: 1.8rem;">
+            
+            <!-- STAGE 1: FOUNDATIONAL KNOWLEDGE -->
+            <div class="atpl-card" data-stage="1" style="background: #0f0f17; border: 1px solid rgba(220,38,38,0.3); border-radius: 28px; overflow: hidden; transition: 0.2s;">
+                <div class="atpl-header" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.8rem; background: rgba(220,38,38,0.08); border-bottom: 1px solid rgba(220,38,38,0.2); flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: #dc2626; width: 40px; height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 800;">01</div>
+                        <h3 style="font-size: 1.4rem; font-weight: 600;">✈️ Foundational Theory</h3>
+                    </div>
+                    <button class="complete-stage-btn" data-stage="1" style="background: transparent; border: 1px solid #dc2626; padding: 0.4rem 1.2rem; border-radius: 60px; color: #dc2626; font-weight: 500; cursor: pointer; transition: 0.2s;">✔ MARK COMPLETE</button>
+                </div>
+                <div class="atpl-body" style="padding: 1.5rem 1.8rem;">
+                    <p style="color: #cbd5e1; margin-bottom: 1rem;"><strong>From zero to aeronautical basics:</strong> Principles of flight, atmosphere & aerodynamics, aircraft general knowledge, basic electrics, human performance fundamentals.</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.2rem;">
+                        <span class="tech-tag"><i class="fas fa-wind"></i> Bernoulli & lift</span>
+                        <span class="tech-tag"><i class="fas fa-tachometer-alt"></i> IAS/CAS/TAS</span>
+                        <span class="tech-tag"><i class="fas fa-brain"></i> Human factors</span>
+                        <span class="tech-tag"><i class="fas fa-battery-full"></i> DC/AC basics</span>
+                    </div>
+                    <div class="warning-note" style="background: rgba(220,38,38,0.1);">
+                        <i class="fas fa-book-open"></i> Essential for EASA/FAA ATPL exams: Air Law, Operational Procedures, Mass & Balance.
+                    </div>
+                </div>
+            </div>
+    
+            <!-- STAGE 2: TECHNICAL & METEOROLOGY (CORE ATPL) -->
+            <div class="atpl-card" data-stage="2" style="background: #0f0f17; border: 1px solid rgba(220,38,38,0.3); border-radius: 28px; overflow: hidden;">
+                <div class="atpl-header" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.8rem; background: rgba(220,38,38,0.08); border-bottom: 1px solid rgba(220,38,38,0.2); flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: #dc2626; width: 40px; height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 800;">02</div>
+                        <h3 style="font-size: 1.4rem; font-weight: 600;">🌦️ Meteorology & Advanced Systems</h3>
+                    </div>
+                    <button class="complete-stage-btn" data-stage="2" style="background: transparent; border: 1px solid #dc2626; padding: 0.4rem 1.2rem; border-radius: 60px; color: #dc2626; font-weight: 500; cursor: pointer;">✔ MARK COMPLETE</button>
+                </div>
+                <div class="atpl-body" style="padding: 1.5rem 1.8rem;">
+                    <p style="color: #cbd5e1; margin-bottom: 1rem;"><strong>Aviation meteorology, propulsion, hydraulics, pressurization, ice & rain protection.</strong> Reading SIGWX charts, jet streams, thunderstorms, engine management (turbofan/turboprop).</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+                        <span class="tech-tag"><i class="fas fa-cloud-sun"></i> Air masses & fronts</span>
+                        <span class="tech-tag"><i class="fas fa-fan"></i> Turbofan performance</span>
+                        <span class="tech-tag"><i class="fas fa-tint"></i> Icing conditions</span>
+                        <span class="tech-tag"><i class="fas fa-chart-line"></i> QNH / QFE / QNE</span>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- STAGE 3: NAVIGATION & FLIGHT PLANNING -->
+            <div class="atpl-card" data-stage="3" style="background: #0f0f17; border: 1px solid rgba(220,38,38,0.3); border-radius: 28px; overflow: hidden;">
+                <div class="atpl-header" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.8rem; background: rgba(220,38,38,0.08); border-bottom: 1px solid rgba(220,38,38,0.2); flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: #dc2626; width: 40px; height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 800;">03</div>
+                        <h3 style="font-size: 1.4rem; font-weight: 600;">🧭 Navigation & Flight Planning</h3>
+                    </div>
+                    <button class="complete-stage-btn" data-stage="3" style="background: transparent; border: 1px solid #dc2626; padding: 0.4rem 1.2rem; border-radius: 60px; color: #dc2626; font-weight: 500; cursor: pointer;">✔ MARK COMPLETE</button>
+                </div>
+                <div class="atpl-body" style="padding: 1.5rem 1.8rem;">
+                    <p style="color: #cbd5e1; margin-bottom: 1rem;"><strong>General navigation, radio navigation, inertial reference systems, GNSS, flight planning & monitoring.</strong> Time-speed-distance, drift, great circle, ETOPS, alternate selection.</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+                        <span class="tech-tag"><i class="fas fa-map-marked-alt"></i> VOR / DME / NDB</span>
+                        <span class="tech-tag"><i class="fas fa-satellite-dish"></i> RNAV / RNP</span>
+                        <span class="tech-tag"><i class="fas fa-chart-pie"></i> Fuel planning</span>
+                        <span class="tech-tag"><i class="fas fa-hourglass-half"></i> ETA / PNR</span>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- STAGE 4: INSTRUMENTATION & PROCEDURES (IR) -->
+            <div class="atpl-card" data-stage="4" style="background: #0f0f17; border: 1px solid rgba(220,38,38,0.3); border-radius: 28px; overflow: hidden;">
+                <div class="atpl-header" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.8rem; background: rgba(220,38,38,0.08); border-bottom: 1px solid rgba(220,38,38,0.2); flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: #dc2626; width: 40px; height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 800;">04</div>
+                        <h3 style="font-size: 1.4rem; font-weight: 600;">📡 Instrumentation & IFR Procedures</h3>
+                    </div>
+                    <button class="complete-stage-btn" data-stage="4" style="background: transparent; border: 1px solid #dc2626; padding: 0.4rem 1.2rem; border-radius: 60px; color: #dc2626; font-weight: 500; cursor: pointer;">✔ MARK COMPLETE</button>
+                </div>
+                <div class="atpl-body" style="padding: 1.5rem 1.8rem;">
+                    <p style="color: #cbd5e1; margin-bottom: 1rem;"><strong>Instrument rating core: </strong> altimetry, pitot-static, gyroscopic instruments, EFIS/PFD, autoflight systems, instrument departure/approach (SID/STAR, ILS, VOR, NDB, RNP AR).</p>
+                    <div class="tech-grid" style="margin: 0.5rem 0;">
+                        <span class="tech-tag">ADIRU / AHRS</span>
+                        <span class="tech-tag">ILS categories</span>
+                        <span class="tech-tag">Missed approach</span>
+                        <span class="tech-tag">FMA & automation</span>
+                    </div>
+                    <div class="warning-note" style="margin-top: 1rem;"><i class="fas fa-exclamation-triangle"></i> Minimum decision heights, RVR, required alternate minima — critical for real-world IFR.</div>
+                </div>
+            </div>
+    
+            <!-- STAGE 5: FINAL PHASE – MULTI-CREW COOPERATION (MCC) & LINE ORIENTED FLIGHT TEST (LOFT) -->
+            <div class="atpl-card" data-stage="5" style="background: #0f0f17; border: 1px solid rgba(220,38,38,0.3); border-radius: 28px; overflow: hidden;">
+                <div class="atpl-header" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.8rem; background: rgba(220,38,38,0.08); border-bottom: 1px solid rgba(220,38,38,0.2); flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: #dc2626; width: 40px; height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: 800;">05</div>
+                        <h3 style="font-size: 1.4rem; font-weight: 600;">👥 MCC / JOC + LINE TRAINING (THE END)</h3>
+                    </div>
+                    <button class="complete-stage-btn" data-stage="5" style="background: transparent; border: 1px solid #dc2626; padding: 0.4rem 1.2rem; border-radius: 60px; color: #dc2626; font-weight: 500; cursor: pointer;">✔ MARK COMPLETE</button>
+                </div>
+                <div class="atpl-body" style="padding: 1.5rem 1.8rem;">
+                    <p style="color: #cbd5e1; margin-bottom: 1rem;"><strong>Multi-Crew Cooperation (MCC) → Jet Orientation Course (JOC) → Base training → Line Training (LIFUS) → Line Check.</strong> Standard operating procedures, PF/PM, upset recovery, advanced automation, real airline environment.</p>
+                    <div style="background: #00000055; border-radius: 20px; padding: 0.8rem; margin-top: 0.8rem;">
+                        <i class="fas fa-check-double" style="color: #f97316;"></i> <strong style="color:white;">Final milestone:</strong> Skill test + competency check → Frozen ATPL → Unrestricted ATPL after 1500h (or 1000h for integrated).
+                    </div>
+                    <div class="tech-grid" style="margin-top: 1rem;">
+                        <span class="tech-tag"><i class="fas fa-users"></i> Crew resource management</span>
+                        <span class="tech-tag"><i class="fas fa-plane-departure"></i> LVO training</span>
+                        <span class="tech-tag"><i class="fas fa-tasks"></i> LOFT scenario</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- ATPL RESOURCES & TRAINING QUOTE -->
+        <div style="margin-top: 2.5rem; background: radial-gradient(circle at 20% 30%, #0b0b1a, #030308); border-radius: 32px; padding: 1.5rem; border: 1px solid #dc262680;">
+            <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between;">
+                <div>
+                    <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem;"><i class="fas fa-route"></i> ATPL SYLLABUS REFERENCE (EASA / ICAO)</h4>
+                    <p style="color: #9ca3af; font-size: 0.85rem;">14 theoretical knowledge exams + advanced UPRT + MCC + type rating. From "Principles of Flight" to "Line oriented flight evaluation".</p>
+                </div>
+                <div class="badge" style="background:#dc262620; padding: 0.6rem 1rem;"><i class="fas fa-award"></i> FULL JOURNEY: 0 → ATPL</div>
+            </div>
+            <hr style="border-color: #333; margin: 1rem 0;">
+            <div class="warning-note" style="background: #111; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <i class="fas fa-headset" style="font-size: 1.8rem;"></i>
+                <span style="font-family: 'JetBrains Mono';">"From first lesson on a Cessna 152 to commanding an A350 — the ATPL route demands discipline, systems knowledge, and unwavering decision-making."</span>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .atpl-card .complete-stage-btn:hover {
+            background: #dc2626;
+            color: #fff;
+            border-color: #dc2626;
+        }
+        .atpl-card.completed {
+            border-left: 6px solid #f97316;
+            background: rgba(249,115,22,0.05);
+            transition: 0.2s;
+        }
+        .atpl-card.completed .atpl-header {
+            background: rgba(249,115,22,0.12);
+        }
+        @media (max-width: 720px) {
+            .atpl-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+            .atpl-header button {
+                align-self: flex-start;
+            }
+        }
+    </style>
+    
+    <script>
+        (function() {
+            // ATPL PROGRESS STORAGE (localStorage)
+            const STORAGE_KEY = 'atpl_stage_progress';
+            let completedStages = new Set();
+    
+            function loadProgress() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    try {
+                        const arr = JSON.parse(saved);
+                        if(Array.isArray(arr)) arr.forEach(stage => completedStages.add(stage));
+                    } catch(e) {}
+                }
+                // sync UI
+                for(let stage of [1,2,3,4,5]) {
+                    const card = document.querySelector(`.atpl-card[data-stage="${stage}"]`);
+                    if(card && completedStages.has(stage)) {
+                        card.classList.add('completed');
+                        const btn = card.querySelector('.complete-stage-btn');
+                        if(btn) {
+                            btn.style.background = '#f97316';
+                            btn.style.borderColor = '#f97316';
+                            btn.style.color = 'white';
+                            btn.innerHTML = '✓ COMPLETED';
+                            btn.disabled = true;
+                            btn.style.opacity = '0.7';
+                            btn.style.cursor = 'default';
+                        }
+                    }
+                }
+                updateProgressBar();
+            }
+    
+            function updateProgressBar() {
+                const total = 5;
+                const done = completedStages.size;
+                const percent = (done / total) * 100;
+                const fill = document.getElementById('atplProgressFill');
+                const label = document.getElementById('atplPercentLabel');
+                if(fill) fill.style.width = `${percent}%`;
+                if(label) label.innerText = `${Math.round(percent)}% COMPLETE (${done}/5)`;
+                // final celebration effect
+                if(done === total) {
+                    const confettiMsg = document.querySelector('.atpl-progress-container');
+                    if(confettiMsg && !confettiMsg.hasAttribute('data-celebrated')) {
+                        confettiMsg.setAttribute('data-celebrated', 'true');
+                        const toast = document.createElement('div');
+                        toast.innerText = '🏆 ATPL JOURNEY COMPLETE! FROM FOUNDATION TO LINE TRAINING — YOU ARE AIRLINE READY 🏆';
+                        toast.style.position = 'fixed';
+                        toast.style.bottom = '30px';
+                        toast.style.left = '20px';
+                        toast.style.right = '20px';
+                        toast.style.maxWidth = '500px';
+                        toast.style.background = 'linear-gradient(135deg, #dc2626, #f97316)';
+                        toast.style.color = 'white';
+                        toast.style.padding = '1rem';
+                        toast.style.borderRadius = '28px';
+                        toast.style.textAlign = 'center';
+                        toast.style.fontWeight = 'bold';
+                        toast.style.zIndex = '9999';
+                        toast.style.fontFamily = "'JetBrains Mono'";
+                        toast.style.boxShadow = '0 0 20px rgba(220,38,38,0.6)';
+                        document.body.appendChild(toast);
+                        setTimeout(() => toast.remove(), 5000);
+                    }
+                }
+            }
+    
+            function saveProgress() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(completedStages)));
+                updateProgressBar();
+            }
+    
+            function markStage(stageNum, btnElement, cardElement) {
+                if(completedStages.has(stageNum)) return;
+                completedStages.add(stageNum);
+                cardElement.classList.add('completed');
+                if(btnElement) {
+                    btnElement.style.background = '#f97316';
+                    btnElement.style.borderColor = '#f97316';
+                    btnElement.style.color = 'white';
+                    btnElement.innerHTML = '✓ COMPLETED';
+                    btnElement.disabled = true;
+                    btnElement.style.opacity = '0.7';
+                    btnElement.style.cursor = 'default';
+                }
+                saveProgress();
+                // optional mini-soundless vibe
+            }
+    
+            function attachHandlers() {
+                const btns = document.querySelectorAll('.complete-stage-btn');
+                btns.forEach(btn => {
+                    if(btn.disabled) return;
+                    btn.removeEventListener('click', handlerFunc);
+                    btn.addEventListener('click', handlerFunc);
+                });
+            }
+    
+            function handlerFunc(e) {
+                const btn = e.currentTarget;
+                const card = btn.closest('.atpl-card');
+                if(!card) return;
+                const stageAttr = card.getAttribute('data-stage');
+                if(!stageAttr) return;
+                const stageNum = parseInt(stageAttr, 10);
+                if(!isNaN(stageNum) && !completedStages.has(stageNum)) {
+                    markStage(stageNum, btn, card);
+                }
+            }
+    
+            // reset all (optional but not required) — but we can add a hidden reset if needed, but not mandatory
+            // Also make sure dynamic added? No, static exists.
+            loadProgress();
+            attachHandlers();
+    
+            // live observer in case of any future dynamic changes
+            const observer = new MutationObserver(() => {
+                attachHandlers();
+            });
+            const atplContainer = document.querySelector('.atpl-master-section');
+            if(atplContainer) observer.observe(atplContainer, { childList: true, subtree: true });
+            
+            // if new cards appear, reattach.
+            window.addEventListener('load', () => {
+                attachHandlers();
+                loadProgress(); // double-check
+            });
+        })();
+    </script>
     
     <footer class="footer">
         <div class="footer-content">
