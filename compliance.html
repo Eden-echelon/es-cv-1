@@ -2859,6 +2859,230 @@
     }
     
     enhanceMessageBoardWithControls();
+
+    // MISSION LOG AND DATE
+
+    (function missionLogAndDateSystem() {
+      // ONE FUNCTION TO RULE THEM ALL
+      
+      let missionLogsUnsubscribe = null;
+      let currentDirectiveText = '';
+      let currentDirectiveDate = '';
+      
+      async function injectMissionLogButton() {
+        // Wait for the Audit button to exist
+        let attempts = 0;
+        const checkInterval = setInterval(() => {
+          const auditBtn = document.getElementById('viewCommandLogsBtn');
+          if (auditBtn && auditBtn.parentElement) {
+            clearInterval(checkInterval);
+            
+            // Check if button already exists to avoid duplicates
+            if (!document.getElementById('missionLogViewBtn')) {
+              const missionLogBtn = document.createElement('button');
+              missionLogBtn.id = 'missionLogViewBtn';
+              missionLogBtn.className = 'btn';
+              missionLogBtn.style.marginTop = '8px';
+              missionLogBtn.style.marginLeft = '8px';
+              missionLogBtn.innerHTML = '<i class="fas fa-history"></i> MISSION LOG';
+              missionLogBtn.onclick = toggleMissionLogPanel;
+              auditBtn.parentElement.appendChild(missionLogBtn);
+              console.log('✓ Mission Log button injected');
+            }
+            
+            // Also add date display if not present
+            addDateDisplayToDirective();
+          }
+          attempts++;
+          if (attempts > 50) clearInterval(checkInterval);
+        }, 200);
+      }
+      
+      function addDateDisplayToDirective() {
+        const directiveContainer = document.getElementById('directiveText');
+        if (directiveContainer && !document.getElementById('directiveDateDisplay')) {
+          const dateSpan = document.createElement('div');
+          dateSpan.id = 'directiveDateDisplay';
+          dateSpan.style.fontSize = '0.7rem';
+          dateSpan.style.color = '#ff8888';
+          dateSpan.style.marginTop = '8px';
+          dateSpan.style.padding = '4px';
+          dateSpan.style.borderTop = '1px dashed #ff1a1a33';
+          dateSpan.innerHTML = '📅 LOADING MISSION DATE...';
+          directiveContainer.parentElement.insertBefore(dateSpan, directiveContainer.nextSibling);
+        }
+        loadCurrentDirectiveWithDate();
+      }
+      
+      async function loadCurrentDirectiveWithDate() {
+        if (!window.firebase || !window.firebase.firestore) return;
+        const db = window.firebase.firestore();
+        try {
+          const doc = await db.collection('cio').doc('directive_alpha5').get();
+          if (doc.exists) {
+            const data = doc.data();
+            currentDirectiveText = data.text || 'No directive';
+            currentDirectiveDate = data.uploadDate || data.timestamp?.toDate?.()?.toLocaleString() || 'Date unknown';
+            
+            const dateDisplay = document.getElementById('directiveDateDisplay');
+            if (dateDisplay) {
+              dateDisplay.innerHTML = `📅 MISSION UPLOADED: ${currentDirectiveDate}`;
+            }
+          }
+        } catch(e) { console.error('Error loading directive date:', e); }
+      }
+      
+      async function saveMissionToLog() {
+        if (!window.firebase || !window.firebase.firestore) return;
+        const db = window.firebase.firestore();
+        
+        // Get current directive and its date
+        const doc = await db.collection('cio').doc('directive_alpha5').get();
+        const directive = doc.exists ? doc.data() : null;
+        if (!directive) return;
+        
+        const missionLog = {
+          directiveText: directive.text || 'No directive',
+          uploadDate: directive.uploadDate || new Date().toLocaleString(),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          rawTimestamp: Date.now(),
+          version: directive.version || 'v1',
+          archived: false
+        };
+        
+        await db.collection('missionLogs').add(missionLog);
+        toast('✓ Mission saved to log', 'success');
+      }
+      
+      // Hook into existing UPDATE button to also save the mission
+      function hookUpdateButton() {
+        let attempts = 0;
+        const checkInterval = setInterval(() => {
+          const updateBtn = document.getElementById('sendDirectiveBtn');
+          if (updateBtn) {
+            clearInterval(checkInterval);
+            const originalClick = updateBtn.onclick;
+            updateBtn.onclick = async function(e) {
+              if (originalClick) await originalClick(e);
+              setTimeout(() => {
+                loadCurrentDirectiveWithDate();
+                saveMissionToLog();
+              }, 500);
+            };
+            console.log('✓ Update button hooked for mission logging');
+          }
+          attempts++;
+          if (attempts > 50) clearInterval(checkInterval);
+        }, 200);
+      }
+      
+      let missionLogPanel = null;
+      
+      async function toggleMissionLogPanel() {
+        if (missionLogPanel && missionLogPanel.style.display === 'block') {
+          missionLogPanel.style.display = 'none';
+          return;
+        }
+        
+        if (!missionLogPanel) {
+          missionLogPanel = document.createElement('div');
+          missionLogPanel.id = 'missionLogPanel';
+          missionLogPanel.style.cssText = `
+            display: block;
+            margin-top: 1rem;
+            background: #0a0000aa;
+            border: 1px solid #ff1a1a;
+            padding: 0.8rem;
+            max-height: 400px;
+            overflow-y: auto;
+          `;
+          missionLogPanel.innerHTML = '<div style="text-align:center; padding:1rem;">📡 LOADING MISSION LOGS...</div>';
+          
+          const auditPanel = document.getElementById('commandLogPanel');
+          if (auditPanel && auditPanel.parentElement) {
+            auditPanel.parentElement.insertBefore(missionLogPanel, auditPanel.nextSibling);
+          }
+        }
+        
+        missionLogPanel.style.display = 'block';
+        await loadMissionLogs();
+      }
+      
+      async function loadMissionLogs() {
+        if (!window.firebase || !window.firebase.firestore) return;
+        const db = window.firebase.firestore();
+        
+        const snapshot = await db.collection('missionLogs')
+          .orderBy('rawTimestamp', 'desc')
+          .limit(50)
+          .get();
+        
+        if (snapshot.empty) {
+          missionLogPanel.innerHTML = '<div style="text-align:center; padding:1rem; color:#ff8888;">📭 No mission logs yet. Update a directive to save it.</div>';
+          return;
+        }
+        
+        let html = '<h4 style="margin-bottom:0.5rem;"><i class="fas fa-scroll"></i> MISSION LOG ARCHIVE</h4>';
+        snapshot.forEach(doc => {
+          const log = doc.data();
+          html += `
+            <div style="border-left: 3px solid #ff1a1a; padding: 0.5rem; margin-bottom: 0.5rem; background: #050000;">
+              <div style="font-size:0.65rem; color:#ff8888;">📅 ${log.uploadDate || 'Unknown date'}</div>
+              <div style="font-size:0.75rem; margin-top:0.3rem;">${escapeHtmlStatic(log.directiveText?.substring(0, 200) || 'No text')}${log.directiveText?.length > 200 ? '...' : ''}</div>
+              <div style="font-size:0.6rem; color:#ff6666; margin-top:0.3rem;">🔖 ${log.version || 'v1'}</div>
+            </div>
+          `;
+        });
+        html += `<div style="font-size:0.6rem; text-align:center; margin-top:0.5rem;">📋 ${snapshot.size} mission(s) archived</div>`;
+        missionLogPanel.innerHTML = html;
+      }
+      
+      function escapeHtmlStatic(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+      }
+      
+      function toast(msg, type = 'info') {
+        const stack = document.getElementById('toastStack');
+        if (!stack) { console.log(msg); return; }
+        const div = document.createElement('div');
+        div.className = 'toast-msg';
+        div.style.borderLeftColor = type === 'error' ? '#ff4444' : '#ff1a1a';
+        div.innerHTML = `<span>${type === 'error' ? '⚠' : '✓'}</span> ${msg} <button style="float:right;background:none;border:none;color:red;cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+        stack.appendChild(div);
+        setTimeout(() => div.remove(), 4000);
+      }
+      
+      // Also hook into SCHEDULE button
+      function hookScheduleButton() {
+        let attempts = 0;
+        const checkInterval = setInterval(() => {
+          const scheduleBtn = document.getElementById('scheduleDirectiveBtn');
+          if (scheduleBtn) {
+            clearInterval(checkInterval);
+            const originalSchedule = scheduleBtn.onclick;
+            scheduleBtn.onclick = async function(e) {
+              if (originalSchedule) await originalSchedule(e);
+              setTimeout(() => {
+                loadCurrentDirectiveWithDate();
+                saveMissionToLog();
+              }, 1000);
+            };
+          }
+          attempts++;
+          if (attempts > 50) clearInterval(checkInterval);
+        }, 200);
+      }
+      
+      // Initialize everything
+      setTimeout(() => {
+        injectMissionLogButton();
+        hookUpdateButton();
+        hookScheduleButton();
+        loadCurrentDirectiveWithDate();
+        console.log('✅ ONE FUNCTION DEPLOYED: Mission date display + Mission Log button + Auto-logging');
+      }, 2000);
+    })();
     
 </script>
   
