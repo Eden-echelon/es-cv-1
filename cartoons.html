@@ -1,727 +1,916 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-    <title>ToonBlack</title>
-
-    <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
-    <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
-    
-    <link rel="apple-touch-icon" href="favicon.png">
-    <link rel="apple-touch-icon-precomposed" href="favicon.png">
-    
-    <meta name="msapplication-TileImage" content="favicon.png">
-    <meta name="msapplication-TileColor" content="#000000">
-
+    <meta name="theme-color" content="#0a0e14">
+    <title>ToonBlack • 24/7 Cartoon TV Channel</title>
+    <link rel="icon" type="image/png" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b7efb0'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
     <style>
-
         * {
-
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
 
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #0f131c;
+            --bg-card: #11161f;
+            --border: #2a4b2f;
+            --border-light: #3a6b3f;
+            --text-primary: #d4f0cc;
+            --text-secondary: #9bbf92;
+            --accent: #4a8a4f;
+            --accent-dark: #2a5a2f;
+            --danger: #d44c2f;
         }
 
         body {
-
-            background: #0a0e14;
-            font-family: 'Courier New', 'Fira Code', 'SF Mono', monospace;
+            background: var(--bg-primary);
+            font-family: 'Courier New', 'Fira Code', 'SF Mono', 'IBM Plex Mono', monospace;
             line-height: 1.5;
-            padding: 2rem;
             min-height: 100vh;
-
+            display: flex;
+            justify-content: center;
         }
 
-        .cartoon-universe {
-
-            max-width: 1600px;
+        /* MAIN CENTERED CONTAINER */
+        .app-container {
+            max-width: 1400px;
             width: 100%;
             margin: 0 auto;
-            background: #0f131c;
-            border: 2px solid #2a4b2f;
-            border-radius: 28px;
-            padding: 2rem;
-
+            padding: 1.5rem;
         }
 
-        .top-bar {
+        /* PROGRESS BAR — clean, no shadow */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--accent);
+            z-index: 2000;
+            transition: width 0.2s ease;
+        }
 
+        /* HEADER — centered content */
+        .tv-header {
+            background: var(--bg-primary);
+            border-bottom: 2px solid var(--border);
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
-            padding-bottom: 1.5rem;
-            margin-bottom: 2.5rem;
-            border-bottom: 2px solid #2e5536;
-
         }
 
-        .title-area h1 {
-
-            font-size: 2rem;
+        .channel-brand h1 {
+            font-size: 1.8rem;
             letter-spacing: 2px;
-            color: #b7efb0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
             font-weight: 700;
-
         }
 
-        .title-area p {
-
-            font-size: 0.75rem;
-            color: #7b9f7a;
-            margin-top: 0.25rem;
-
-        }
-
-        .security-tag {
-
-            background: #121a22;
-            border: 1px solid #3b6e42;
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            color: #b0d6a8;
+        .live-badge {
+            background: var(--danger);
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.7rem;
+            border-radius: 0;
             font-weight: bold;
-
-        }
-
-        .scroll-nav {
-
-            display: flex;
-            justify-content: center;
-            gap: 1.2rem;
-            margin-bottom: 2.5rem;
-            flex-wrap: wrap;
-
-        }
-
-        .scroll-btn {
-
-            background: #1b262f;
-            border: 1.5px solid #3f7a49;
-            color: #d2f0ca;
-            padding: 0.6rem 1.4rem;
-            font-family: monospace;
-            font-weight: bold;
-            font-size: 0.8rem;
-            cursor: pointer;
-            border-radius: 60px;
-            transition: 0.1s linear;
             letter-spacing: 1px;
-
         }
 
-        .scroll-btn:hover {
-
-            background: #2d4635;
-            border-color: #6eae6e;
-
+        .stats {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            padding: 0.3rem 1rem;
+            border: 1px solid var(--border);
         }
 
-        .cartoon-master-grid {
+        /* TOOLBAR — centered layout */
+        .toolbar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 1rem 1.2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
 
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-primary);
+            padding: 0.4rem 1rem;
+            border: 1px solid var(--border);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: monospace;
+            font-size: 0.8rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .search-box input::placeholder {
+            color: #5b885b;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn, .view-toggle, .settings-btn {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.4rem 1rem;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transition: 0.1s linear;
+        }
+
+        .filter-btn.active, .view-toggle.active {
+            background: var(--accent-dark);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .filter-btn:hover, .view-toggle:hover {
+            background: var(--border);
+            color: white;
+        }
+
+        /* BROADCAST FEED — centered grid */
+        .broadcast-feed {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2.2rem;
-            margin: 2rem 0 2.5rem;
-
+            gap: 2rem;
+            margin: 1.5rem 0;
         }
 
-        .cartoon-card-item {
-
-            background: #11161f;
-            border: 1.5px solid #2c5a34;
-            border-radius: 24px;
-            overflow: hidden;
-            transition: 0.15s linear;
-
+        .broadcast-feed.grid-view {
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
         }
 
-        .cartoon-card-item:hover {
-
-            border-color: #5faa5f;
-            background: #121b21;
-
+        .broadcast-feed.list-view {
+            grid-template-columns: 1fr;
         }
 
-        .canvas-zone {
+        /* EPISODE CARD — Boondocks flat style, no shadows */
+        .cartoon-episode {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            transition: 0.1s linear;
+            display: flex;
+            flex-direction: column;
+        }
 
-            padding: 1.5rem;
+        .cartoon-episode:hover {
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+        }
+
+        .media-container {
+            background: var(--bg-primary);
+            padding: 1.2rem;
             display: flex;
             justify-content: center;
-            background: #0c1018;
-            border-bottom: 1px solid #2a5032;
-
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            min-height: 220px;
         }
 
-        canvas.custom-sketch-canvas {
-
+        .media-container img,
+        .media-container video,
+        .media-container audio {
+            max-width: 100%;
             display: block;
+        }
+
+        .media-container img {
             width: 100%;
             height: auto;
-            background: #0f131e;
-            border-radius: 20px;
-            border: 1px solid #2e643a;
-
+            object-fit: contain;
+            max-height: 260px;
+            cursor: pointer;
+            border: 1px solid var(--border-light);
         }
 
-        .cartoon-info {
-            
-            padding: 1.2rem 1.2rem 1.5rem 1.2rem;
-            
+        .media-container video {
+            width: 100%;
+            max-height: 260px;
+            background: #000;
+            border: 1px solid var(--border-light);
         }
 
-        .cartoon-title {
-            
+        .media-container audio {
+            width: 100%;
+        }
+
+        .episode-info {
+            padding: 1rem;
+        }
+
+        .episode-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-bottom: 0.8rem;
-            
+            margin-bottom: 0.6rem;
         }
 
-        .callsign-badge {
-            
-            font-size: 1.2rem;
+        .episode-title {
+            font-size: 1rem;
             font-weight: bold;
-            color: #c5f0bc;
-            font-family: monospace;
+            color: var(--text-primary);
             letter-spacing: 0.5px;
-            
         }
 
-        .rank-chip {
-            
-            background: #1a2d22;
-            padding: 0.2rem 0.8rem;
-            border-radius: 50px;
-            font-size: 0.65rem;
-            color: #acdba4;
-            border: 0.5px solid #447a4a;
-            
-        }
-
-        .desc-text {
-            
-            font-size: 0.7rem;
-            color: #9bbf92;
-            border-left: 3px solid #428a47;
-            padding-left: 0.75rem;
-            margin-top: 0.65rem;
-            line-height: 1.4;
-            
-        }
-        
-        .creation-panel {
-            
-            background: #0e141d;
-            border: 1.5px solid #2f643b;
-            border-radius: 30px;
-            padding: 1.5rem 2rem;
-            margin: 1rem 0 1rem 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
-            
-        }
-
-        .input-group {
-            
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            
-        }
-
-        .input-group input {
-            
-            background: #10161f;
-            border: 1px solid #407548;
-            padding: 0.7rem 1.2rem;
-            font-family: monospace;
-            font-size: 0.8rem;
-            color: #d9ffd0;
-            border-radius: 48px;
-            outline: none;
-            width: 180px;
-            
-        }
-
-        .input-group input:focus {
-            
-            border-color: #7acf7a;
-            
-        }
-
-        .create-btn {
-            
-            background: #1f2e28;
-            border: 1.5px solid #499154;
-            padding: 0.7rem 1.8rem;
-            border-radius: 60px;
-            font-weight: bold;
-            font-family: monospace;
-            color: #e2ffe0;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.08s linear;
-            
-        }
-
-        .create-btn:hover {
-            
-            background: #2f5940;
-            border-color: #7ccf7c;
-            
-        }
-
-        .stats-note {
-            
-            font-size: 0.7rem;
-            color: #7cac7a;
-            background: #0a121a;
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            letter-spacing: 0.5px;
-            
-        }
-
-        .footer-meta {
-            
-            margin-top: 2rem;
-            padding-top: 1.3rem;
-            text-align: center;
+        .type-badge {
+            background: var(--accent-dark);
+            padding: 0.2rem 0.6rem;
             font-size: 0.6rem;
-            color: #5b885b;
-            border-top: 1px solid #2a5332;
-            
+            color: white;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
 
-        @media (min-width: 1400px) {
-            .cartoon-universe { padding: 2.5rem; }
-            .cartoon-master-grid { gap: 2.5rem; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
-            .title-area h1 { font-size: 2.3rem; }
+        .air-date {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--accent);
+            padding-left: 0.6rem;
+            margin: 0.5rem 0;
         }
 
-        @media (max-width: 1200px) {
-            body { padding: 1.5rem; }
-            .cartoon-master-grid { gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+        .episode-description {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-top: 0.5rem;
         }
 
-        @media (max-width: 900px) {
-            .cartoon-master-grid { gap: 1.8rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-            .creation-panel { flex-direction: column; align-items: stretch; }
-            .input-group { justify-content: center; }
+        .episode-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.6rem;
+            transition: 0.1s;
+            font-family: monospace;
+        }
+
+        .action-btn:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* FLOATING ACTION BUTTONS — centered alignment */
+        .fab-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 200;
+        }
+
+        .fab {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: 0.1s;
+        }
+
+        .fab:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent);
+        }
+
+        /* MODAL — pure flat */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 14, 20, 0.98);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            border: 2px solid var(--accent);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: monospace;
+        }
+
+        .modal-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .modal-nav-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        /* SETTINGS PANEL */
+        .settings-panel {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            padding: 0.8rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 199;
+            min-width: 160px;
+        }
+
+        .settings-panel.active {
+            display: flex;
+        }
+
+        .settings-panel button {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.3rem 0.6rem;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-family: monospace;
+        }
+
+        .settings-panel button:hover {
+            background: var(--accent-dark);
+        }
+
+        /* LOAD MORE */
+        .load-more-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .load-more-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.8rem 2rem;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .load-more-btn:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent);
+        }
+
+        /* PUBLISHER NOTE */
+        .publisher-note {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .publisher-note code {
+            background: var(--bg-primary);
+            padding: 0.2rem 0.4rem;
+            color: var(--text-primary);
+            font-size: 0.7rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            margin-top: 1.5rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.7rem;
+            z-index: 300;
+            animation: fadeOut 2s ease forwards;
+            white-space: nowrap;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
         }
 
         @media (max-width: 680px) {
-            body { padding: 1rem; }
-            .cartoon-universe { padding: 1.2rem; }
-            .title-area h1 { font-size: 1.4rem; }
-            .scroll-nav { gap: 0.8rem; }
-            .scroll-btn { padding: 0.4rem 1rem; font-size: 0.7rem; }
-            .input-group input { width: 140px; padding: 0.5rem 0.9rem; }
-            .create-btn { padding: 0.5rem 1.2rem; }
-            .cartoon-master-grid { gap: 1.5rem; }
+            .app-container { padding: 1rem; }
+            .tv-header { flex-direction: column; text-align: center; }
+            .channel-brand h1 { font-size: 1.3rem; justify-content: center; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .filter-group { justify-content: center; }
+            .broadcast-feed.grid-view { grid-template-columns: 1fr; }
+            .fab { width: 40px; height: 40px; font-size: 1rem; }
+            .toast { white-space: normal; text-align: center; max-width: 80%; }
         }
 
         @media (max-width: 480px) {
-            .top-bar { flex-direction: column; align-items: flex-start; }
-            .cartoon-info { padding: 1rem; }
-            .callsign-badge { font-size: 1rem; }
+            .episode-title { font-size: 0.9rem; }
+            .action-btn { font-size: 0.6rem; }
         }
-        
     </style>
-    
 </head>
-    
 <body>
+<div class="app-container">
+    <div class="progress-bar" id="progressBar"></div>
 
-<div class="cartoon-universe">
+    <div class="tv-header">
+        <div class="channel-brand">
+            <h1>📺 TOONBLACK <span class="live-badge">LIVE 24/7</span></h1>
+        </div>
+        <div class="stats" id="channelStats">📡 LOADING...</div>
+    </div>
 
-    <div class="top-bar">
-        <div class="title-area">
-            <h1>✏️ ToonBlack</h1>
+    <div class="toolbar">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 SEARCH CARTOONS...">
+        </div>
+        <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">ALL</button>
+            <button class="filter-btn" data-filter="image">🖼️ IMAGE</button>
+            <button class="filter-btn" data-filter="video">🎬 VIDEO</button>
+            <button class="filter-btn" data-filter="audio">🎙️ AUDIO</button>
+            <button class="view-toggle active" data-view="grid">GRID</button>
+            <button class="view-toggle" data-view="list">LIST</button>
+            <button class="settings-btn" id="settingsBtn">⚙️</button>
         </div>
     </div>
 
-    <div class="scroll-nav">
-        <button class="scroll-btn" id="scrollTopBtn">▲ TOP ▲</button>
-        <button class="scroll-btn" id="scrollMiddleBtn">● MIDDLE ●</button>
-        <button class="scroll-btn" id="scrollDownBtn">▼ BOTTOM ▼</button>
+    <div id="broadcastFeed" class="broadcast-feed grid-view"></div>
+
+    <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+        <button class="load-more-btn" id="loadMoreBtn">▼ LOAD MORE EPISODES ▼</button>
     </div>
 
-    <div id="cartoonGridContainer" class="cartoon-master-grid"></div>
-
-    <div class="creation-panel">
-        <div class="input-group">
-            <input type="text" id="operatorNameInput" placeholder="CALLSIGN" value="SPRINGBOK-1">
-            <input type="text" id="specialMarkInput" placeholder="INSIGNIA | PATCH" value="PRIVATE TASK FORCE">
-            <button class="create-btn" id="generateCustomBtn">⚡ GENERATE CARTOON ⚡</button>
-        </div>
-        <div class="stats-note">
-            🎖️ SOUTH AFRICAN MILITANT PENCIL STYLE • FULLY RESPONSIVE • NO SHADOWS
-        </div>
+    <div class="publisher-note">
+        📺 <strong>PUBLISH DAILY</strong> — Edit <code>broadcastSchedule</code> array in script.<br>
+        Add { type, title, src, date, description } → Save → Refresh.
     </div>
-    <div class="footer-meta">
-        🖊️ ADVANCED CUSTOM CARTOONS • SECURE PRIVATE UNIT • LARGEST TO SMALLEST • PERFECT SPACING
+
+    <div class="footer">
+        🖊️ TOONBLACK • 24/7 CARTOON CHANNEL • BOONDOCKS STYLE • NO GLOWS • NO SHADOWS
+    </div>
+
+    <!-- FLOATING ACTION BUTTONS -->
+    <div class="fab-container">
+        <div class="fab" id="fabTop" title="Top">▲</div>
+        <div class="fab" id="fabMiddle" title="Middle">●</div>
+        <div class="fab" id="fabBottom" title="Bottom">▼</div>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+        <button id="exportLibBtn">📦 EXPORT LIBRARY</button>
+        <button id="clearSearchBtn">🗑️ CLEAR SEARCH</button>
+        <button id="resetFiltersBtn">🔄 RESET FILTERS</button>
+    </div>
+
+    <div id="mediaModal" class="modal">
+        <button class="close-modal">&times;</button>
+        <div class="modal-content" id="modalContent"></div>
+        <div class="modal-nav">
+            <button class="modal-nav-btn" id="modalPrev">◀ PREV</button>
+            <button class="modal-nav-btn" id="modalNext">NEXT ▶</button>
+        </div>
     </div>
 </div>
 
 <script>
-    
-    (function() {
-
-        function drawPencilSketchCartoon(ctx, width, height, customAttrs) {
-
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = "#0f131e";
-            ctx.fillRect(0, 0, width, height);
-            
-            for(let i = 0; i < 180; i++) {
-                ctx.fillStyle = `rgba(110, 150, 100, 0.04)`;
-                ctx.fillRect(Math.random() * width, Math.random() * height, 1.2, 1.2);
-            }
-            
-            const cx = width / 2;
-            const bodyBaseY = height * 0.64;
-            const headY = height * 0.4;
-
-            function pencilLine(x1, y1, x2, y2, lineW, opacity = 0.85) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.lineWidth = lineW;
-                ctx.lineCap = 'round';
-                ctx.strokeStyle = `rgba(190, 230, 165, ${opacity})`;
-                const steps = Math.max(6, Math.hypot(x2 - x1, y2 - y1) / 4.5);
-                for (let step = 0; step <= steps; step++) {
-                    const t = step / steps;
-                    let x = x1 + (x2 - x1) * t;
-                    let y = y1 + (y2 - y1) * t;
-                    if (step > 0 && step < steps) {
-                        x += (Math.random() - 0.5) * 1.1;
-                        y += (Math.random() - 0.5) * 1.1;
-                    }
-                    if (step === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                }
-                ctx.stroke();
-                ctx.restore();
-            }
-            
-            pencilLine(cx - 30, bodyBaseY - 22, cx - 16, bodyBaseY + 24, 1.5);
-            pencilLine(cx + 30, bodyBaseY - 22, cx + 16, bodyBaseY + 24, 1.5);
-            pencilLine(cx - 15, bodyBaseY + 24, cx, bodyBaseY + 40, 1.4);
-            pencilLine(cx + 15, bodyBaseY + 24, cx, bodyBaseY + 40, 1.4);
-            
-            ctx.beginPath();
-            for(let ang = 0; ang <= Math.PI * 2; ang += 0.35) {
-                let xOff = Math.cos(ang) * 23;
-                let yOff = Math.sin(ang) * 24;
-                let xt = cx + xOff + (Math.random() - 0.5) * 0.9;
-                let yt = headY + yOff + (Math.random() - 0.5) * 0.9;
-                if(ang === 0) ctx.moveTo(xt, yt);
-                else ctx.lineTo(xt, yt);
-            }
-            ctx.strokeStyle = "#bfe6aa";
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-            
-            let useBoonie = (customAttrs.callsign.length % 2 === 0) ? true : false;
-            if(customAttrs.weaponType === "LMG") useBoonie = false;
-            if(useBoonie) {
-                pencilLine(cx - 30, headY - 6, cx - 19, headY - 22, 1.3);
-                pencilLine(cx + 30, headY - 6, cx + 19, headY - 22, 1.3);
-                pencilLine(cx - 19, headY - 22, cx + 19, headY - 22, 1.3);
-            } else {
-                pencilLine(cx - 26, headY - 12, cx + 26, headY - 12, 1.4);
-                ctx.beginPath();
-                ctx.ellipse(cx, headY - 5, 25, 19, 0, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-            
-            ctx.fillStyle = "#c8f0b0";
-            ctx.beginPath();
-            ctx.arc(cx - 11, headY - 2, 2.8, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(cx + 11, headY - 2, 2.8, 0, Math.PI * 2);
-            ctx.fill();
-            pencilLine(cx - 9, headY + 8, cx + 9, headY + 8, 1.0);
-            
-            let isLMG = (customAttrs.weaponType === "LMG");
-            if(isLMG) {
-                pencilLine(cx + 24, bodyBaseY - 2, cx + 72, bodyBaseY + 3, 2.2);
-                pencilLine(cx + 56, bodyBaseY - 8, cx + 66, bodyBaseY - 18, 1.4);
-            } else {
-                pencilLine(cx + 26, bodyBaseY - 6, cx + 78, bodyBaseY - 9, 1.9);
-                pencilLine(cx + 74, bodyBaseY - 16, cx + 82, bodyBaseY - 7, 1.3);
-            }
-            
-            ctx.strokeStyle = "#86b47a";
-            ctx.lineWidth = 1.2;
-            ctx.strokeRect(cx - 29, bodyBaseY - 19, 58, 42);
-            for(let i=0;i<8;i++) {
-                pencilLine(cx - 25 + i * 8, bodyBaseY - 12, cx - 23 + i * 8, bodyBaseY + 12, 0.8);
-            }
-
-            ctx.fillStyle = "#2f6a3a";
-            ctx.fillRect(cx + 34, bodyBaseY - 24, 20, 14);
-            ctx.fillStyle = "#e6c34a";
-            ctx.fillRect(cx + 38, bodyBaseY - 22, 5, 10);
-            ctx.fillStyle = "#1c752c";
-            ctx.fillRect(cx + 34, bodyBaseY - 16, 20, 5);
-            
-            ctx.font = `bold 13px "Courier New", monospace`;
-            ctx.fillStyle = "#bae8aa";
-            ctx.fillText(`${customAttrs.callsign.slice(0, 18)}`, cx - 54, headY - 36);
-            ctx.font = `10px monospace`;
-            ctx.fillStyle = "#9fcb94";
-            ctx.fillText(`◆ ${customAttrs.specialMark.slice(0, 28)} ◆`, cx - 48, height - 16);
-            ctx.fillStyle = "#789f6b";
-            ctx.font = `9px monospace`;
-            ctx.fillText("SOUTH AFRICAN PRIVATE UNIT", 12, height - 6);
-            
-            for(let s=0; s<32; s++) {
-                ctx.fillStyle = `rgba(150, 190, 120, 0.2)`;
-                ctx.fillRect(cx - 20 + (s*7) % 55, bodyBaseY - 10 + (s%24), 1.2, 1);
-            }
+    // =============================================
+    // TOONBLACK BROADCAST SCHEDULE
+    // EDIT THIS ARRAY TO PUBLISH DAILY
+    // =============================================
+    let broadcastSchedule = [
+        {
+            id: "ep1",
+            type: "image",
+            title: "RECCE-44 • Bush Patrol",
+            src: "https://picsum.photos/id/104/800/500",
+            date: "2026-05-15",
+            description: "Pencil sketch • South African recon unit patrolling the Caprivi Strip. Pure cartoon style."
+        },
+        {
+            id: "ep2",
+            type: "video",
+            title: "ToonBlack Intro • Channel ID",
+            src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            date: "2026-05-14",
+            description: "Opening sequence — the cartoon channel that never sleeps."
+        },
+        {
+            id: "ep3",
+            type: "image",
+            title: "Iron Anteater • Heavy Gunner",
+            src: "https://picsum.photos/id/106/800/500",
+            date: "2026-05-13",
+            description: "LMG specialist • Pencil style • Tactical vest."
+        },
+        {
+            id: "ep4",
+            type: "audio",
+            title: "ToonBlack Theme • Radio Spot",
+            src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            date: "2026-05-12",
+            description: "🎙️ Audio cartoon episode — The Ballad of the Border War."
+        },
+        {
+            id: "ep5",
+            type: "image",
+            title: "Shadow Springbok • Night Recon",
+            src: "https://picsum.photos/id/107/800/500",
+            date: "2026-05-11",
+            description: "Night vision sketch • Stealth operator."
+        },
+        {
+            id: "ep6",
+            type: "image",
+            title: "Kalahari Fist • Desert Patrol",
+            src: "https://picsum.photos/id/108/800/500",
+            date: "2026-05-10",
+            description: "Hot climate gear • Sand-colored fatigues."
         }
+    ];
 
-        let allCartoonCards = [];
+    // =============================================
+    // APP STATE
+    // =============================================
+    let currentFilter = "all";
+    let currentView = "grid";
+    let searchTerm = "";
+    let currentModalIndex = -1;
+    let visibleEpisodes = [];
+    let itemsPerPage = 12;
+    let currentPage = 1;
 
-        function buildCartoonCard(customData) {
-            const container = document.getElementById('cartoonGridContainer');
-            if(!container) return null;
+    function ensureIds() {
+        broadcastSchedule = broadcastSchedule.map((ep, idx) => {
+            if (!ep.id) ep.id = 'ep_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).substr(2, 4);
+            return ep;
+        });
+    }
+
+    function getFilteredEpisodes() {
+        let filtered = [...broadcastSchedule];
+        if (currentFilter !== "all") {
+            filtered = filtered.filter(ep => ep.type === currentFilter);
+        }
+        if (searchTerm.trim() !== "") {
+            const term = searchTerm.toLowerCase();
+            filtered = filtered.filter(ep => 
+                ep.title.toLowerCase().includes(term) || 
+                ep.date.includes(term) || 
+                (ep.description && ep.description.toLowerCase().includes(term))
+            );
+        }
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        return filtered;
+    }
+
+    function renderFeed() {
+        const feed = document.getElementById('broadcastFeed');
+        if (!feed) return;
+
+        const allFiltered = getFilteredEpisodes();
+        visibleEpisodes = allFiltered;
+        
+        const start = 0;
+        const end = currentPage * itemsPerPage;
+        const paginated = allFiltered.slice(0, end);
+        
+        const stats = document.getElementById('channelStats');
+        if (stats) stats.innerHTML = `📡 ${allFiltered.length} EPISODES • LIVE`;
+        
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+        if (loadMoreContainer) {
+            loadMoreContainer.style.display = (end < allFiltered.length) ? 'flex' : 'none';
+        }
+        
+        if (paginated.length === 0) {
+            feed.innerHTML = `<div style="text-align:center; padding:3rem; color:var(--text-secondary); border:2px solid var(--border); background:var(--bg-secondary);">📡 NO MATCHING CARTOONS. ADD MORE TO broadcastSchedule!</div>`;
+            return;
+        }
+        
+        feed.innerHTML = paginated.map((ep, idx) => {
+            let typeLabel = "";
+            if (ep.type === "image") typeLabel = "🖼️ CARTOON";
+            else if (ep.type === "video") typeLabel = "🎬 VIDEO";
+            else if (ep.type === "audio") typeLabel = "🎙️ AUDIO";
             
-            const cardId = 'cc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
-            const canvasId = `sketchCanvas_${cardId}`;
+            let mediaHtml = "";
+            if (ep.type === "image") {
+                mediaHtml = `<img src="${escapeHtml(ep.src)}" alt="${escapeHtml(ep.title)}" loading="lazy" onclick="openModalByIndex(${allFiltered.findIndex(e => e.id === ep.id)})" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 24 24\' fill=\'%234a8a4f\'%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%239bbf92\'%3E⚠️%3C/text%3E%3C/svg%3E'">`;
+            } else if (ep.type === "video") {
+                mediaHtml = `<video src="${escapeHtml(ep.src)}" controls preload="metadata" playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 24 24' fill='%232a4b2f'%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239bbf92'%3E🎬%3C/text%3E%3C/svg%3E"></video>`;
+            } else if (ep.type === "audio") {
+                mediaHtml = `<audio src="${escapeHtml(ep.src)}" controls preload="metadata"></audio>`;
+            }
             
-            const cardDiv = document.createElement('div');
-            cardDiv.className = 'cartoon-card-item';
-            
-            const canvasZone = document.createElement('div');
-            canvasZone.className = 'canvas-zone';
-            const canvas = document.createElement('canvas');
-            canvas.width = 420;
-            canvas.height = 320;
-            canvas.className = 'custom-sketch-canvas';
-            canvas.id = canvasId;
-            canvasZone.appendChild(canvas);
-            
-            const infoZone = document.createElement('div');
-            infoZone.className = 'cartoon-info';
-            
-            let derivedRank = (customData.weaponType === 'LMG') ? 'HEAVY GUNNER' : 'TACTICAL OPERATOR';
-            if(customData.callsign.includes('RECCE')) derivedRank = 'RECON SPECIALIST';
-            
-            infoZone.innerHTML = `
-                <div class="cartoon-title">
-                    <span class="callsign-badge">✎ ${escapeHtml(customData.callsign)}</span>
-                    <span class="rank-chip">${derivedRank}</span>
-                </div>
-                <div class="desc-text">
-                    🛡️ MARK / PATCH: ${escapeHtml(customData.specialMark)}<br>
-                    🎖️ SOUTH AFRICAN MILITANT STYLE • PENCIL SKETCH
+            return `
+                <div class="cartoon-episode" data-id="${ep.id}" data-type="${ep.type}">
+                    <div class="media-container">
+                        ${mediaHtml}
+                    </div>
+                    <div class="episode-info">
+                        <div class="episode-header">
+                            <span class="episode-title">✏️ ${escapeHtml(ep.title)}</span>
+                            <span class="type-badge">${typeLabel}</span>
+                        </div>
+                        <div class="air-date">📅 ${escapeHtml(ep.date)}</div>
+                        <div class="episode-description">${escapeHtml(ep.description || 'No description.')}</div>
+                        <div class="episode-actions">
+                            <button class="action-btn" onclick="copyLink('${ep.id}')">🔗 SHARE</button>
+                            <button class="action-btn" onclick="downloadMedia('${ep.id}')">💾 SAVE</button>
+                        </div>
+                    </div>
                 </div>
             `;
-            
-            cardDiv.appendChild(canvasZone);
-            cardDiv.appendChild(infoZone);
-            container.appendChild(cardDiv);
-
-            const drawAttributes = {
-                callsign: customData.callsign.slice(0, 20),
-                specialMark: customData.specialMark.slice(0, 28),
-                weaponType: customData.weaponType || "R4"
-            };
-            
-            const ctx = canvas.getContext('2d');
-            drawPencilSketchCartoon(ctx, canvas.width, canvas.height, drawAttributes);
-            
-            const cardRecord = {
-                id: cardId,
-                canvasId: canvasId,
-                attrs: drawAttributes,
-                update: function() {
-                    const cvs = document.getElementById(this.canvasId);
-                    if(cvs) {
-                        const newCtx = cvs.getContext('2d');
-                        drawPencilSketchCartoon(newCtx, cvs.width, cvs.height, this.attrs);
-                    }
-                }
-            };
-            allCartoonCards.push(cardRecord);
-            return cardDiv;
-        }
+        }).join('');
         
-        function escapeHtml(str) {
-            return str.replace(/[&<>]/g, function(m) {
-                if(m === '&') return '&amp;';
-                if(m === '<') return '&lt;';
-                if(m === '>') return '&gt;';
-                return m;
-            });
-        }
+        updateProgressBar();
+    }
+    
+    function updateProgressBar() {
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('progressBar').style.width = scrolled + '%';
+    }
+    
+    function loadMore() {
+        currentPage++;
+        renderFeed();
+    }
+    
+    function openModalByIndex(index) {
+        const filtered = getFilteredEpisodes();
+        if (index < 0 || index >= filtered.length) return;
+        const episode = filtered[index];
+        if (episode.type !== "image") return;
         
-        const presetSoldiers = [
-            { callsign: "RECCE-32 BN", specialMark: "BUSH WAR VETERAN • CAPE", weaponType: "R4" },
-            { callsign: "IRON ANTEATER", specialMark: "PRIVATE SECURITY FORCE", weaponType: "LMG" },
-            { callsign: "KALAHARI FIST", specialMark: "DESERT RECON UNIT", weaponType: "R4" },
-            { callsign: "SHADOW SPRINGBOK", specialMark: "SPECIAL TASK BRIGADE", weaponType: "R4" },
-            { callsign: "RHINO GUARD", specialMark: "ANTI-POACHING TEAM", weaponType: "R4" },
-            { callsign: "BUSH VIPER", specialMark: "TRACKER / SNIPER ELEMENT", weaponType: "R4" }
-        ];
-        
-        function loadInitialCartoons() {
-            const gridContainer = document.getElementById('cartoonGridContainer');
-            if(gridContainer) gridContainer.innerHTML = '';
-            allCartoonCards = [];
-            // load first six presets
-            for(let preset of presetSoldiers) {
-                buildCartoonCard({
-                    callsign: preset.callsign,
-                    specialMark: preset.specialMark,
-                    weaponType: preset.weaponType
-                });
+        currentModalIndex = index;
+        const modal = document.getElementById('mediaModal');
+        const modalContent = document.getElementById('modalContent');
+        modalContent.innerHTML = `<img src="${escapeHtml(episode.src)}" alt="${escapeHtml(episode.title)}">`;
+        modal.classList.add('active');
+    }
+    
+    function navigateModal(direction) {
+        const filtered = getFilteredEpisodes();
+        const imagesOnly = filtered.filter(ep => ep.type === "image");
+        const currentImageIndex = imagesOnly.findIndex(ep => ep.id === filtered[currentModalIndex]?.id);
+        let newImageIndex = currentImageIndex + direction;
+        if (newImageIndex < 0) newImageIndex = imagesOnly.length - 1;
+        if (newImageIndex >= imagesOnly.length) newImageIndex = 0;
+        const newEpisode = imagesOnly[newImageIndex];
+        const newOriginalIndex = filtered.findIndex(ep => ep.id === newEpisode.id);
+        if (newOriginalIndex !== -1) openModalByIndex(newOriginalIndex);
+    }
+    
+    function closeModal() {
+        document.getElementById('mediaModal').classList.remove('active');
+        document.getElementById('modalContent').innerHTML = '';
+        currentModalIndex = -1;
+    }
+    
+    function copyLink(epId) {
+        const url = `${window.location.href.split('#')[0]}#ep-${epId}`;
+        navigator.clipboard.writeText(url).then(() => showToast('📋 LINK COPIED'));
+    }
+    
+    function downloadMedia(epId) {
+        const episode = broadcastSchedule.find(e => e.id === epId);
+        if (!episode) return;
+        const a = document.createElement('a');
+        a.href = episode.src;
+        a.download = `toonblack_${episode.title.replace(/[^a-z0-9]/gi, '_')}.${episode.type === 'image' ? 'jpg' : (episode.type === 'video' ? 'mp4' : 'mp3')}`;
+        a.target = '_blank';
+        a.click();
+        showToast('💾 DOWNLOAD STARTED');
+    }
+    
+    function showToast(msg) {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m] || m));
+    }
+    
+    function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function scrollToMiddle() { window.scrollTo({ top: document.documentElement.scrollHeight / 2.5, behavior: 'smooth' }); }
+    function scrollToBottom() { window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' }); }
+    
+    function setView(view) {
+        currentView = view;
+        const feed = document.getElementById('broadcastFeed');
+        feed.className = `broadcast-feed ${view}-view`;
+        document.querySelectorAll('.view-toggle').forEach(btn => {
+            if (btn.dataset.view === view) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+    }
+    
+    function exportLibrary() {
+        const dataStr = JSON.stringify(broadcastSchedule, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `toonblack_backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('📦 LIBRARY EXPORTED');
+    }
+    
+    function resetAll() {
+        searchTerm = "";
+        currentFilter = "all";
+        currentPage = 1;
+        document.getElementById('searchInput').value = "";
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            if (btn.dataset.filter === 'all') btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        renderFeed();
+        showToast('🔄 FILTERS RESET');
+    }
+    
+    function handleHash() {
+        const hash = window.location.hash.slice(1);
+        if (hash.startsWith('ep-')) {
+            const epId = hash.replace('ep-', '');
+            const filtered = getFilteredEpisodes();
+            const index = filtered.findIndex(e => e.id === epId);
+            if (index !== -1 && filtered[index].type === 'image') {
+                setTimeout(() => openModalByIndex(index), 100);
             }
-
-            buildCartoonCard({
-                callsign: "PRIVATE OPS-ZA",
-                specialMark: "TACTICAL PENCIL DIVISION",
-                weaponType: "R4"
-            });
         }
+    }
+    
+    function init() {
+        ensureIds();
+        renderFeed();
         
-        function generateCustomCartoonFromInput() {
-            let rawName = document.getElementById('operatorNameInput').value.trim();
-            let rawMark = document.getElementById('specialMarkInput').value.trim();
-            if(rawName === "") rawName = "GHOST-UNIT";
-            if(rawMark === "") rawMark = "CLASSIFIED OPS";
-            let weaponChoice = (rawName.length % 2 === 0) ? "R4" : "LMG";
-            if(rawMark.toUpperCase().includes("HEAVY")) weaponChoice = "LMG";
-            buildCartoonCard({
-                callsign: rawName.toUpperCase().slice(0, 20),
-                specialMark: rawMark.slice(0, 30),
-                weaponType: weaponChoice
-            });
-
-            setTimeout(() => {
-                const lastCard = document.querySelector('.cartoon-card-item:last-child');
-                if(lastCard) lastCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 50);
-        }
-        
-        function handleResizeUpdate() {
-            for(let card of allCartoonCards) {
-                const canvasElem = document.getElementById(card.canvasId);
-                if(canvasElem && canvasElem.width === 420 && canvasElem.height === 320) {
-                    card.update();
-                }
-            }
-        }
-        
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        function scrollToMiddle() {
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const middlePos = totalHeight / 2;
-            window.scrollTo({ top: middlePos, behavior: 'smooth' });
-        }
-        function scrollToBottom() {
-            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-        }
-        
-        loadInitialCartoons();
-        
-        const topBtn = document.getElementById('scrollTopBtn');
-        const midBtn = document.getElementById('scrollMiddleBtn');
-        const downBtn = document.getElementById('scrollDownBtn');
-        if(topBtn) topBtn.addEventListener('click', scrollToTop);
-        if(midBtn) midBtn.addEventListener('click', scrollToMiddle);
-        if(downBtn) downBtn.addEventListener('click', scrollToBottom);
-        
-        const genBtn = document.getElementById('generateCustomBtn');
-        if(genBtn) genBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            generateCustomCartoonFromInput();
+        window.addEventListener('scroll', updateProgressBar);
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            currentPage = 1;
+            renderFeed();
         });
         
-        window.addEventListener('resize', () => {
-            handleResizeUpdate();
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                currentPage = 1;
+                renderFeed();
+            });
         });
         
-        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.querySelectorAll('.view-toggle').forEach(btn => {
+            btn.addEventListener('click', () => setView(btn.dataset.view));
+        });
         
-        console.log("✅ CARTOON SYSTEM ACTIVE : NO GLOWS, PERFECT SPACING, ADVANCED PENCIL RENDER, QUICK SCROLL READY");
-    })();
-
+        document.getElementById('fabTop').addEventListener('click', scrollToTop);
+        document.getElementById('fabMiddle').addEventListener('click', scrollToMiddle);
+        document.getElementById('fabBottom').addEventListener('click', scrollToBottom);
+        document.getElementById('loadMoreBtn')?.addEventListener('click', loadMore);
+        
+        document.querySelector('.close-modal')?.addEventListener('click', closeModal);
+        document.getElementById('mediaModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('mediaModal')) closeModal();
+        });
+        document.getElementById('modalPrev')?.addEventListener('click', () => navigateModal(-1));
+        document.getElementById('modalNext')?.addEventListener('click', () => navigateModal(1));
+        
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsPanel = document.getElementById('settingsPanel');
+        settingsBtn?.addEventListener('click', () => settingsPanel.classList.toggle('active'));
+        document.getElementById('exportLibBtn')?.addEventListener('click', exportLibrary);
+        document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
+            document.getElementById('searchInput').value = "";
+            searchTerm = "";
+            currentPage = 1;
+            renderFeed();
+        });
+        document.getElementById('resetFiltersBtn')?.addEventListener('click', resetAll);
+        
+        window.addEventListener('hashchange', handleHash);
+        handleHash();
+        
+        // Expose functions globally
+        window.openModalByIndex = openModalByIndex;
+        window.copyLink = copyLink;
+        window.downloadMedia = downloadMedia;
+        
+        console.log('📺 TOONBLACK • CENTERED • BOONDOCKS STYLE • NO GLOWS • NO SHADOWS');
+    }
+    
+    init();
 </script>
-
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
