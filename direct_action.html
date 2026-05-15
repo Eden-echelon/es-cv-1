@@ -507,20 +507,30 @@
     systemCodeInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') authenticateOverwatch(); });
 
     const DEPARTMENTS = [
-      { id: 'innov', name: '01. INNOVATIONS CORE', icon: 'fa-microchip', code: 'CIO01', file: 'innovations.html' },
-      { id: 'compl', name: '02. COMPLIANCE DIV', icon: 'fa-gavel', code: 'SAC02', file: 'compliance.html' },
-      { id: 'exec', name: '03. EXECUTIVE NODE', icon: 'fa-briefcase', code: 'CEO8', file: 'ceo.html' },
-      { id: 'supply', name: '04. SUPPLY CHAIN', icon: 'fa-truck-fast', code: 'SC03', file: 'scl.html' },
+      
+      { id: 'innov', name: '01. INNOVATIONS', icon: 'fa-microchip', code: 'CIO01', file: 'innovations.html' },
+      
+      { id: 'compl', name: '02. COMPLIANCE', icon: 'fa-gavel', code: 'SAC02', file: 'compliance.html' },
+      
+      { id: 'exec', name: '03. EXECUTIVE', icon: 'fa-briefcase', code: 'CEO8', file: 'ceo.html' },
+
+      { id: 'rl', name: '04. RELATIONS', icon: 'fa-handshake', code: 'RL04', file: 'relations.html' },
+  
       { id: 'ops', name: '05. OPERATIONS', icon: 'fa-gears', code: 'COO05', file: 'operations.html' },
-      { id: 'compsci', name: '06. COMPUTER SCIENCE', icon: 'fa-code', code: 'ZA7', file: 'compsci.html' },
-      { id: 'brand', name: '07. BRANDING UNIT', icon: 'fa-palette', code: 'BR10', file: 'branding.html' }
+      
+      { id: 'supply', name: '06. SUPPLY CHAIN', icon: 'fa-truck-fast', code: 'SC03', file: 'scl.html' },   
+      
+      { id: 'compsci', name: '07. COMPUTER SCIENCE', icon: 'fa-code', code: 'ZA7', file: 'compsci.html' },
+      
+      { id: 'brand', name: '08. BRANDING UNIT', icon: 'fa-palette', code: 'BR10', file: 'branding.html' }
+      
     ];
 
     let currentDept = null;
     function renderDepartmentGrid() {
       if(!deptGridSection) return;
       if(!systemUnlocked) {
-        deptGridSection.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; border:1px solid #ff3366;">🔒 LOCKED: COMPLETE SYSTEM OVERWATCH AUTHENTICATION FIRST.</div>`;
+        deptGridSection.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; border:1px solid #ff3366;">🔒 LOCKED: COMPLETE AUTO-JS OVERWATCH AUTHENTICATION FIRST.</div>`;
         return;
       }
       deptGridSection.innerHTML = DEPARTMENTS.map(dept => `
@@ -532,7 +542,7 @@
         </div>
       `).join('');
       attachCardEvents();
-      pushToLiveConsole('Departments grid rendered. Awaiting division selection.', 'log');
+      pushToLiveConsole('Departments grid rendered. Awaiting selection.', 'log');
     }
 
     function attachCardEvents() {
@@ -624,7 +634,7 @@
       pushToLiveConsole(`[ERROR] ${e.message}`, 'warn');
     });
 
-    pushToLiveConsole('DIRECT ACTION // AWAITING OVERWATCH CODE (111)', 'log');
+    pushToLiveConsole('CV-5', 'log');
     document.addEventListener('contextmenu', (e) => e.preventDefault());
   })();
 
