@@ -1339,7 +1339,7 @@
 
     document.getElementById('deleteMissionBtn').addEventListener('click', async () => {
       if (!commanderUnlockedLocal || !confirm("DELETE CURRENT DIRECTIVE?")) return;
-      await db.collection('cio').doc('directive_alpha5').set({ text: "MISSION DIRECTIVE DELETED — EMERGENCY PROTOCOL", version: "DELETED", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+      await db.collection('cio').doc('directive_alpha5').set({ text: "MISSION DIRECTIVE DELETED — GENERAL EMERGENCY PROTOCOL-2... FOLLOW!", version: "DELETED", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
       await loadMissionDirective();
       logCommand("DELETE", "Directive erased");
       toast("Directive deleted", "error");
