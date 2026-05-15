@@ -85,15 +85,18 @@
     }
 
     body::after {
+      
       content: "";
       position: fixed;
       inset: 0;
       background: repeating-linear-gradient(0deg, rgba(42, 255, 160, 0.025) 0px, rgba(42, 255, 160, 0.025) 1px, transparent 1px, transparent 3px);
       pointer-events: none;
       z-index: 2;
+      
     }
 
     header {
+      
       position: fixed;
       top: 0;
       left: 0;
@@ -105,20 +108,26 @@
       align-items: center;
       justify-content: center;
       z-index: 100;
+      
     }
 
     header h1 {
+      
       font-size: clamp(0.85rem, 4vw, 1.5rem);
       letter-spacing: 5px;
       font-weight: 400;
+      
     }
 
     header h1 a {
+      
       text-decoration: none;
       color: var(--signal-cyan);
+      
     }
 
     #hero {
+      
       min-height: 55vh;
       display: flex;
       align-items: center;
@@ -126,26 +135,32 @@
       position: relative;
       z-index: 5;
       padding: 85px 20px 30px;
+      
     }
 
     .core-terminal {
+      
       background: #03080e;
       border: 1.5px solid #2f6b5e;
       padding: 32px 24px;
       text-align: center;
       width: 480px;
       max-width: 85vw;
+      
     }
 
     .system-question {
+      
       font-family: var(--mono);
       font-size: clamp(1rem, 5vw, 1.6rem);
       letter-spacing: 3px;
       color: var(--signal-amber);
       margin-bottom: 20px;
+      
     }
 
     #systemAccessCode {
+      
       background: #000000;
       border: 1px solid var(--signal-green);
       padding: 14px 20px;
@@ -156,14 +171,18 @@
       letter-spacing: 8px;
       color: var(--signal-cyan);
       margin: 20px 0;
+      
     }
 
     #systemAccessCode:focus {
+      
       outline: none;
       border-color: var(--signal-cyan);
+      
     }
 
     .enter-btn {
+      
       background: transparent;
       border: 1px solid var(--signal-green);
       color: var(--signal-green);
@@ -173,14 +192,18 @@
       letter-spacing: 2px;
       cursor: pointer;
       transition: 0.05s linear;
+      
     }
 
     .enter-btn:active {
+      
       background: var(--signal-green);
       color: #000;
+      
     }
 
     .section-title {
+      
       text-align: center;
       font-family: var(--mono);
       font-weight: 400;
@@ -188,51 +211,65 @@
       font-size: clamp(1rem, 4vw, 1.5rem);
       margin: 25px 0 25px;
       scroll-margin-top: 80px;
+      
     }
 
     .grid {
+      
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
       gap: 22px;
       padding: 0 24px 100px;
       max-width: 1400px;
       margin: 0 auto;
+      
     }
 
     .card {
+      
       background: #050b12;
       border: 1px solid #2c5a52;
       padding: 28px 16px;
       text-align: center;
       cursor: pointer;
       transition: 0.05s linear;
+      
     }
 
     .card:active {
+      
       background: #0f1e1f;
       border-color: var(--signal-amber);
+      
     }
 
     .card i {
+      
       font-size: 2.2rem;
       color: var(--signal-cyan);
       margin-bottom: 12px;
+      
     }
 
     .card h3 {
+      
       font-size: 1rem;
       letter-spacing: 2px;
       font-weight: 400;
       margin-bottom: 6px;
+      
     }
 
     .card p {
+      
       font-size: 0.7rem;
       opacity: 0.7;
       margin-bottom: 18px;
+      
     }
 
     .dev-live-console {
+      
       position: fixed;
       bottom: 52px;
       right: 12px;
@@ -248,15 +285,19 @@
       color: #bbffdd;
       text-align: left;
       border-top: 1px solid #2a4a44;
+      
     }
 
     .dev-live-console span {
+      
       display: block;
       white-space: pre-wrap;
       word-break: break-all;
+      
     }
 
     .data-footer {
+      
       position: fixed;
       bottom: 0;
       left: 0;
@@ -269,9 +310,11 @@
       font-size: 0.7rem;
       font-family: var(--mono);
       z-index: 100;
+      
     }
 
     #authOverlay {
+      
       position: fixed;
       inset: 0;
       background: #000000f5;
@@ -279,30 +322,38 @@
       align-items: center;
       justify-content: center;
       z-index: 2000;
+      
     }
 
     #authBox {
+      
       background: #03080e;
       border: 1px solid var(--signal-amber);
       width: 90%;
       max-width: 440px;
       padding: 36px 28px;
       text-align: center;
+      
     }
 
     #authBox h3 {
+      
       font-family: var(--mono);
       font-size: 1.2rem;
       letter-spacing: 3px;
+      
     }
 
     #authDept {
+      
       font-size: 0.85rem;
       opacity: 0.8;
       margin: 10px 0 20px;
+      
     }
 
     #codeInput {
+      
       width: 100%;
       background: #010101;
       border: 1px solid #3a6a62;
@@ -313,11 +364,14 @@
       font-family: var(--mono);
       letter-spacing: 6px;
       margin: 22px 0;
+      
     }
 
     #authStatus {
+      
       min-height: 38px;
       font-size: 0.8rem;
+      
     }
 
     .threat-safe { color: var(--signal-green); }
@@ -329,11 +383,13 @@
       .card { padding: 20px 12px; }
       .dev-live-console { display: none; }
     }
+    
     @media (max-width: 480px) {
       .grid { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; }
       .core-terminal { width: 280px; }
       #systemAccessCode { font-size: 1rem; letter-spacing: 4px; }
     }
+    
     @media (orientation: landscape) and (max-height: 520px) {
       #hero { min-height: 38vh; padding-top: 75px; }
       .core-terminal { width: 260px; padding: 16px; }
@@ -341,6 +397,7 @@
       .card p { display: none; }
     }
     @supports (height: 100dvh) { body { min-height: 100dvh; } }
+    
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
     
   </style>
@@ -358,7 +415,7 @@
 <main>
   <section id="hero">
     <div class="core-terminal">
-      <div class="system-question">❚ AUTO-JS ENGINE OVERWATCH ❚<br>「 IDENTITY VERIFICATION 」</div>
+      <div class="system-question">❚❚<br>「 IDENTITY VERIFICATION 」</div>
       <input type="password" id="systemAccessCode" placeholder="ENTER CODE" maxlength="5" autocomplete="off">
       <button class="enter-btn" id="submitOverwatchBtn">AUTHENTICATE</button>
       <div id="overwatchStatus" style="margin-top: 18px; font-size: 0.75rem; min-height: 32px;"></div>
