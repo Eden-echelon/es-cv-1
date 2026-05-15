@@ -581,7 +581,6 @@
     </div>
 
     <div class="dashboard">
-        <!-- LEFT: CODE EDITOR -->
         <div class="card">
             <div class="card-header">
                 <i class="fas fa-terminal"></i>
@@ -591,7 +590,7 @@
                 <div class="code-editor">
                     <div class="editor-header">
                         <span><i class="fas fa-file-code"></i> script.js</span>
-                        <span><i class="fas fa-node"></i> Node.js v20 (Production-grade mock)</span>
+                        <span><i class="fas fa-node"></i> Node.js v20</span>
                     </div>
                     <textarea id="codeInput" rows="8" spellcheck="false">// 🚀 Node.js Production Playground
 console.log("Node.js environment active");
@@ -602,7 +601,6 @@ const { EventEmitter } = require("events");
 console.log("Platform:", os.platform());
 console.log("Node Version:", process.version);
 
-// Event-driven example
 const ticker = new EventEmitter();
 ticker.on("tick", (count) => {
   console.log(`✅ Tick #${count}`);
@@ -612,7 +610,6 @@ for (let i = 1; i <= 3; i++) {
   ticker.emit("tick", i);
 }
 
-// Async demo
 setTimeout(() => {
   console.log("⚡ Asynchronous callback (non-blocking)");
 }, 100);
@@ -633,7 +630,7 @@ console.log("Ready for more — try fs, path, promises!");
                     <div id="outputContent" class="output-content">// Click "Run Code" to execute Node.js logic<br>// Includes real async behavior and core modules</div>
                 </div>
                 <div style="margin-top: 12px; font-size: 0.7rem; color:#84a2b5;">
-                    <i class="fas fa-lightbulb"></i> Tip: Use require('fs'), require('events'), Promise, setTimeout — all native Node APIs are accurately simulated.
+                    <i class="fas fa-lightbulb"></i>
                 </div>
             </div>
         </div>
