@@ -1120,7 +1120,7 @@
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         likes: 0
       });
-      toast("Directive broadcast to all units", "success");
+      toast("Directive broadcast to all departments", "success");
     }
 
     async function aiGenerateDirective(promptHint) {
@@ -1134,7 +1134,7 @@
         const data = await res.json();
         return data.choices?.[0]?.message?.content || "DIRECTIVE: Maintain constant vigilance. Alpha-5 standing by.";
       } catch (e) {
-        return "STANDARD PROTOCOL: All units report readiness. Await further.";
+        return "STANDARD PROTOCOL: All departments report readiness. Await further.";
       }
     }
 
@@ -1339,7 +1339,7 @@
 
     document.getElementById('deleteMissionBtn').addEventListener('click', async () => {
       if (!commanderUnlockedLocal || !confirm("DELETE CURRENT DIRECTIVE?")) return;
-      await db.collection('cio').doc('directive_alpha5').set({ text: "MISSION DIRECTIVE DELETED — GENERAL EMERGENCY PROTOCOL-2... FOLLOW!", version: "DELETED", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+      await db.collection('cio').doc('directive_alpha5').set({ text: "MISSION DIRECTIVE DELETED — GENERAL EMERGENCY EVAC PROTOCOL-2... FOLLOW!", version: "DELETED", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
       await loadMissionDirective();
       logCommand("DELETE", "Directive erased");
       toast("Directive deleted", "error");
