@@ -8,7 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
   <meta name="theme-color" content="#000000">
   
-  <title>DIRECT ACTION · SYSTEM OVERWATCH</title>
+  <title>DIRECT ACTION</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -38,6 +39,7 @@
     }
 
     :root {
+      
       --blackout: #000000;
       --dark-panel: #050a0f;
       --signal-green: #2affa0;
@@ -46,9 +48,11 @@
       --danger-red: #ff3366;
       --terminal-border: #2a5548;
       --mono: 'Share Tech Mono', 'Space Mono', monospace;
+      
     }
 
     html, body {
+      
       width: 100%;
       min-height: 100%;
       background: var(--blackout);
@@ -58,17 +62,17 @@
       overflow-y: auto;
       font-size: 16px;
       line-height: 1.35;
+      
     }
 
-    /* NO GLOWS, NO SHADOWS — pure militant digital */
     canvas, .core-terminal, .card, .enter-btn, #authBox, header, .data-footer, .dev-output {
       filter: none !important;
       box-shadow: none !important;
       text-shadow: none !important;
     }
 
-    /* binary battlefield canvas */
     #binaryBattleCanvas {
+      
       position: fixed;
       top: 0;
       left: 0;
@@ -77,9 +81,9 @@
       z-index: 0;
       opacity: 0.35;
       pointer-events: none;
+      
     }
 
-    /* scanlines tactical */
     body::after {
       content: "";
       position: fixed;
@@ -228,7 +232,6 @@
       margin-bottom: 18px;
     }
 
-    /* DEV TOOLS LIVE OUTPUT PANEL - everything visible on page */
     .dev-live-console {
       position: fixed;
       bottom: 52px;
@@ -339,33 +342,36 @@
     }
     @supports (height: 100dvh) { body { min-height: 100dvh; } }
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+    
   </style>
+  
 </head>
+  
 <body>
 
 <canvas id="binaryBattleCanvas"></canvas>
 
 <header>
-  <h1><a href="#">⟡ DIRECT ACTION · SYSTEM OVERWATCH ⟡</a></h1>
+  <h1><a href="#">⟡ DIRECT ACTION · AUTO-JS ENGINE OVERWATCH ⟡</a></h1>
 </header>
 
 <main>
   <section id="hero">
     <div class="core-terminal">
-      <div class="system-question">❚ SYSTEM OVERWATCH ❚<br>「 IDENTITY VERIFICATION 」</div>
+      <div class="system-question">❚ AUTO-JS ENGINE OVERWATCH ❚<br>「 IDENTITY VERIFICATION 」</div>
       <input type="password" id="systemAccessCode" placeholder="ENTER CODE" maxlength="5" autocomplete="off">
       <button class="enter-btn" id="submitOverwatchBtn">AUTHENTICATE</button>
       <div id="overwatchStatus" style="margin-top: 18px; font-size: 0.75rem; min-height: 32px;"></div>
     </div>
   </section>
 
-  <h2 class="section-title"><span>◈ DIRECT ACTION DIVISIONS ◈</span></h2>
+  <h2 class="section-title"><span>◈ DIRECT ACTION DEPARTMENTS◈</span></h2>
   <div class="grid" id="deptGrid"></div>
 </main>
 
 <div id="authOverlay">
   <div id="authBox">
-    <h3>⚙️ TACTICAL ACCESS ⚙️</h3>
+    <h3> TACTICAL ACCESS </h3>
     <p id="authDept"></p>
     <input type="password" id="codeInput" placeholder="✧ 5-BIT CODE ✧" maxlength="5" autocomplete="off">
     <div id="authStatus"></div>
@@ -383,7 +389,7 @@
 </div>
 
 <div class="data-footer">
-  <span>⚡ OPERATOR: EDEN // TACTICAL SOLDIER ⚡</span>
+  <span> OPERATOR: EDEN STEALTH CV-1 // COMPANY </span>
   <span id="clockDigital">--:--:--</span>
   <span id="threatLed" class="threat-safe">◇ THREAT: NULL ◇</span>
 </div>
@@ -453,12 +459,12 @@
     }
 
     window.addEventListener('load', () => {
-      pushToLiveConsole('SYSTEM OVERWATCH ACTIVE // DIRECT ACTION READY', 'log');
+      pushToLiveConsole('AUTO-JS ENGINE OVERWATCH ACTIVE // DIRECT ACTION READY', 'log');
     });
 
     setInterval(() => {
       const memInfo = performance.memory ? ` | JS heap: ${Math.round(performance.memory.usedJSHeapSize / 1048576)}MB` : '';
-      if(consoleMetricsSpan) consoleMetricsSpan.innerHTML = `⚡ ticks: ${Math.floor(Math.random() * 999)} ops ${memInfo}`;
+      if(consoleMetricsSpan) consoleMetricsSpan.innerHTML = ` ticks: ${Math.floor(Math.random() * 999)} ops ${memInfo}`;
     }, 1800);
 
     const systemCodeInput = document.getElementById('systemAccessCode');
@@ -470,13 +476,13 @@
 
     function authenticateOverwatch() {
       const enteredCode = systemCodeInput.value.trim();
-      if(enteredCode === '111') {
+      if(enteredCode === '11111') {
         systemUnlocked = true;
         overwatchStatusDiv.style.color = '#2affa0';
-        overwatchStatusDiv.innerHTML = '✓ ACCESS GRANTED — WELCOME, SOLDIER. DEPARTMENTS UNLOCKED.';
+        overwatchStatusDiv.innerHTML = '✓ ACCESS GRANTED — WELCOME, OPERATOR. DEPARTMENTS UNLOCKED.';
         threatLed.className = 'threat-safe';
         threatLed.innerText = '◇ THREAT: NULL ◇';
-        pushToLiveConsole('ACCESS GRANTED: system override complete. Dept grid unlocked.', 'log');
+        pushToLiveConsole('ACCESS GRANTED: Dept grid unlocked.', 'log');
 
         renderDepartmentGrid();
         systemCodeInput.disabled = true;
@@ -502,7 +508,7 @@
 
     const DEPARTMENTS = [
       { id: 'innov', name: '01. INNOVATIONS CORE', icon: 'fa-microchip', code: 'CIO01', file: 'innovations.html' },
-      { id: 'compl', name: '02. COMPLIANCE DIV', icon: 'fa-gavel', code: 'LAW02', file: 'compliance.html' },
+      { id: 'compl', name: '02. COMPLIANCE DIV', icon: 'fa-gavel', code: 'SAC02', file: 'compliance.html' },
       { id: 'exec', name: '03. EXECUTIVE NODE', icon: 'fa-briefcase', code: 'CEO8', file: 'ceo.html' },
       { id: 'supply', name: '04. SUPPLY CHAIN', icon: 'fa-truck-fast', code: 'SC03', file: 'scl.html' },
       { id: 'ops', name: '05. OPERATIONS', icon: 'fa-gears', code: 'COO05', file: 'operations.html' },
