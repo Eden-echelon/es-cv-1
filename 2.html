@@ -1,677 +1,482 @@
 <!DOCTYPE html>
-
 <html lang="en">
-    
 <head>
-    
     <meta charset="UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <title>2</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SANDF PROTOCOL-2 | REAL-TIME COMMS (P2P)</title>
     <style>
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: #03070f;
-            font-family: 'Courier New', 'Fira Code', 'Monaco', 'Source Code Pro', monospace;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: #0a0f1a;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            padding: 20px;
             min-height: 100vh;
-            padding: 16px;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(#0a121f 1px, transparent 1px),
-                linear-gradient(90deg, #0a121f 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            opacity: 0.25;
-            z-index: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .comms-terminal {
-            position: relative;
-            z-index: 2;
+            max-width: 900px;
             width: 100%;
-            max-width: 1280px;
-            background: #070b14;
-            border: 1px solid #2a3f4e;
-            padding: 20px 24px;
-            transition: all 0.1s linear;
+            background: #0e1422;
+            border: 1px solid #2a5f6e;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        @media (max-width: 720px) {
-            .comms-terminal {
-                padding: 14px 16px;
-            }
-        }
-        @media (max-width: 480px) {
-            .comms-terminal {
-                padding: 10px 12px;
-            }
-        }
-        @media (max-width: 320px) {
-            .comms-terminal {
-                padding: 8px 10px;
-            }
+        .header {
+            background: #0a101c;
+            padding: 20px;
+            border-bottom: 1px solid #1e4a5a;
         }
 
-        .command-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: baseline;
-            border-bottom: 1px solid #3e5a6b;
-            padding-bottom: 14px;
-            margin-bottom: 20px;
-            gap: 12px;
-        }
-        .protocol-designator {
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: #9fc7d6;
-            background: #0f1725;
-            padding: 4px 12px;
-            border-left: 3px solid #7e9aa8;
-        }
-        .chain-of-command {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            font-size: 0.75rem;
-            color: #7c9eb3;
-        }
-        .rank-tag {
-            background: #0f1722;
-            padding: 2px 8px;
-            border-right: 1px solid #2f5268;
-        }
-        .utc-timestamp {
-            font-family: monospace;
-            font-size: 0.7rem;
-            background: #03070f;
-            padding: 4px 8px;
-            border: 1px solid #2e4a5c;
-            color: #adccdf;
-        }
-        @media (max-width: 560px) {
-            .protocol-designator { font-size: 0.75rem; }
-            .rank-tag { font-size: 0.65rem; }
-            .utc-timestamp { font-size: 0.6rem; }
-        }
-
-        .evac-status-panel {
-            background: #0e121f;
-            border-left: 4px solid #b55541;
-            padding: 14px 18px;
-            margin-bottom: 24px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }
-        .evac-warning {
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            color: #e6b8a8;
-        }
-        .evac-warning strong {
-            color: #e07a5f;
-            font-size: 1.1rem;
-        }
-        .clearance-badge {
-            font-size: 0.7rem;
-            background: #050a12;
-            padding: 4px 12px;
-            border: 1px solid #b55541;
-            color: #d99e86;
-        }
-        @media (max-width: 480px) {
-            .evac-status-panel { padding: 10px 12px; }
-            .evac-warning { font-size: 0.75rem; }
-        }
-
-        .auth-gate {
-            background: #0b111c;
-            border: 1px solid #3d5a6c;
-            padding: 18px 22px;
-            margin-bottom: 28px;
-        }
-        .gate-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #b7cfdf;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-            letter-spacing: 0.5px;
-        }
-        .pin-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        #pinCodeInput {
-            flex: 3;
-            min-width: 180px;
-            background: #01050c;
-            border: 1px solid #4c6e82;
-            padding: 12px 16px;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-            font-weight: 500;
+        .header h1 {
+            color: #6abf9e;
+            font-size: 1.2rem;
             letter-spacing: 2px;
-            color: #cae9ff;
-            outline: none;
+            margin-bottom: 8px;
         }
-        .action-buttons {
+
+        .header p {
+            color: #8aaec0;
+            font-size: 0.75rem;
+        }
+
+        .connection-panel {
+            padding: 20px;
+            background: #0c1120;
+            border-bottom: 1px solid #1e3a44;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .my-id {
+            flex: 2;
+            background: #01050e;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border-left: 3px solid #6abf9e;
+        }
+
+        .my-id label {
+            font-size: 0.65rem;
+            color: #6b8f9e;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .my-id code {
+            color: #c0e0ff;
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .remote-connect {
+            flex: 3;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-        .mil-button {
-            background: #141e2c;
-            border: 1px solid #5b7f94;
-            padding: 10px 18px;
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.05s linear;
-            color: #cbe7f5;
-        }
-        .mil-button:active {
-            background: #1c2c3e;
-            transform: scale(0.98);
-        }
-        .mil-primary {
-            background: #1e3a47;
-            border-color: #6b9eb8;
-            color: #e8f4ff;
-        }
-        .mil-danger {
-            background: #3f2620;
-            border-color: #a56353;
-        }
-        .auth-feedback {
-            font-size: 0.7rem;
-            color: #bda69a;
-            margin-top: 12px;
-            padding-left: 4px;
-        }
-        @media (max-width: 550px) {
-            .auth-gate { padding: 12px 14px; }
-            .pin-controls { flex-direction: column; align-items: stretch; }
-            #pinCodeInput { text-align: center; }
-            .action-buttons { justify-content: center; }
+
+        .remote-connect input {
+            flex: 2;
+            background: #01050e;
+            border: 1px solid #2a5a6a;
+            padding: 10px;
+            font-family: monospace;
+            color: #c0e0ff;
+            border-radius: 6px;
         }
 
-        .protocol-core {
-            background: #070d16;
-            border: 1px solid #5c7d8f;
-            padding: 20px 24px;
-            margin-bottom: 24px;
-        }
-        .comms-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: baseline;
-            border-bottom: 1px solid #3a5a6e;
-            padding-bottom: 12px;
-            margin-bottom: 20px;
-            gap: 12px;
-        }
-        .comms-channel {
-            font-size: 0.8rem;
-            background: #0f1924;
-            padding: 4px 12px;
-            border-left: 2px solid #c0a080;
-            color: #cbdbe2;
-        }
-        .directive-body {
-            margin: 12px 0 18px 0;
-        }
-        .directive-text {
-            font-size: 0.9rem;
-            line-height: 1.45;
-            color: #cbd8e6;
-            margin-bottom: 16px;
-        }
-        .evac-coordinates {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 16px;
-            margin: 18px 0 22px 0;
-        }
-        .coord-block {
-            background: #0f1722;
-            border-left: 3px solid #b7784b;
-            padding: 10px 14px;
-            font-size: 0.8rem;
-            color: #c4d4e3;
-        }
-        .evac-trigger-area {
-            margin: 20px 0 12px 0;
-        }
-        #finalEvacBtn {
-            width: 100%;
-            background: #542c1f;
-            border: 1px solid #bc7a5c;
-            padding: 16px 12px;
+        button {
+            background: #1e3a44;
+            border: 1px solid #4a8a9a;
+            padding: 10px 20px;
             font-family: monospace;
-            font-weight: 700;
-            font-size: 1rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #ffe1d0;
+            font-weight: bold;
+            color: #e0f0ff;
             cursor: pointer;
-            transition: 0.05s linear;
+            border-radius: 6px;
+            transition: all 0.1s;
         }
-        #finalEvacBtn:active {
-            background: #3e241b;
-            transform: scale(0.99);
+
+        button:active {
+            transform: scale(0.97);
+            background: #0e2a34;
         }
-        #finalEvacBtn.disabled-evac, #finalEvacBtn:disabled {
-            background: #1e2a2f;
-            border-color: #5e6e76;
-            color: #7e8c94;
-            cursor: not-allowed;
-            transform: none;
+
+        .status {
+            padding: 8px 20px;
+            font-size: 0.7rem;
+            background: #0a1020;
+            color: #8ab0c0;
+            border-bottom: 1px solid #1e4a5a;
         }
-        .comms-log {
-            background: #030812;
-            border: 1px solid #3e5d6b;
-            padding: 12px 14px;
-            max-height: 130px;
+
+        .chat-area {
+            padding: 20px;
+        }
+
+        .messages {
+            background: #050a14;
+            height: 350px;
             overflow-y: auto;
-            margin-top: 22px;
-        }
-        .log-entry {
-            font-size: 0.7rem;
-            font-family: monospace;
-            color: #aac7db;
-            border-bottom: 1px dotted #2f4e60;
-            padding: 6px 4px;
-        }
-        .footer-auth {
-            text-align: center;
-            font-size: 0.6rem;
-            color: #5a7f91;
-            margin-top: 16px;
-            letter-spacing: 1px;
-        }
-        @media (max-width: 640px) {
-            .protocol-core { padding: 14px 16px; }
-            .directive-text { font-size: 0.8rem; }
-            .coord-block { font-size: 0.7rem; }
-            #finalEvacBtn { font-size: 0.8rem; padding: 12px 8px; }
-        }
-        @media (max-width: 380px) {
-            .coord-block { font-size: 0.65rem; }
-            .comms-channel { font-size: 0.65rem; }
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #1e4a5a;
         }
 
-        button, input, .comms-terminal, .auth-gate, .protocol-core {
-            box-shadow: none;
-            text-shadow: none;
+        .message {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 0.85rem;
         }
-        
+
+        .message.sent {
+            background: #1e3a4a;
+            margin-left: auto;
+            color: #d0f0ff;
+            border-right: 2px solid #6abf9e;
+        }
+
+        .message.received {
+            background: #111a28;
+            border-left: 2px solid #e89f6e;
+            color: #c0d8e8;
+        }
+
+        .message small {
+            display: block;
+            font-size: 0.6rem;
+            color: #7a9ab0;
+            margin-bottom: 4px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-area input {
+            flex: 1;
+            background: #01050e;
+            border: 1px solid #2a5a6a;
+            padding: 12px;
+            font-family: monospace;
+            color: #e0f0ff;
+            border-radius: 6px;
+        }
+
+        .input-area input:disabled {
+            opacity: 0.5;
+        }
+
+        .footer {
+            padding: 15px 20px;
+            background: #0a101c;
+            border-top: 1px solid #1e4a5a;
+            font-size: 0.65rem;
+            color: #5a8090;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .connection-panel { flex-direction: column; align-items: stretch; }
+            .message { max-width: 95%; }
+        }
     </style>
-    
 </head>
-    
 <body>
 
 <div class="comms-terminal">
-
-    <div class="command-header">
-        <div class="protocol-designator">
-            [SANDF] PROTOCOL-2 // GENERAL EMERGENCY EVACUATION (COMMS)
-        </div>
-        <div class="chain-of-command">
-            <span class="rank-tag">C-IN-C: GEN. N. RAMAPHOSA</span>
-            <span class="rank-tag">2IC: LT. GEN. M. DLAMINI</span>
-            <span class="rank-tag">CHIEF SANDF: GEN. R. MTSHALI</span>
-        </div>
-        <div class="utc-timestamp" id="milTimestamp">--:--:-- Z</div>
+    <div class="header">
+        <h1>📡 PROTOCOL-2 · REAL-TIME COMMS TERMINAL</h1>
+        <p>PEER-TO-PEER ENCRYPTED CHANNEL | NO DATABASE | FRONT-END ONLY</p>
     </div>
 
-    <div class="evac-status-panel">
-        <div class="evac-warning">
-            <strong>⚠️ GENERAL EMERGENCY EVACUATION ⚠️</strong> — COMMUNICATION DIRECTIVE ACTIVE
+    <div class="connection-panel">
+        <div class="my-id">
+            <label>🔑 YOUR COMMS ID (SHARE THIS)</label>
+            <code id="myPeerId">Initializing...</code>
         </div>
-        <div class="clearance-badge">
-            OMEGA CLEARANCE // SANDF HIGHCOM
+        <div class="remote-connect">
+            <input type="text" id="remoteIdInput" placeholder="PASTE TARGET COMMS ID">
+            <button id="connectBtn">🔗 ESTABLISH LINK</button>
         </div>
     </div>
 
-    <div class="auth-gate">
-        <div class="gate-title">
-            <span>🔑</span> <span>COMMAND VERIFICATION GATE · AUTHORIZED PERSONNEL ONLY</span>
-        </div>
-        <div class="pin-controls">
-            <input type="password" id="pinCodeInput" placeholder="8-DIGIT COMMAND PIN" maxlength="8" inputmode="numeric" autocomplete="off">
-            <div class="action-buttons">
-                <button id="authPinBtn" class="mil-button mil-primary">AUTHENTICATE</button>
-                <button id="resetGateBtn" class="mil-button mil-danger">RESET GATE</button>
+    <div class="status" id="statusMsg">
+        ⚡ AWAITING CONNECTION · PROTOCOL-2 STANDBY
+    </div>
+
+    <div class="chat-area">
+        <div class="messages" id="messageLog">
+            <div class="message received">
+                <small>SYSTEM</small>
+                [SANDF PROTOCOL-2] Real-time text channel ready.<br>
+                Share your Comms ID above. Enter target ID to connect.
             </div>
         </div>
-        <div class="auth-feedback" id="pinAuthFeedback">
-            [SANDF SECURITY] AWAITING COMMANDER-IN-CHIEF AUTHORIZATION · PROTOCOL LOCK ACTIVE
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+            <button id="sendBtn" disabled>📡 TRANSMIT</button>
         </div>
     </div>
 
-    <div class="protocol-core">
-        <div class="comms-header">
-            <span>📡 PROTOCOL-2 · GENERAL EMERGENCY EVACUATION COMMUNICATION</span>
-            <div class="comms-channel">CH: 6 | ES-CV-1 | SINGULARITY NODE</div>
-        </div>
-        <div class="directive-body">
-            <div class="directive-text">
-                <strong>*** CLASSIFIED SANDF DIRECTIVE ***</strong> — In accordance with Section 7/COMD/2026, all military,
-                reserve and strategic assets must execute GENERAL EMERGENCY EVACUATION. Priority: Command echelon,
-                critical datacores, and rapid deployment units. This is a COMMUNICATION PROTOCOL — all subordinate
-                commands acknowledge and rebroadcast on encrypted channels.
-            </div>
-            <div class="evac-coordinates">
-                <div class="coord-block">
-                    <strong>📍 PRIMARY ASSEMBLY</strong><br>
-                    SECTOR-7 | HANGAR DELTA<br>
-                    CODED CALLSIGN: IRON SHIELD
-                </div>
-                <div class="coord-block">
-                    <strong>📡 FALLBACK COMMS</strong><br>
-                    VHF 78.90 MHz · AES-256<br>
-                    SECONDARY: HF 5.120 MHz
-                </div>
-                <div class="coord-block">
-                    <strong>🚁 AIR EVAC ASSET</strong><br>
-                    OPERATION: SILENT DAWN<br>
-                    RENDEZVOUS: ALPHA POINT
-                </div>
-            </div>
-        </div>
-
-        <div class="evac-trigger-area">
-            <button id="finalEvacBtn" disabled>🔒 PROTOCOL-2 LOCKED · AWAIT COMMAND PIN 🔒</button>
-        </div>
-
-        <div class="comms-log" id="commsAuditLog">
-            <div class="log-entry">⏺ [SANDF COMMS] ES-CV-1 terminal online. PROTOCOL-2 standby. Gate PIN mandatory.</div>
-            <div class="log-entry">⏺ [SECURITY] Awaiting Commander-in-Chief authentication.</div>
-        </div>
-        <div class="footer-auth">
-            ⚡ SECURE COMMUNICATION CHANNEL · UNAUTHORIZED ACCESS WILL BE LOGGED · ⚡
-        </div>
+    <div class="footer">
+        ⚡ PROTOCOL-2 · P2P COMMUNICATION · NO DATA STORED · END-TO-END BROWSER DIRECT ⚡
     </div>
 </div>
 
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-
-    const SANDF_GATE_PIN = "27121945";
-    let gateUnlocked = false;
-    let evacuationBroadcast = false;
-
-    const pinInputField = document.getElementById('pinCodeInput');
-    const authButton = document.getElementById('authPinBtn');
-    const resetGateButton = document.getElementById('resetGateBtn');
-    const evacButton = document.getElementById('finalEvacBtn');
-    const authFeedbackSpan = document.getElementById('pinAuthFeedback');
-    const auditLogContainer = document.getElementById('commsAuditLog');
-    const timestampSpan = document.getElementById('milTimestamp');
-
-    function addCommsLog(message, isSecurity = false) {
-        const logDiv = document.createElement('div');
-        logDiv.className = 'log-entry';
-        const now = new Date();
-        const timeTag = now.toISOString().slice(11, 19) + 'Z';
-        const prefix = isSecurity ? '[SEC LOG]' : '[PROTOCOL]';
-        logDiv.innerHTML = `${prefix} ${timeTag} :: ${message}`;
-        auditLogContainer.appendChild(logDiv);
-        auditLogContainer.scrollTop = auditLogContainer.scrollHeight;
-        while (auditLogContainer.children.length > 32) {
-            auditLogContainer.removeChild(auditLogContainer.firstChild);
+    // PROTOCOL-2: FRONT-END REAL-TIME TEXT COMMUNICATION
+    // Uses PeerJS (WebRTC) - works on GitHub Pages, no backend needed
+    
+    let peer = null;
+    let currentConnection = null;  // active peer connection
+    let myPeerId = null;
+    
+    // DOM elements
+    const myIdSpan = document.getElementById('myPeerId');
+    const remoteIdInput = document.getElementById('remoteIdInput');
+    const connectBtn = document.getElementById('connectBtn');
+    const statusDiv = document.getElementById('statusMsg');
+    const messageLog = document.getElementById('messageLog');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    
+    // Helper: add message to chat
+    function addMessage(text, type = 'received', sender = null) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${type}`;
+        const time = new Date().toLocaleTimeString();
+        const senderName = type === 'sent' ? 'YOU' : (sender || 'REMOTE');
+        msgDiv.innerHTML = `<small>${senderName} @ ${time}</small>${escapeHtml(text)}`;
+        messageLog.appendChild(msgDiv);
+        messageLog.scrollTop = messageLog.scrollHeight;
+        
+        // auto-clean if too many messages (keep last 100)
+        while (messageLog.children.length > 100) {
+            messageLog.removeChild(messageLog.firstChild);
         }
     }
-
-    function updateMilTimestamp() {
-        const current = new Date();
-        const utcString = current.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' UTC';
-        timestampSpan.textContent = utcString;
+    
+    // simple escape to prevent XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
     }
-    setInterval(updateMilTimestamp, 1000);
-    updateMilTimestamp();
-
-    function resetGateAccess() {
-        if (evacuationBroadcast) {
-            addCommsLog('RESET DENIED: Evacuation protocol already transmitted. Full lockdown.', true);
-            authFeedbackSpan.innerText = '[DENIED] Evacuation active — Gate reset unavailable.';
-            return;
-        }
-        if (gateUnlocked) {
-            gateUnlocked = false;
-            evacButton.disabled = true;
-            evacButton.innerText = '🔒 PROTOCOL-2 LOCKED · AWAIT COMMAND PIN 🔒';
-            evacButton.classList.add('disabled-evac');
-            authFeedbackSpan.innerText = '[SANDF] Gate access REVOKED. Re-authentication required.';
-            addCommsLog('Gate authentication reset by Commander authority. PIN required again.', true);
-            pinInputField.value = '';
-            pinInputField.disabled = false;
-            authButton.disabled = false;
-            resetGateButton.disabled = false;
+    
+    // update status with visual indicator
+    function setStatus(text, isError = false) {
+        statusDiv.innerHTML = isError ? `⚠️ ${text}` : `📡 ${text}`;
+        statusDiv.style.color = isError ? '#e89f6e' : '#8ab0c0';
+    }
+    
+    // enable/disable messaging UI
+    function setMessagingEnabled(enabled) {
+        messageInput.disabled = !enabled;
+        sendBtn.disabled = !enabled;
+        if (enabled) {
+            messageInput.focus();
         } else {
-            pinInputField.value = '';
-            authFeedbackSpan.innerText = '[SANDF] Gate remains locked. Enter valid 8-digit Command PIN.';
-            addCommsLog('Manual PIN field reset. No active authentication.', false);
+            messageInput.value = '';
         }
     }
-
-    function authenticateGate() {
-        if (evacuationBroadcast) {
-            addCommsLog('UNAUTHORIZED AUTH ATTEMPT: Evacuation already executed.', true);
-            authFeedbackSpan.innerText = '[BLOCKED] Evacuation sequence active — Gate authentication disabled.';
+    
+    // send message through active connection
+    function sendMessage() {
+        if (!currentConnection || currentConnection.open === false) {
+            addMessage('[SYSTEM] No active connection. Establish link first.', 'received', 'PROTOCOL');
+            setStatus('No active connection. Please connect first.', true);
             return;
         }
-        const enteredCode = pinInputField.value.trim();
-        if (enteredCode === "") {
-            authFeedbackSpan.innerText = '[ACCESS DENIED] PIN cannot be empty. Retry with valid 8-digit code.';
-            addCommsLog('Empty PIN authentication attempt rejected.', true);
-            return;
-        }
-        if (enteredCode === SANDF_GATE_PIN) {
-            if (!gateUnlocked) {
-                gateUnlocked = true;
-                authFeedbackSpan.innerText = '[AUTHENTICATED] Commander-in-Chief verified. PROTOCOL-2 unblocked.';
-                addCommsLog('GATE AUTHENTICATION SUCCESS: SANDF High Command override enabled.');
-                evacButton.disabled = false;
-                evacButton.innerText = '🔴🔴 INITIATE GENERAL EMERGENCY EVACUATION (AUTHORIZED) 🔴🔴';
-                evacButton.classList.remove('disabled-evac');
-                pinInputField.disabled = false;
-
-                document.querySelector('.auth-gate').style.borderColor = '#708d9e';
-                addCommsLog('ES-CV-1: Communication channel 6 ready for EVAC broadcast.');
+        
+        const msgText = messageInput.value.trim();
+        if (!msgText) return;
+        
+        // send via WebRTC data channel
+        currentConnection.send(msgText);
+        addMessage(msgText, 'sent', 'YOU');
+        messageInput.value = '';
+        messageInput.focus();
+        
+        // log transmission
+        console.log('[PROTOCOL-2] Message sent:', msgText);
+    }
+    
+    // Initialize PeerJS
+    function initPeer() {
+        // Generate random ID for this session (front-end only)
+        const randomId = 'sandf-' + Math.random().toString(36).substring(2, 10) + '-' + Date.now().toString(36);
+        
+        peer = new Peer(randomId, {
+            debug: 0,
+            config: {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:stun1.l.google.com:19302' }
+                ]
+            }
+        });
+        
+        peer.on('open', (id) => {
+            myPeerId = id;
+            myIdSpan.textContent = id;
+            setStatus(`Ready | Your Comms ID: ${id} | Share to connect`);
+            addMessage(`[PROTOCOL-2] Terminal online. Your Comms ID: ${id}`, 'received', 'SYSTEM');
+        });
+        
+        peer.on('connection', (conn) => {
+            setStatus(`Incoming connection from ${conn.peer}... establishing link.`);
+            handleConnection(conn);
+        });
+        
+        peer.on('error', (err) => {
+            console.error('Peer error:', err);
+            if (err.type === 'peer-unavailable') {
+                setStatus(`Remote ID not found or offline.`, true);
+                addMessage(`[ERROR] Cannot reach the specified Comms ID.`, 'received', 'SYSTEM');
             } else {
-                authFeedbackSpan.innerText = '[INFO] Gate already unlocked. Protocol-2 ready.';
+                setStatus(`Connection error: ${err.message || err.type}`, true);
             }
-        } else {
-            authFeedbackSpan.innerText = `[VIOLATION] Invalid PIN (${'*'.repeat(enteredCode.length)}). Attempt logged.`;
-            addCommsLog(`INVALID PIN AUTHENTICATION ATTEMPT — source IP masked — recorded.`, true);
-            if (!gateUnlocked) {
-                evacButton.disabled = true;
-                evacButton.innerText = '🔒 PROTOCOL-2 LOCKED · AWAIT COMMAND PIN 🔒';
-            }
-
-            if (gateUnlocked) {
-                addCommsLog('WARNING: Unlocked gate received bad PIN — additional surveillance.', true);
-            }
-        }
+        });
+        
+        peer.on('disconnected', () => {
+            setStatus('Peer server disconnected. Attempting to reconnect...', true);
+            setTimeout(() => {
+                if (peer && !peer.destroyed) {
+                    peer.reconnect();
+                }
+            }, 2000);
+        });
     }
-
-    function executeProtocol2Evacuation() {
-        if (!gateUnlocked) {
-            addCommsLog('🚫 EVACUATION ATTEMPT BLOCKED: Gate PIN not authenticated. Security incident.', true);
-            authFeedbackSpan.innerText = '[UNAUTHORIZED] Evacuation requires valid SANDF command PIN.';
+    
+    // handle established connection (both incoming and outgoing)
+    function handleConnection(conn) {
+        // close existing connection if any
+        if (currentConnection && currentConnection !== conn && currentConnection.open) {
+            currentConnection.close();
+            addMessage('[SYSTEM] Previous connection closed.', 'received', 'PROTOCOL');
+        }
+        
+        currentConnection = conn;
+        
+        conn.on('open', () => {
+            setStatus(`Connected to ${conn.peer} | REAL-TIME CHANNEL ACTIVE`);
+            addMessage(`[CONNECTION ESTABLISHED] Linked to Comms ID: ${conn.peer}`, 'received', 'PROTOCOL');
+            setMessagingEnabled(true);
+            messageInput.focus();
+        });
+        
+        conn.on('data', (data) => {
+            // receive text message
+            const receivedText = typeof data === 'string' ? data : JSON.stringify(data);
+            addMessage(receivedText, 'received', conn.peer.substring(0, 12));
+        });
+        
+        conn.on('close', () => {
+            setStatus(`Connection closed by remote peer.`);
+            addMessage(`[DISCONNECTED] Link to ${conn.peer} terminated.`, 'received', 'SYSTEM');
+            if (currentConnection === conn) {
+                currentConnection = null;
+                setMessagingEnabled(false);
+            }
+        });
+        
+        conn.on('error', (err) => {
+            setStatus(`Connection error: ${err.message}`, true);
+            addMessage(`[ERROR] Communication fault. Re-establish link.`, 'received', 'SYSTEM');
+            if (currentConnection === conn) {
+                currentConnection = null;
+                setMessagingEnabled(false);
+            }
+        });
+    }
+    
+    // initiate connection to remote peer
+    function connectToRemote() {
+        const remoteId = remoteIdInput.value.trim();
+        if (!remoteId) {
+            setStatus('Enter target Comms ID', true);
             return;
         }
-        if (evacuationBroadcast) {
-            addCommsLog('DUPLICATE PROTOCOL: Evacuation already communicated to all units.', true);
-            authFeedbackSpan.innerText = '[PROTOCOL ACTIVE] Evacuation already broadcasted.';
+        
+        if (remoteId === myPeerId) {
+            setStatus('Cannot connect to yourself', true);
             return;
         }
-
-        evacuationBroadcast = true;
-        addCommsLog('***** [SANDF HIGHCOM] PROTOCOL-2 ACTIVATED :: GENERAL EMERGENCY EVACUATION *****');
-        addCommsLog('ES-CV-1 SINGULARITY NODE: All regional commands acknowledge. EXECUTE EVAC IMMEDIATELY.');
-        addCommsLog('DIRECTIVE: All units proceed to primary assembly SECTOR-7. IRON SHIELD extraction plan.');
-        addCommsLog('COMMANDER-IN-CHIEF ORDER: Priority evac of strategic assets & Command personnel.');
-        addCommsLog('CHIEF OF SANDF confirms: secondary fallback protocols engaged at ALPHA & BRAVO points.');
-
-        evacButton.disabled = true;
-        evacButton.innerText = '🚨 EVACUATION DIRECTIVE TRANSMITTED · PROTOCOL-2 EXECUTED 🚨';
-        evacButton.style.background = '#3e2a21';
-        evacButton.style.borderColor = '#aa7c64';
-        pinInputField.disabled = true;
-        authButton.disabled = true;
-        resetGateButton.disabled = true;
-        resetGateButton.style.opacity = '0.6';
-        authFeedbackSpan.innerText = '[LOCKDOWN] EVACUATION IN PROGRESS — All channels active.';
         
-        const statusPanel = document.querySelector('.evac-status-panel');
-        statusPanel.style.background = '#130f1a';
-        statusPanel.style.borderLeftColor = '#df8f6c';
-        const warningDiv = statusPanel.querySelector('.evac-warning');
-        warningDiv.innerHTML = '<strong>💀💀 EVACUATION DIRECTIVE ACTIVE 💀💀</strong><br> ALL SANDF ASSETS: EVAC IMMEDIATELY. OMEGA CLEARANCE ENFORCED.';
+        setStatus(`Connecting to ${remoteId}...`);
         
-        const coreBody = document.querySelector('.directive-body');
-        const extraNode = document.createElement('div');
-        extraNode.style.marginTop = '12px';
-        extraNode.style.background = '#0b121f';
-        extraNode.style.padding = '10px';
-        extraNode.style.borderLeft = '2px solid #b06f52';
-        extraNode.style.fontSize = '0.75rem';
-        extraNode.style.color = '#cbdae6';
-        extraNode.innerHTML = '<strong>📢 COMMAND TRANSMISSION (C-IN-C):</strong> All SANDF elements switch to encrypted channel 6. Execute EXODUS-7. SECOND-IN-COMMAND confirms tactical redeployment.';
-        coreBody.appendChild(extraNode);
+        // close existing connection before new one
+        if (currentConnection && currentConnection.open) {
+            currentConnection.close();
+            addMessage('[SYSTEM] Closed existing link to establish new connection.', 'received', 'PROTOCOL');
+        }
         
-        addCommsLog('✅ EVACUATION ORDER RELAYED via SATCOM and terrestrial mesh networks.');
-        addCommsLog('🔊 TACTICAL ALERT: Audio beacon transmitted to all SANDF frequencies.');
-        addCommsLog('⚠️ PROTOCOL-2 TERMINAL LOCK — historical log secured.');
-
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const beep = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            beep.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            beep.frequency.value = 960;
-            gainNode.gain.value = 0.2;
-            beep.start();
-            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.0);
-            beep.stop(audioCtx.currentTime + 1.0);
-            addCommsLog('[AUDIBLE] Emergency alert signal (960Hz) transmission sent.');
-        } catch(e) { /* no audio, still compliant */ }
+        const newConn = peer.connect(remoteId, {
+            reliable: true,
+            serialization: 'json'
+        });
+        
+        handleConnection(newConn);
+        
+        // timeout feedback
+        setTimeout(() => {
+            if (newConn && newConn.open === false && newConn.peerConnection?.iceConnectionState !== 'connected') {
+                setStatus(`Connection timeout. Ensure remote peer is online.`, true);
+                addMessage(`[TIMEOUT] Could not reach ${remoteId}. Verify ID and try again.`, 'received', 'SYSTEM');
+            }
+        }, 10000);
     }
-
-    authButton.addEventListener('click', authenticateGate);
-    resetGateButton.addEventListener('click', resetGateAccess);
-    evacButton.addEventListener('click', executeProtocol2Evacuation);
-    pinInputField.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+    
+    // event listeners
+    connectBtn.addEventListener('click', connectToRemote);
+    sendBtn.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && sendBtn.disabled === false) {
             e.preventDefault();
-            authenticateGate();
+            sendMessage();
         }
     });
-
-    gateUnlocked = false;
-    evacuationBroadcast = false;
-    evacButton.disabled = true;
-    evacButton.classList.add('disabled-evac');
-    pinInputField.value = '';
-    pinInputField.focus();
-    addCommsLog('ES-CV-1 COMMS TERMINAL: awaiting Command PIN — PROTOCOL-2 armed.');
-    addCommsLog('SANDF directive: communication protocol only. No procedure — broadcast ready.');
     
+    // initialize everything
+    initPeer();
+    
+    // clean up on page unload (optional)
+    window.addEventListener('beforeunload', () => {
+        if (currentConnection && currentConnection.open) {
+            currentConnection.close();
+        }
+        if (peer && !peer.destroyed) {
+            peer.destroy();
+        }
+    });
+    
+    // additional manual reconnect helper
+    console.log('PROTOCOL-2 · Front-end real-time communicator loaded');
 </script>
-    
 </body>
-    
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
