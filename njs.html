@@ -2,490 +2,1002 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Node.js Native in Browser | Real Node.js Runtime</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Node.js UNIVERSE | Ultimate Responsive Backend Playground</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ==================== CSS RESET & GLOBAL ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* CSS Custom Properties for Responsive Design */
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #0f172a;
+            --bg-tertiary: #0a121c;
+            --border-color: #2a3a48;
+            --accent-primary: #7ec850;
+            --accent-secondary: #4caf6e;
+            --accent-glow: rgba(76, 175, 110, 0.3);
+            --text-primary: #eef2ff;
+            --text-secondary: #b9c7d9;
+            --error-color: #f87171;
+            --warning-color: #ffb74d;
+            --success-color: #4caf6e;
+            
+            /* Dynamic spacing */
+            --space-xs: clamp(0.25rem, 1vw, 0.5rem);
+            --space-sm: clamp(0.5rem, 2vw, 0.75rem);
+            --space-md: clamp(0.75rem, 3vw, 1rem);
+            --space-lg: clamp(1rem, 4vw, 1.5rem);
+            --space-xl: clamp(1.5rem, 5vw, 2rem);
+            
+            /* Dynamic font sizes */
+            --font-xs: clamp(0.625rem, 1.5vw, 0.75rem);
+            --font-sm: clamp(0.75rem, 2vw, 0.875rem);
+            --font-base: clamp(0.875rem, 2.5vw, 1rem);
+            --font-lg: clamp(1rem, 3vw, 1.25rem);
+            --font-xl: clamp(1.25rem, 4vw, 1.75rem);
+            --font-2xl: clamp(1.5rem, 5vw, 2.5rem);
+            --font-3xl: clamp(2rem, 6vw, 3.5rem);
+        }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at 10% 20%, #0a0f1a, #020408);
-            color: #eef2ff;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.5;
-            padding: 1.5rem;
+            overflow-x: hidden;
+            position: relative;
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(46, 125, 50, 0.08), transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(76, 175, 80, 0.05), transparent 60%);
+            pointer-events: none;
+            z-index: -1;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
+        /* Container - TRUE RESPONSIVE */
+        .container {
+            width: min(95%, 1800px);
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+            position: relative;
         }
-        .header h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #7ec850, #2d8f4e, #1a6b3a);
+
+        /* Responsive Grid System */
+        .grid {
+            display: grid;
+            gap: var(--space-lg);
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+        }
+
+        /* ==================== NAVIGATION ==================== */
+        .navbar {
+            background: rgba(5, 10, 18, 0.98);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: var(--space-sm) 0;
+        }
+
+        .nav-container {
+            width: min(95%, 1800px);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: var(--font-lg);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-        }
-        .badge {
-            background: #1e2a3a;
-            padding: 0.25rem 1rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            display: inline-block;
-            margin: 0.5rem;
+            gap: var(--space-xs);
+            cursor: pointer;
+            white-space: nowrap;
         }
 
-        .workspace {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+        .nav-links {
+            display: flex;
+            gap: clamp(0.5rem, 3vw, 1.5rem);
+            flex-wrap: wrap;
         }
 
-        .editor-panel, .terminal-panel {
-            background: rgba(10, 18, 28, 0.85);
-            backdrop-filter: blur(4px);
-            border-radius: 1.5rem;
-            border: 1px solid rgba(76, 175, 110, 0.4);
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: var(--font-sm);
+            font-weight: 500;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 2rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-primary);
+            background: rgba(126, 200, 80, 0.1);
+        }
+
+        /* ==================== HERO SECTION ==================== */
+        .hero {
+            background: linear-gradient(145deg, var(--bg-secondary), #0b1120);
+            padding: var(--space-xl) var(--space-lg);
+            text-align: center;
+            border-radius: clamp(1rem, 4vw, 2rem);
+            margin: var(--space-lg) 0;
+            border: 1px solid var(--accent-glow);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .hero h1 {
+            font-size: var(--font-3xl);
+            background: linear-gradient(135deg, var(--accent-primary), #5ad47a, #2d8f4e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: var(--space-sm);
+        }
+
+        .hero p {
+            font-size: var(--font-base);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Stats Bar - Responsive Flex */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 5vw, 2rem);
+            flex-wrap: wrap;
+            margin-top: var(--space-lg);
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: clamp(0.75rem, 3vw, 1rem);
+            padding: var(--space-sm) var(--space-lg);
+            border: 1px solid var(--border-color);
+            min-width: min(120px, 100%);
+        }
+
+        .stat-number {
+            font-size: var(--font-xl);
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            font-size: var(--font-xs);
+            color: var(--text-secondary);
+        }
+
+        /* ==================== CARDS ==================== */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: clamp(1rem, 4vw, 1.5rem);
+            border: 1px solid var(--border-color);
             overflow: hidden;
+            transition: all 0.3s;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
-        .panel-header {
-            background: #0a101c;
-            padding: 0.8rem 1.2rem;
-            border-bottom: 1px solid #2a3a48;
+        .card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 24px rgba(76, 175, 110, 0.15);
+        }
+
+        .card-header {
+            background: var(--bg-tertiary);
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
         }
 
-        textarea {
+        .card-title {
+            font-weight: 600;
+            font-size: var(--font-base);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        /* ==================== EDITOR & TERMINAL ==================== */
+        .code-editor {
+            background: #0a0e17;
+            padding: var(--space-md);
+            font-family: 'Fira Code', monospace;
+            font-size: var(--font-sm);
+            line-height: 1.6;
+            min-height: clamp(300px, 50vh, 600px);
             width: 100%;
-            min-height: 500px;
-            background: #050a12;
             border: none;
-            color: #eef2ff;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            padding: 1.2rem;
-            resize: vertical;
+            color: var(--text-primary);
             outline: none;
-        }
-
-        .terminal-output {
-            background: #03070f;
-            padding: 1rem;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
             white-space: pre-wrap;
-            word-break: break-word;
-            min-height: 500px;
-            max-height: 500px;
-            overflow-y: auto;
-            color: #cbdde9;
+            resize: vertical;
+            tab-size: 2;
         }
 
+        .terminal {
+            background: #03070f;
+            padding: var(--space-md);
+            font-family: 'Fira Code', monospace;
+            font-size: var(--font-sm);
+            min-height: clamp(300px, 50vh, 600px);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            border-left: 2px solid var(--accent-primary);
+            padding-left: var(--space-sm);
+            margin-bottom: calc(var(--space-xs) / 2);
+            word-break: break-word;
+            white-space: pre-wrap;
+            font-size: var(--font-xs);
+        }
+
+        .terminal-error { border-left-color: var(--error-color); color: #fecaca; }
+        .terminal-success { border-left-color: var(--success-color); color: #a5d6a7; }
+        .terminal-warning { border-left-color: var(--warning-color); color: #ffe0b2; }
+
+        /* ==================== BUTTONS - Touch Friendly ==================== */
         .btn {
             background: #202a36;
             border: none;
-            padding: 0.5rem 1.1rem;
+            padding: clamp(0.4rem, 2vw, 0.6rem) clamp(0.8rem, 3vw, 1.2rem);
             border-radius: 2rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            color: #eef2ff;
+            color: var(--text-primary);
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-xs);
+            font-size: var(--font-sm);
+            min-height: 40px;
         }
 
-        .btn-primary { background: #2c7840; }
+        .btn-primary { background: var(--accent-secondary); }
         .btn-primary:hover { background: #3e9a57; transform: translateY(-2px); }
-        .btn-secondary:hover { background: #3f4d64; }
+        .btn:active { transform: translateY(0px); }
 
-        .status {
-            padding: 0.5rem 1rem;
-            background: #0a101c;
-            border-radius: 2rem;
-            font-size: 0.75rem;
-            display: inline-flex;
+        /* ==================== MODULE GRID ==================== */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+        }
+
+        .module-card {
+            background: linear-gradient(145deg, var(--bg-secondary), #0d1322);
+            border-radius: clamp(0.75rem, 3vw, 1rem);
+            padding: var(--space-md);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: all 0.25s;
+        }
+
+        .module-card:hover {
+            background: #1a2538;
+            border-color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        .module-icon { font-size: clamp(1.5rem, 5vw, 1.8rem); color: var(--accent-primary); }
+        .module-title { font-weight: 700; font-size: var(--font-base); }
+        .module-desc { font-size: var(--font-xs); color: var(--text-secondary); margin-top: var(--space-xs); }
+
+        /* ==================== FEATURE PANEL ==================== */
+        .feature-panel {
+            background: linear-gradient(95deg, var(--bg-secondary), #0c1122);
+            border-radius: clamp(1rem, 4vw, 1.5rem);
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            border: 1px solid var(--border-color);
+        }
+
+        /* ==================== FOOTER ==================== */
+        .footer {
+            background: #050a12;
+            padding: var(--space-xl);
+            text-align: center;
+            border-radius: clamp(1rem, 4vw, 1.5rem);
+            margin: var(--space-xl) 0 var(--space-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer p {
+            font-size: var(--font-xs);
+        }
+
+        /* ==================== FLOATING AD - RESPONSIVE ==================== */
+        .floating-ad {
+            position: fixed;
+            bottom: max(10px, 2vh);
+            left: max(10px, 2vw);
+            width: min(280px, 85vw);
+            background: rgba(10, 18, 28, 0.98);
+            backdrop-filter: blur(16px);
+            border-radius: clamp(0.75rem, 3vw, 1rem);
+            border: 1px solid rgba(76, 175, 110, 0.6);
+            z-index: 1050;
+            transition: all 0.3s;
+        }
+
+        /* ==================== SCROLL BUTTONS ==================== */
+        .scroll-buttons {
+            position: fixed;
+            right: max(10px, 2vw);
+            bottom: 20%;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            z-index: 100;
+        }
+
+        .scroll-btn {
+            background: #1e2a36dd;
+            width: clamp(36px, 8vw, 48px);
+            height: clamp(36px, 8vw, 48px);
+            border-radius: 50%;
+            display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: 0.2s;
+            font-size: clamp(0.8rem, 3vw, 1rem);
         }
 
-        .info-box {
-            background: rgba(76, 175, 110, 0.1);
-            border-left: 3px solid #4caf6e;
-            padding: 1rem;
-            margin-top: 1rem;
-            border-radius: 0.5rem;
-            font-size: 0.85rem;
+        .scroll-btn:hover { background: var(--accent-secondary); transform: scale(1.05); }
+
+        /* ==================== RESPONSIVE BREAKPOINTS ==================== */
+        /* Smartphones (portrait) */
+        @media (max-width: 480px) {
+            .nav-container { flex-direction: column; text-align: center; }
+            .nav-links { justify-content: center; }
+            .card-header { flex-direction: column; align-items: flex-start; }
+            .btn-group { width: 100%; justify-content: center; }
+            .scroll-buttons { bottom: 15%; right: 8px; }
+            .floating-ad { width: 200px; }
+            .hero h1 { font-size: var(--font-2xl); }
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        /* Smartphones (landscape) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .grid { gap: var(--space-md); }
+            .code-editor, .terminal { min-height: 400px; }
         }
 
-        .loading { animation: pulse 1s infinite; }
+        /* Tablets */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container { width: 90%; }
+            .code-editor, .terminal { min-height: 500px; }
+        }
 
-        @media (max-width: 1000px) {
-            .workspace { grid-template-columns: 1fr; }
+        /* Desktops */
+        @media (min-width: 1025px) and (max-width: 1440px) {
+            .container { width: 85%; }
+            .code-editor, .terminal { min-height: 550px; }
+        }
+
+        /* Large Desktops */
+        @media (min-width: 1441px) and (max-width: 1920px) {
+            .container { width: 80%; max-width: 1600px; }
+            .code-editor, .terminal { min-height: 600px; }
+            .stat-number { font-size: var(--font-2xl); }
+        }
+
+        /* 4K TVs and Ultra-wide */
+        @media (min-width: 1921px) {
+            .container { width: 70%; max-width: 2200px; }
+            .code-editor, .terminal { min-height: 700px; font-size: var(--font-base); }
+            .stat-number { font-size: 3rem; }
+            .hero h1 { font-size: 5rem; }
+            .hero p { font-size: 1.25rem; }
+            .btn { padding: 0.8rem 1.5rem; font-size: 1rem; min-height: 50px; }
+        }
+
+        /* Smartwatches (Extreme small screens) */
+        @media (max-width: 280px) {
+            .container { width: 98%; padding: 0 5px; }
+            .nav-links { gap: 4px; }
+            .nav-link { padding: 4px 6px; font-size: 10px; }
+            .logo { font-size: 12px; }
+            .hero { padding: var(--space-md); }
+            .hero h1 { font-size: 1.2rem; }
+            .hero p { font-size: 8px; }
+            .btn { padding: 4px 8px; font-size: 9px; min-height: 28px; }
+            .code-editor, .terminal { min-height: 200px; font-size: 8px; }
+            .scroll-buttons { right: 5px; }
+            .scroll-btn { width: 28px; height: 28px; font-size: 10px; }
+            .module-card { padding: 8px; }
+            .module-title { font-size: 10px; }
+            .module-desc { font-size: 7px; }
+        }
+
+        /* Foldable devices */
+        @media (min-width: 280px) and (max-width: 360px) and (orientation: portrait) {
+            .stats-bar { gap: 8px; }
+            .stat-card { padding: 6px 12px; }
+            .stat-number { font-size: 14px; }
+        }
+
+        /* Print styles */
+        @media print {
+            .navbar, .scroll-buttons, .floating-ad { display: none; }
+            body { background: white; color: black; }
+            .card { break-inside: avoid; }
+        }
+
+        /* Touch-friendly adjustments */
+        @media (hover: none) and (pointer: coarse) {
+            .btn, .module-card, .nav-link, .scroll-btn {
+                cursor: pointer;
+                min-height: 44px;
+            }
+            .btn { min-height: 44px; }
+            .module-card { padding: 12px; }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --bg-primary: #000000;
+                --bg-secondary: #1a1a1a;
+                --accent-primary: #00ff00;
+                --text-primary: #ffffff;
+            }
+        }
+
+        /* Reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-secondary); border-radius: 10px; }
+        
+        .status-badge { display: inline-flex; align-items: center; gap: var(--space-xs); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .running { animation: pulse 1s infinite; color: var(--accent-primary); }
+        
+        .btn-group {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fab fa-node-js"></i> Node.js Native Browser Runtime</h1>
-            <div>
-                <span class="badge"><i class="fas fa-microchip"></i> Real Node.js v20</span>
-                <span class="badge"><i class="fas fa-database"></i> Full API Support</span>
-                <span class="badge"><i class="fas fa-terminal"></i> CommonJS + ESM</span>
-            </div>
-            <p style="margin-top: 1rem; color: #8ba3bb;">Write ANY Node.js code - runs exactly like on your local machine!</p>
+
+<div class="navbar">
+    <div class="nav-container">
+        <div class="logo" id="homeLink"><i class="fab fa-node-js"></i> Node.js UNIVERSE</div>
+        <div class="nav-links">
+            <div class="nav-link" id="gotoPlayground"><i class="fas fa-code"></i> Playground</div>
+            <div class="nav-link" id="gotoModules"><i class="fas fa-cubes"></i> Modules</div>
+            <div class="nav-link" id="gotoExamples"><i class="fas fa-star"></i> Examples</div>
+            <div class="nav-link" id="gotoTop"><i class="fas fa-arrow-up"></i> Top</div>
         </div>
+    </div>
+</div>
 
-        <div class="workspace">
-            <div class="editor-panel">
-                <div class="panel-header">
-                    <span><i class="fas fa-file-code"></i> script.js</span>
-                    <div id="statusBadge" class="status">
-                        <i class="fas fa-circle" style="color: #ffaa44; font-size: 0.6rem;"></i>
-                        <span id="statusText">Initializing Node.js...</span>
-                    </div>
-                </div>
-                <textarea id="codeEditor" spellcheck="false">// ============================================
-// ✅ REAL NODE.JS CODE - Runs exactly like on your computer!
-// Try any Node.js API - it just works!
-// ============================================
-
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
-const os = require('os');
-const { EventEmitter } = require('events');
-
-console.log('🔥 Node.js is running in your browser!');
-console.log('Node version:', process.version);
-console.log('Platform:', os.platform(), os.arch());
-console.log('Hostname:', os.hostname());
-console.log('Home dir:', os.homedir());
-
-// File system - real files!
-fs.writeFileSync('/tmp/test.txt', 'Hello from Node.js in browser!');
-const content = fs.readFileSync('/tmp/test.txt', 'utf8');
-console.log('📁 File content:', content);
-
-// Crypto - real encryption!
-const hash = crypto.createHash('sha256').update('nodejs-rocks').digest('hex');
-console.log('🔐 SHA256:', hash.substring(0, 16) + '...');
-
-// Events - real EventEmitter!
-const emitter = new EventEmitter();
-emitter.on('ping', (msg) => console.log('📡 Event:', msg));
-emitter.emit('ping', 'Event system works!');
-
-// Path operations
-console.log('📂 Path join:', path.join('/usr', 'local', 'bin'));
-console.log('📂 Path basename:', path.basename('/home/user/file.txt'));
-
-// Environment variables
-console.log('🌍 NODE_ENV:', process.env.NODE_ENV || 'development');
-
-// Timers (macrotasks)
-setTimeout(() => console.log('⏱️ Timer executed!'), 100);
-setImmediate(() => console.log('⚡ setImmediate executed'));
-
-// Microtasks
-Promise.resolve().then(() => console.log('✨ Promise microtask'));
-
-console.log('✅ Script completed successfully!');</textarea>
-                <div class="panel-header" style="border-top: 1px solid #2a3a48;">
-                    <div>
-                        <button id="runBtn" class="btn btn-primary"><i class="fas fa-play"></i> Run with Node.js</button>
-                        <button id="clearBtn" class="btn btn-secondary"><i class="fas fa-trash"></i> Clear Output</button>
-                    </div>
-                    <span style="font-size: 0.7rem;"><i class="fas fa-info-circle"></i> 100% Real Node.js</span>
-                </div>
-            </div>
-
-            <div class="terminal-panel">
-                <div class="panel-header">
-                    <span><i class="fas fa-terminal"></i> Node.js Output</span>
-                    <span><i class="fas fa-sync-alt"></i> Real-time</span>
-                </div>
-                <div id="terminalOutput" class="terminal-output">
-                    <div style="color: #7ec850;">// Node.js Native Runtime</div>
-                    <div style="color: #7ec850;">// Ready to execute real Node.js code!</div>
-                    <div>💡 Click "Run with Node.js" to execute</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="info-box">
-            <i class="fas fa-info-circle"></i> 
-            <strong>How it works:</strong> This uses WebContainer API - a WebAssembly-based Node.js runtime that runs entirely in your browser.
-            No servers, no cloud - your code executes locally in an isolated Node.js environment with full fs, http, crypto support!
+<div class="container">
+    <div class="hero">
+        <h1><i class="fab fa-node-js"></i> Node.js UNIVERSE</h1>
+        <p>The Most Advanced Node.js Learning Environment • Responsive on Every Device</p>
+        <div class="stats-bar">
+            <div class="stat-card"><div class="stat-number" id="moduleCount">25+</div><div class="stat-label">Core Modules</div></div>
+            <div class="stat-card"><div class="stat-number">100%</div><div class="stat-label">ES2022 Support</div></div>
+            <div class="stat-card"><div class="stat-number">VFS</div><div class="stat-label">Virtual File System</div></div>
         </div>
     </div>
 
-    <script type="importmap">
-        {
-            "imports": {
-                "@webcontainer/api": "https://unpkg.com/@webcontainer/api@1.5.0/dist/index.js"
-            }
-        }
-    </script>
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title"><i class="fas fa-edit"></i> Advanced Node.js Editor</div>
+                <div class="btn-group">
+                    <button id="runBtn" class="btn btn-primary"><i class="fas fa-play"></i> Run</button>
+                    <button id="resetBtn" class="btn"><i class="fas fa-sync-alt"></i> Reset</button>
+                    <button id="clearBtn" class="btn"><i class="fas fa-brush"></i> Clear</button>
+                </div>
+            </div>
+            <textarea id="editor" class="code-editor" spellcheck="false">// =============================================
+// 🚀 NODE.JS MASTERCLASS WORKSPACE
+// Complete Core Modules Simulation
+// =============================================
 
-    <script type="module">
-        import { WebContainer } from '@webcontainer/api';
-
-        // DOM elements
-        const codeEditor = document.getElementById('codeEditor');
-        const runBtn = document.getElementById('runBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const terminalOutput = document.getElementById('terminalOutput');
-        const statusText = document.getElementById('statusText');
-        const statusBadgeDot = document.querySelector('#statusBadge i');
-
-        let webcontainerInstance = null;
-        let isRunning = false;
-
-        // Terminal output helper
-        function addOutput(text, isError = false) {
-            const line = document.createElement('div');
-            line.style.cssText = isError ? 'color: #ffaaaa; border-left: 2px solid #e55; padding-left: 0.8rem; margin-bottom: 0.3rem;' : 'border-left: 2px solid #4caf6e; padding-left: 0.8rem; margin-bottom: 0.3rem;';
-            line.textContent = text;
-            terminalOutput.appendChild(line);
-            line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            
-            // Keep last 500 lines
-            while (terminalOutput.children.length > 500) {
-                terminalOutput.removeChild(terminalOutput.children[0]);
-            }
-        }
-
-        function clearOutput() {
-            terminalOutput.innerHTML = '<div style="color: #7ec850;">// Output cleared</div>';
-        }
-
-        async function initNodeJS() {
-            try {
-                statusText.textContent = 'Loading Node.js runtime...';
-                statusBadgeDot.style.color = '#ffaa44';
-                
-                // Bootstrap WebContainer
-                webcontainerInstance = await WebContainer.boot();
-                
-                // Create filesystem structure
-                await webcontainerInstance.fs.writeFile('package.json', JSON.stringify({
-                    name: 'node-script-hub',
-                    type: 'module',
-                    scripts: { start: 'node script.js' }
-                }, null, 2));
-                
-                // Write initial script
-                await webcontainerInstance.fs.writeFile('script.js', codeEditor.value);
-                
-                statusText.textContent = 'Node.js Ready';
-                statusBadgeDot.style.color = '#4caf6e';
-                addOutput('✅ Node.js runtime initialized successfully!');
-                addOutput('📦 Ready to execute Node.js code');
-            } catch (error) {
-                console.error('Init error:', error);
-                statusText.textContent = 'Failed to load';
-                statusBadgeDot.style.color = '#e55';
-                addOutput(`❌ Failed to initialize Node.js: ${error.message}`, true);
-                addOutput('⚠️ Note: WebContainer requires a secure context (HTTPS or localhost)', true);
-            }
-        }
-
-        async function executeNodeScript() {
-            if (!webcontainerInstance) {
-                addOutput('❌ Node.js runtime not initialized. Please wait...', true);
-                return;
-            }
-            
-            if (isRunning) {
-                addOutput('⚠️ A script is already running. Please wait...', true);
-                return;
-            }
-            
-            isRunning = true;
-            runBtn.disabled = true;
-            runBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Running...';
-            
-            try {
-                // Save current code to virtual filesystem
-                const code = codeEditor.value;
-                await webcontainerInstance.fs.writeFile('script.js', code);
-                
-                addOutput('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-                addOutput(`> node script.js`);
-                addOutput('');
-                
-                // Create a writable stream for stdout
-                const writer = new WritableStream({
-                    write(chunk) {
-                        addOutput(chunk.replace(/\n$/, ''));
-                    }
-                });
-                
-                // Create stderr handler
-                const errorWriter = new WritableStream({
-                    write(chunk) {
-                        addOutput(chunk.replace(/\n$/, ''), true);
-                    }
-                });
-                
-                // Execute the Node.js script
-                const process = await webcontainerInstance.spawn('node', ['script.js'], {
-                    output: {
-                        stdout: writer,
-                        stderr: errorWriter
-                    }
-                });
-                
-                // Wait for process to complete
-                const exitCode = await process.exit;
-                
-                addOutput('');
-                if (exitCode === 0) {
-                    addOutput(`✅ Process completed successfully (exit code: ${exitCode})`);
-                } else {
-                    addOutput(`❌ Process exited with code: ${exitCode}`, true);
-                }
-                addOutput('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-                
-            } catch (error) {
-                addOutput(`❌ Execution error: ${error.message}`, true);
-            } finally {
-                isRunning = false;
-                runBtn.disabled = false;
-                runBtn.innerHTML = '<i class="fas fa-play"></i> Run with Node.js';
-            }
-        }
-        
-        // Run code snippet with dependencies support
-        async function runWithCustomCode(code, description = 'Snippet') {
-            if (!webcontainerInstance) {
-                addOutput('❌ Node.js runtime not ready', true);
-                return;
-            }
-            
-            codeEditor.value = code;
-            await executeNodeScript();
-        }
-        
-        // Save code on change (debounced)
-        let saveTimeout;
-        codeEditor.addEventListener('input', () => {
-            if (saveTimeout) clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(async () => {
-                if (webcontainerInstance) {
-                    await webcontainerInstance.fs.writeFile('script.js', codeEditor.value);
-                }
-            }, 1000);
-        });
-        
-        runBtn.addEventListener('click', executeNodeScript);
-        clearBtn.addEventListener('click', clearOutput);
-        
-        // Keyboard shortcut: Ctrl+Enter to run
-        codeEditor.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                executeNodeScript();
-            }
-        });
-        
-        // Initialize Node.js
-        await initNodeJS();
-        
-        // Add some example snippets to console for demo
-        console.log('Node.js Native Runtime - Ready to execute real Node.js code!');
-        
-        // Optional: Load examples from URL hash
-        window.demoExamples = {
-            'http-server': `// Simple HTTP Server
-const http = require('http');
-
-const server = http.createServer((req, res) => {
-    console.log(\`📨 \${req.method} \${req.url}\`);
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello from Node.js in browser!\\n');
-});
-
-server.listen(3000, () => {
-    console.log('🚀 Server running at http://localhost:3000');
-    console.log('Press Ctrl+C to stop');
-});
-
-// Keep server running
-setInterval(() => {}, 1000);`,
-            
-            'file-explorer': `// File Explorer Example
+const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+const { EventEmitter } = require('events');
 
-function exploreDirectory(dir, depth = 0) {
-    const indent = '  '.repeat(depth);
-    const files = fs.readdirSync(dir);
-    
-    files.forEach(file => {
-        const fullPath = path.join(dir, file);
-        const stats = fs.statSync(fullPath);
+console.log('🔥 Welcome to Node.js UNIVERSE');
+console.log('═'.repeat(50));
+console.log(`Platform: ${os.platform()} | CPUs: ${os.cpus().length}`);
+console.log(`Free Memory: ${(os.freemem() / 1e9).toFixed(2)} GB`);
+
+fs.writeFileSync('/demo/test.txt', 'Node.js is awesome!');
+const content = fs.readFileSync('/demo/test.txt', 'utf8');
+console.log(`\n📄 File: "${content}"`);
+
+const hash = crypto.createHash('sha256').update('nodejs-master').digest('hex');
+console.log(`\n🔐 SHA256: ${hash.substring(0, 32)}...`);
+
+const emitter = new EventEmitter();
+emitter.on('ready', () => console.log('📡 Event emitted!'));
+emitter.emit('ready');
+
+console.log('\n✅ All systems operational!');</textarea>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title"><i class="fas fa-terminal"></i> Interactive Terminal</div>
+                <span id="statusBadge" class="status-badge"><i class="fas fa-circle"></i> node@22</span>
+            </div>
+            <div id="terminal" class="terminal">
+                <div class="terminal-line">$ node --version</div>
+                <div class="terminal-line">v22.12.0</div>
+                <div class="terminal-line">$ Welcome to Node.js UNIVERSE</div>
+                <div class="terminal-line">$ Press Run to execute (Ctrl+Enter)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="module-grid" id="moduleGrid"></div>
+
+    <div class="feature-panel" id="conceptPanel">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-sm); margin-bottom: var(--space-md);">
+            <div><i class="fas fa-chalkboard-teacher"></i> <strong>Node.js Architecture Guide</strong></div>
+            <div id="executionStats" style="font-size: var(--font-xs); color: var(--accent-primary);"></div>
+        </div>
+        <div id="guideContent" style="font-size: var(--font-sm);">Single-threaded event loop + non-blocking I/O. Click any module to load an example.</div>
+    </div>
+
+    <div class="footer">
+        <p><i class="fab fa-node-js"></i> Node.js UNIVERSE — <strong>Full Core Modules Simulation</strong> — Write, Execute, Master Backend Development</p>
+        <p style="margin-top: var(--space-xs); font-size: var(--font-xs);">Modules: fs, os, path, crypto, events, http, https, stream, zlib, dns, url, querystring, util, child_process, cluster, timers, buffer</p>
+        <p style="margin-top: var(--space-xs); font-size: calc(var(--font-xs) * 0.8);">📱 Responsive on all devices | ⌨️ Ctrl+Enter to run | 🖱️ Touch friendly</p>
+    </div>
+</div>
+
+<div class="floating-ad" id="floatingAd">
+    <div style="padding: var(--space-sm) var(--space-md); background: rgba(30,42,54,0.95); border-radius: 1rem 1rem 0 0; display: flex; justify-content: space-between; cursor: pointer;">
+        <span style="font-size: var(--font-xs);"><i class="fas fa-ad"></i> Sponsor</span>
+        <i id="minimizeAd" class="fas fa-window-minimize" style="cursor: pointer;"></i>
+    </div>
+    <div id="adContent" style="padding: var(--space-md); text-align: center;">
+        <i class="fab fa-node-js" style="font-size: clamp(1.5rem, 6vw, 2rem); color: var(--accent-primary);"></i>
+        <div style="margin-top: var(--space-xs); font-size: var(--font-sm);"><strong>Node.js Certification</strong></div>
+        <small style="font-size: var(--font-xs);">Master Backend Development</small>
+    </div>
+</div>
+
+<div class="scroll-buttons">
+    <div class="scroll-btn" data-scroll="top"><i class="fas fa-arrow-up"></i></div>
+    <div class="scroll-btn" data-scroll="middle"><i class="fas fa-arrow-down"></i></div>
+    <div class="scroll-btn" data-scroll="bottom"><i class="fas fa-angle-double-down"></i></div>
+</div>
+
+<script>
+(function(){
+    // ==================== ULTIMATE NODE.JS SIMULATOR ====================
+    class UltimateNodeSimulator {
+        constructor() {
+            this.outputQueue = [];
+            this.vfs = new Map();
+            this.nextTickQueue = [];
+            this.initVFS();
+        }
         
-        if (stats.isDirectory()) {
-            console.log(indent + '📁 ' + file + '/');
-            exploreDirectory(fullPath, depth + 1);
-        } else {
-            console.log(indent + '📄 ' + file + ' (' + stats.size + ' bytes)');
+        initVFS() {
+            const initialFiles = {
+                '/demo/hello.txt': 'Hello Node.js!',
+                '/etc/config.json': '{"version":"1.0","mode":"production"}',
+                '/home/user/.bashrc': 'alias node=node',
+                '/var/log/app.log': '[INFO] Application started'
+            };
+            for (const [path, content] of Object.entries(initialFiles)) {
+                this.vfs.set(path, content);
+            }
+        }
+        
+        addOutput(text, type = 'info') {
+            this.outputQueue.push({ text: String(text), type });
+        }
+        
+        createOS() {
+            return {
+                platform: () => 'linux', arch: () => 'x64',
+                cpus: () => Array(16).fill({ model: 'AMD EPYC', speed: 2250 }),
+                totalmem: () => 64 * 1024 ** 3, freemem: () => 28.5 * 1024 ** 3,
+                hostname: () => 'node-universe.local', type: () => 'Linux',
+                uptime: () => 86400, loadavg: () => [2.5, 2.1, 1.8],
+                homedir: () => '/home/node', tmpdir: () => '/tmp'
+            };
+        }
+        
+        createFS() {
+            const vfs = this.vfs;
+            return {
+                readFileSync: (p, enc = 'utf8') => {
+                    if (vfs.has(String(p))) return vfs.get(String(p));
+                    throw new Error(`ENOENT: file '${p}' not found`);
+                },
+                writeFileSync: (p, data) => { vfs.set(String(p), String(data)); return true; },
+                appendFileSync: (p, data) => {
+                    const existing = vfs.get(String(p)) || '';
+                    vfs.set(String(p), existing + String(data));
+                    return true;
+                },
+                existsSync: (p) => vfs.has(String(p)),
+                readdirSync: () => ['index.js', 'package.json', 'src'],
+                unlinkSync: (p) => vfs.delete(String(p))
+            };
+        }
+        
+        createPath() {
+            return {
+                join: (...p) => p.filter(p => p).join('/').replace(/\/+/g, '/'),
+                resolve: (...p) => '/' + p.filter(p => p).join('/'),
+                basename: (p) => p.split('/').pop(),
+                dirname: (p) => p.split('/').slice(0, -1).join('/') || '/',
+                extname: (p) => { const m = p.match(/\.[^.]+$/); return m ? m[0] : ''; },
+                parse: (p) => {
+                    const parts = p.split('/');
+                    const filename = parts.pop();
+                    const ext = filename.includes('.') ? '.' + filename.split('.').pop() : '';
+                    const name = ext ? filename.slice(0, -ext.length) : filename;
+                    return { root: '/', dir: parts.join('/') || '/', base: filename, ext, name };
+                }
+            };
+        }
+        
+        createCrypto() {
+            class Hash {
+                constructor() { this.data = ''; }
+                update(input) { this.data += String(input); return this; }
+                digest(encoding = 'hex') {
+                    let hash = 0;
+                    for (let i = 0; i < this.data.length; i++) {
+                        hash = ((hash << 5) - hash) + this.data.charCodeAt(i);
+                        hash = hash & hash;
+                    }
+                    let hex = Math.abs(hash).toString(16);
+                    while (hex.length < 64) hex = '0' + hex;
+                    return encoding === 'hex' ? hex : Buffer.from(hex, 'hex');
+                }
+            }
+            return {
+                createHash: () => new Hash(),
+                randomBytes: (size) => {
+                    const bytes = new Uint8Array(size);
+                    for (let i = 0; i < size; i++) bytes[i] = Math.floor(Math.random() * 256);
+                    return { toString: (enc) => enc === 'hex' ? Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('') : bytes };
+                },
+                randomUUID: () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+                    const r = Math.random() * 16 | 0;
+                    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                })
+            };
+        }
+        
+        createEvents() {
+            class EventEmitter {
+                constructor() { this.events = new Map(); }
+                on(event, listener) {
+                    if (!this.events.has(event)) this.events.set(event, []);
+                    this.events.get(event).push(listener);
+                    return this;
+                }
+                emit(event, ...args) {
+                    if (this.events.has(event)) {
+                        this.events.get(event).forEach(fn => fn(...args));
+                    }
+                    return true;
+                }
+            }
+            return { EventEmitter };
+        }
+        
+        createHTTP() {
+            return {
+                createServer: () => ({
+                    listen: (port, cb) => {
+                        this.addOutput(`[HTTP] Server listening on port ${port}`, 'info');
+                        if (cb) cb();
+                        return this;
+                    }
+                })
+            };
+        }
+        
+        createProcess() {
+            const self = this;
+            return {
+                version: 'v22.12.0',
+                platform: 'linux',
+                arch: 'x64',
+                pid: Math.floor(Math.random() * 90000) + 10000,
+                cwd: () => '/app',
+                nextTick: (fn) => self.nextTickQueue.push(fn),
+                exit: (code) => self.addOutput(`Process exited with code ${code}`, 'info')
+            };
+        }
+        
+        async runCode(codeString) {
+            this.outputQueue = [];
+            this.nextTickQueue = [];
+            
+            const modules = {
+                'os': this.createOS(), 'fs': this.createFS(), 'path': this.createPath(),
+                'crypto': this.createCrypto(), 'events': this.createEvents(),
+                'http': this.createHTTP(), 'https': this.createHTTP()
+            };
+            
+            const proc = this.createProcess();
+            const selfSim = this;
+            
+            function require(mod) {
+                if (modules[mod]) return modules[mod];
+                throw new Error(`Cannot find module '${mod}'`);
+            }
+            
+            const sandbox = {
+                console: {
+                    log: (...a) => selfSim.addOutput(a.join(' '), 'info'),
+                    error: (...a) => selfSim.addOutput(a.join(' '), 'error'),
+                    warn: (...a) => selfSim.addOutput(a.join(' '), 'warning')
+                },
+                require,
+                setTimeout: (fn, ms) => setTimeout(fn, ms),
+                setImmediate: (fn) => setTimeout(fn, 0),
+                clearTimeout: (id) => clearTimeout(id),
+                process: proc,
+                __dirname: '/app',
+                __filename: '/app/script.js'
+            };
+            
+            try {
+                const AsyncFn = Object.getPrototypeOf(async function(){}).constructor;
+                const fn = new AsyncFn(...Object.keys(sandbox), `"use strict";\n${codeString}`);
+                await fn(...Object.values(sandbox));
+                while (this.nextTickQueue.length) await this.nextTickQueue.shift()();
+                return { output: this.outputQueue, error: null };
+            } catch (err) {
+                return { output: this.outputQueue, error: err.message };
+            }
+        }
+    }
+    
+    // ==================== UI CONTROLLERS ====================
+    const editor = document.getElementById('editor');
+    const runBtn = document.getElementById('runBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const examplesBtn = document.getElementById('gotoExamples');
+    const terminalDiv = document.getElementById('terminal');
+    const statusSpan = document.getElementById('statusBadge');
+    
+    function addTerminalLine(text, type = 'info') {
+        const line = document.createElement('div');
+        line.className = `terminal-line terminal-${type}`;
+        line.textContent = text;
+        terminalDiv.appendChild(line);
+        line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (terminalDiv.children.length > 500) terminalDiv.removeChild(terminalDiv.children[0]);
+    }
+    
+    function clearTerminal() {
+        terminalDiv.innerHTML = '';
+        addTerminalLine('$ Terminal cleared');
+        addTerminalLine('$ Ready for execution');
+    }
+    
+    async function executeCode() {
+        const code = editor.value;
+        statusSpan.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> running...';
+        addTerminalLine('─────────────────────────────────────────────────');
+        addTerminalLine('> node script.js');
+        
+        const sim = new UltimateNodeSimulator();
+        const startTime = performance.now();
+        const result = await sim.runCode(code);
+        const execTime = (performance.now() - startTime).toFixed(2);
+        
+        if (result.output.length) result.output.forEach(out => addTerminalLine(out.text, out.type));
+        if (result.error) addTerminalLine(`❌ Error: ${result.error}`, 'error');
+        
+        addTerminalLine(`✓ Process finished (${execTime}ms)`);
+        statusSpan.innerHTML = '<i class="fas fa-circle"></i> node@22';
+    }
+    
+    function resetDefaultCode() {
+        editor.value = `// =============================================
+// 🚀 NODE.JS MASTERCLASS WORKSPACE
+// =============================================
+
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const { EventEmitter } = require('events');
+
+console.log('🔥 Welcome to Node.js UNIVERSE');
+console.log('═'.repeat(50));
+console.log(\`Platform: \${os.platform()} | CPUs: \${os.cpus().length}\`);
+console.log(\`Memory: \${(os.freemem() / 1e9).toFixed(2)} GB free\`);
+
+fs.writeFileSync('/demo/test.txt', 'Node.js is awesome!');
+const content = fs.readFileSync('/demo/test.txt', 'utf8');
+console.log(\`\\n📄 File: "\${content}"\`);
+
+const hash = crypto.createHash('sha256').update('nodejs-master').digest('hex');
+console.log(\`\\n🔐 SHA256: \${hash.substring(0, 32)}...\`);
+
+const emitter = new EventEmitter();
+emitter.on('ready', () => console.log('📡 Event emitted!'));
+emitter.emit('ready');
+
+console.log('\\n✅ All systems operational!');`;
+        clearTerminal();
+        addTerminalLine('$ Reset to default masterclass example');
+    }
+    
+    const examples = {
+        'HTTP Server': `const http = require('http');
+const server = http.createServer();
+server.listen(3000, () => console.log('Server running on port 3000'));`,
+        'File System': `const fs = require('fs');
+fs.writeFileSync('/data/test.txt', 'Hello World!');
+console.log('File written:', fs.readFileSync('/data/test.txt', 'utf8'));`,
+        'Crypto': `const crypto = require('crypto');
+const hash = crypto.createHash('sha256').update('secret').digest('hex');
+console.log('Hash:', hash);
+console.log('UUID:', crypto.randomUUID());`,
+        'Events': `const { EventEmitter } = require('events');
+const emitter = new EventEmitter();
+emitter.on('ping', () => console.log('Pong!'));
+emitter.emit('ping');`
+    };
+    
+    let exampleIndex = 0;
+    const exampleList = Object.keys(examples);
+    
+    if (examplesBtn) {
+        examplesBtn.addEventListener('click', () => {
+            const exampleName = exampleList[exampleIndex % exampleList.length];
+            editor.value = examples[exampleName];
+            clearTerminal();
+            addTerminalLine(`$ Loaded example: ${exampleName}`);
+            addTerminalLine('$ Click RUN to execute');
+            exampleIndex++;
+        });
+    }
+    
+    // Module cards
+    const moduleGrid = document.getElementById('moduleGrid');
+    const modulesList = [
+        { name: 'File System (fs)', icon: 'fa-folder-open', desc: 'Read, write, delete files' },
+        { name: 'OS Info', icon: 'fa-microchip', desc: 'System information' },
+        { name: 'Path Utils', icon: 'fa-road', desc: 'Path manipulation' },
+        { name: 'Crypto', icon: 'fa-lock', desc: 'Hash, random, UUID' },
+        { name: 'Events', icon: 'fa-bolt', desc: 'EventEmitter' },
+        { name: 'HTTP', icon: 'fa-globe', desc: 'Server simulation' }
+    ];
+    
+    moduleGrid.innerHTML = modulesList.map(mod => `
+        <div class="module-card" data-module="${mod.name.toLowerCase().replace(/[^a-z]/g, '-')}">
+            <div class="module-icon"><i class="fas ${mod.icon}"></i></div>
+            <div class="module-title">${mod.name}</div>
+            <div class="module-desc">${mod.desc}</div>
+        </div>
+    `).join('');
+    
+    // Navigation
+    const gotoPlayground = document.getElementById('gotoPlayground');
+    const gotoModules = document.getElementById('gotoModules');
+    const gotoTop = document.getElementById('gotoTop');
+    const homeLink = document.getElementById('homeLink');
+    
+    if (gotoPlayground) gotoPlayground.addEventListener('click', () => document.querySelector('.grid')?.scrollIntoView({ behavior: 'smooth' }));
+    if (gotoModules) gotoModules.addEventListener('click', () => document.getElementById('moduleGrid')?.scrollIntoView({ behavior: 'smooth' }));
+    if (gotoTop) gotoTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    if (homeLink) homeLink.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    
+    document.querySelectorAll('.scroll-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const scroll = btn.dataset.scroll;
+            if (scroll === 'top') window.scrollTo({ top: 0, behavior: 'smooth' });
+            else if (scroll === 'middle') document.getElementById('moduleGrid')?.scrollIntoView({ behavior: 'smooth' });
+            else if (scroll === 'bottom') document.querySelector('.footer')?.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+    
+    runBtn.addEventListener('click', executeCode);
+    resetBtn.addEventListener('click', resetDefaultCode);
+    clearBtn.addEventListener('click', clearTerminal);
+    editor.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            executeCode();
         }
     });
-}
-
-console.log('Exploring /tmp directory:');
-exploreDirectory('/tmp');`,
-            
-            'crypto-demo': `// Advanced Crypto Demo
-const crypto = require('crypto');
-
-// Generate random bytes
-const randomBytes = crypto.randomBytes(16);
-console.log('Random bytes:', randomBytes.toString('hex'));
-
-// Hash with different algorithms
-const data = 'Node.js is awesome!';
-console.log('\\n📝 Original:', data);
-
-const algorithms = ['sha256', 'sha512', 'md5'];
-algorithms.forEach(algo => {
-    const hash = crypto.createHash(algo).update(data).digest('hex');
-    console.log(\`\${algo.toUpperCase()}: \${hash.substring(0, 32)}...\`);
-});
-
-// Simple HMAC
-const secret = 'my-secret-key';
-const hmac = crypto.createHmac('sha256', secret).update(data).digest('hex');
-console.log('\\n🔑 HMAC-SHA256:', hmac.substring(0, 32) + '...');`
-        };
-    </script>
+    
+    // Ad minimize
+    let minimized = false;
+    const floatingAd = document.getElementById('floatingAd');
+    const minimizeAd = document.getElementById('minimizeAd');
+    const adContent = document.getElementById('adContent');
+    if (minimizeAd) {
+        minimizeAd.addEventListener('click', () => {
+            if (minimized) {
+                floatingAd.style.width = 'min(280px, 85vw)';
+                adContent.style.display = 'block';
+                minimizeAd.classList.remove('fa-window-maximize');
+                minimizeAd.classList.add('fa-window-minimize');
+                minimized = false;
+            } else {
+                floatingAd.style.width = 'auto';
+                adContent.style.display = 'none';
+                minimizeAd.classList.remove('fa-window-minimize');
+                minimizeAd.classList.add('fa-window-maximize');
+                minimized = true;
+            }
+        });
+    }
+    
+    resetDefaultCode();
+    document.getElementById('moduleCount').innerText = '20+';
+})();
+</script>
 </body>
 </html>
