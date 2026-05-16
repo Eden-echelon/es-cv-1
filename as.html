@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>PROTOCOL-7 • UNDERGROUND PERPETUAL RECORDER & WALKIE-TALKIE [ADVANCED]</title>
+    <title>PROTOCOL-7 · Perpetual Recorder + PTT Walkie-Talkie</title>
     <style>
         * {
             box-sizing: border-box;
@@ -11,1101 +11,399 @@
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
-            font-family: 'Courier New', 'Fira Code', monospace;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
+            background: #0a0f1e;
+            color: #cfd8dc;
+            font-family: 'Courier New', monospace;
             margin: 0;
+            padding: 20px;
         }
 
-        .protocol-container {
-            max-width: 1400px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(2px);
-            border: 2px solid #2aff9e;
-            box-shadow: 0 0 20px rgba(42, 255, 158, 0.3), inset 0 0 10px rgba(0,255,170,0.1);
-            border-radius: 28px;
-            padding: 20px 22px 26px;
-            transition: all 0.2s;
-        }
-
-        h1 {
-            font-size: 1.6rem;
-            letter-spacing: 3px;
-            color: #2aff9e;
-            text-shadow: 0 0 6px #1eff90;
-            border-left: 6px solid #2aff9e;
-            padding-left: 18px;
-            margin-top: 0;
-            margin-bottom: 18px;
-            font-weight: bold;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .status-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            justify-content: space-between;
             background: #000000aa;
-            border-radius: 40px;
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
             padding: 12px 20px;
-            margin-bottom: 24px;
-            border: 1px solid #2aff9e55;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
             font-weight: bold;
-        }
-
-        .badge {
-            background: #101418;
-            padding: 6px 14px;
-            border-radius: 32px;
-            color: #b3ffe0;
-            font-size: 0.8rem;
-            font-family: monospace;
-            border-left: 3px solid #2aff9e;
+            border: 1px solid #2c3e66;
         }
 
         .recording-led {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: #ff3366;
+            background-color: #e74c3c;
+            box-shadow: 0 0 6px #e74c3c;
+            animation: pulse 1.2s infinite;
             margin-right: 8px;
-            box-shadow: 0 0 8px #ff3366;
-            animation: pulseRed 1.2s infinite;
         }
 
-        .transmit-led {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #2aff9e;
-            margin-right: 8px;
-            box-shadow: 0 0 8px #2aff9e;
-            transition: all 0.1s;
-        }
-
-        .transmit-led.active {
-            animation: pulseGreen 0.5s infinite;
-            background: #ffaa00;
-            box-shadow: 0 0 12px #ffaa00;
-        }
-
-        @keyframes pulseRed {
-            0% { opacity: 0.4; transform: scale(0.8);}
+        @keyframes pulse {
+            0% { opacity: 0.3; transform: scale(0.8);}
             100% { opacity: 1; transform: scale(1.2);}
         }
 
-        @keyframes pulseGreen {
-            0% { opacity: 0.6; transform: scale(0.9);}
-            100% { opacity: 1; transform: scale(1.3);}
-        }
-
-        .grid-2col {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            margin-bottom: 28px;
-        }
-
-        .card {
-            background: #03060cee;
-            border-radius: 24px;
-            border: 1px solid #2aff9e66;
-            padding: 18px;
-            flex: 1;
-            min-width: 250px;
-            backdrop-filter: blur(4px);
-        }
-
-        .card h3 {
-            color: #2aff9e;
-            margin-top: 0;
-            margin-bottom: 14px;
-            font-size: 1.2rem;
-            border-bottom: 1px dashed #2aff9e80;
-            display: inline-block;
-        }
-
-        button {
-            background: #11161f;
-            border: 1.5px solid #2aff9e;
-            color: #cafff0;
-            font-family: monospace;
+        .ptt-button {
+            background: #2c3e66;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
             font-weight: bold;
-            padding: 8px 16px;
+            padding: 20px;
+            width: 100%;
             border-radius: 60px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.75rem;
-            margin: 4px 6px 4px 0;
-        }
-
-        button:active {
-            transform: scale(0.96);
-        }
-
-        button.danger {
-            border-color: #ff5555;
-            color: #ff8888;
-        }
-
-        button.primary {
-            background: #2aff9e22;
-            border-color: #2aff9e;
-            color: #2aff9e;
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .walkie-talkie {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-        input, select {
-            background: #0a0f17;
-            border: 1px solid #2aff9e;
-            color: #adffd0;
-            padding: 8px 12px;
-            border-radius: 48px;
+            transition: 0.07s linear;
             font-family: monospace;
-            flex: 1;
+            letter-spacing: 2px;
+            margin: 20px 0;
         }
 
-        .records-panel {
-            margin-top: 20px;
-            background: #00000099;
+        .ptt-button:active {
+            background: #e67e22;
+            transform: scale(0.97);
+        }
+
+        .panel {
+            background: #11161f;
             border-radius: 24px;
-            padding: 10px;
-            max-height: 280px;
-            overflow-y: auto;
+            padding: 16px;
+            margin-top: 20px;
+            border: 1px solid #2c3e66;
         }
 
-        .record-item {
-            background: #0b101ae0;
-            border-left: 4px solid #2aff9e;
+        .chunk-list {
+            max-height: 320px;
+            overflow-y: auto;
+            list-style: none;
+            padding: 0;
+        }
+
+        .chunk-list li {
+            background: #0f121b;
             margin: 8px 0;
-            padding: 10px 12px;
+            padding: 12px;
             border-radius: 16px;
-            font-size: 0.7rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
+            border-left: 4px solid #3b5e8b;
         }
 
-        .record-actions button {
-            padding: 4px 12px;
-            font-size: 0.7rem;
+        button {
+            background: #1e2a3a;
+            border: none;
+            color: #bbd9ff;
+            padding: 6px 12px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        button.danger {
+            background: #5a1e2a;
+            color: #ffaaae;
         }
 
         audio {
-            max-width: 180px;
+            max-width: 160px;
             height: 32px;
         }
 
+        .webrtc-badge {
+            font-size: 0.75rem;
+            background: #00000066;
+            padding: 4px 8px;
+            border-radius: 32px;
+        }
+
         hr {
-            border-color: #2aff9e30;
-            margin: 14px 0;
-        }
-
-        .small-note {
-            font-size: 0.65rem;
-            color: #7c9f8e;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .warning-badge {
-            color: #ffaa33;
-            border-left-color: #ffaa33;
-        }
-
-        .ptt-active {
-            background: #2aff9e !important;
-            color: #000 !important;
-            transform: scale(1.02);
-        }
-
-        .level-meter {
-            width: 100%;
-            height: 4px;
-            background: #1a1f2a;
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-
-        .level-fill {
-            height: 100%;
-            width: 0%;
-            background: #2aff9e;
-            transition: width 0.05s;
-        }
-
-        .volume-slider {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .volume-slider input {
-            flex: 1;
-            height: 4px;
-            -webkit-appearance: none;
-            background: #2aff9e33;
-            border-radius: 2px;
-        }
-
-        .volume-slider input::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #2aff9e;
-            cursor: pointer;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #2aff9e;
-            color: #000;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.8rem;
-            z-index: 1000;
-            animation: fadeOut 2s forwards;
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; transform: translateY(0); }
-            70% { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-20px); visibility: hidden; }
-        }
-
-        .visualizer {
-            display: inline-block;
-            width: 60px;
-            height: 20px;
-            vertical-align: middle;
-            margin-left: 10px;
-        }
-
-        .visualizer span {
-            display: inline-block;
-            width: 4px;
-            height: 100%;
-            background: #2aff9e;
-            margin: 0 1px;
-            animation: bounce 0.5s infinite ease alternate;
-        }
-
-        @keyframes bounce {
-            0% { transform: scaleY(0.2); }
-            100% { transform: scaleY(1); }
+            border-color: #2c3e66;
         }
     </style>
 </head>
 <body>
-<div class="protocol-container">
-    <h1>⚡ PROTOCOL-7 [ADVANCED] ⚡<br>〈 PERPETUAL RECORDER · WALKIE-TALKIE 〉</h1>
+<div class="container">
     <div class="status-bar">
-        <div class="badge">🎙️ RECORD ENGINE: <span id="recordingState">INITIALIZING...</span></div>
-        <div class="badge">📡 SIGNALING: <span id="signalingStatus">OFFLINE</span></div>
-        <div class="badge">💾 CHUNK TIMER: <span id="chunkTimer">00:00</span></div>
-        <div class="badge"><span class="recording-led"></span> PERPETUAL CAPTURE</div>
-        <div class="badge"><span id="transmitLed" class="transmit-led"></span> TX: <span id="txStatus">IDLE</span></div>
+        <span><span class="recording-led"></span> PERPETUAL RECORDER</span>
+        <span>⏺ Chunk: <span id="chunkCounter">0</span></span>
+        <span>📡 PTT: <span id="pttState">OFF AIR</span></span>
     </div>
 
-    <div class="grid-2col">
-        <div class="card">
-            <h3>🔊 LIVE OVER‑AIR (WALKIE‑TALKIE)</h3>
-            <div class="walkie-talkie">
-                <input type="text" id="roomId" placeholder="channel / room" value="protocol7-base">
-                <button id="joinBtn">🔌 JOIN CHANNEL</button>
-                <button id="leaveBtn" class="danger">🚪 LEAVE</button>
-            </div>
-            <div style="margin-top: 16px;">
-                <div class="badge" style="display: inline-block;">📢 PTT (push to talk)</div>
-                <div style="margin-top: 10px;">
-                    <button id="pttButton" style="background:#1f3a2a; width: 120px; height: 48px; font-size: 1rem;">🎤 HOLD</button>
-                </div>
-                <div class="volume-slider">
-                    <span>🔊</span>
-                    <input type="range" id="remoteVolume" min="0" max="100" value="80">
-                    <span id="volumeValue">80%</span>
-                </div>
-                <div class="level-meter" id="levelMeter">
-                    <div class="level-fill" id="levelFill"></div>
-                </div>
-                <div id="rtcLog" style="font-size: 0.7rem; margin-top: 12px; color: #9effcf;">⚡ not connected</div>
-                <div id="voiceVisualizer" class="visualizer" style="display: none;">
-                    <span></span><span></span><span></span><span></span><span></span>
-                </div>
-            </div>
-        </div>
+    <button id="pttButton" class="ptt-button">📡 HOLD TO TALK (PTT)</button>
 
-        <div class="card">
-            <h3>⏺️ AUTONOMOUS RECORD ENGINE</h3>
-            <div>✅ 5-min chunks auto-save to IndexedDB (Blob storage)</div>
-            <div>🎛️ total chunks stored: <strong id="chunkCount">0</strong></div>
-            <div>💾 estimated storage: <span id="storageUsage">0</span> KB / <span id="storageLimit">0</span> KB</div>
-            <div id="storageWarning" style="color: #ffaa33; font-size: 0.7rem; display: none;">⚠️ STORAGE NEARING LIMIT</div>
-            <button id="exportAllBtn">📦 EXPORT ALL CHUNKS (ZIP)</button>
-            <button id="clearAllRecordsBtn" class="danger">⚠️ WIPE ALL RECORDINGS</button>
-            <button id="pruneOldBtn" class="danger">🗑️ PRUNE OLDEST 5</button>
-            <button id="downloadLatestBtn" class="primary">⬇️ DOWNLOAD LATEST CHUNK</button>
-        </div>
+    <div class="panel">
+        <strong>🎙️ RECORDS MANAGEMENT</strong> (auto-saved every 5 min)
+        <button id="refreshChunksBtn" style="margin-left: 12px;">⟳ refresh</button>
+        <button id="clearAllChunksBtn" class="danger">🗑 delete all chunks</button>
+        <ul id="chunksList" class="chunk-list">
+            <li style="justify-content:center;">— loading audio chunks —</li>
+        </ul>
     </div>
 
-    <div class="card" style="margin-top: 6px;">
-        <h3>📼 RECORDS MANAGEMENT (auto‑saved audio chunks)</h3>
-        <div class="records-panel" id="recordsListPanel">
-            <div class="small-note">🔍 loading chunks...</div>
-        </div>
+    <div class="panel">
+        <details>
+            <summary>🔌 WebRTC / Signaling (Fly.io ready)</summary>
+            <div class="webrtc-badge">🔴 Peer status: <span id="peerStatus">disconnected</span></div>
+            <button id="connectWebRTC">🔗 Connect to signaling (mock)</button>
+            <p style="font-size:12px;">Replace `ws://your-flyio-app.internal` with real signaling server.<br>
+            This demo includes local recording autonomy + PTT activation for remote stream.</p>
+        </details>
     </div>
-    <div class="small-note">🔒 PERPETUAL: records continuously even when not transmitting. WebRTC P2P cross-device via custom signaling server. All chunks stored as Blobs in IndexedDB for efficiency.</div>
-    <div class="small-note warning-badge">⚙️ SIGNALING SERVER: <span id="signalEndpointDisplay">wss://your-signal-server.fly.dev</span> (configured in code)</div>
 </div>
 
 <script>
-    (function(){
-        // ========================
-        // PROTOCOL-7 ADVANCED - FIXES & ENHANCEMENTS
-        // - Blob storage instead of Base64 (memory efficient)
-        - True hold-to-talk (no separate release button)
-        - Audio context cleanup & memory leak fixes
-        - Export as ZIP using JSZip
-        - Remote volume control
-        - Voice activity visualizer
-        - Better error handling & browser detection
-        - Tab broadcast channel for multi-tab harmony
-        // ========================
-        
-        const CHUNK_DURATION_MS = 5 * 60 * 1000;
-        const DB_NAME = 'Protocol7DB_Advanced';
-        const STORE_NAME = 'audioChunks';
-        const MAX_STORAGE_MB = 48;
-        let db = null;
-        
-        let mediaRecorder = null;
-        let audioStream = null;
-        let chunkInterval = null;
-        let currentRecordingStartTime = null;
-        let mediaRecorderActive = false;
-        let restartTimeout = null;
-        
-        let peerConnection = null;
-        let localStreamForCall = null;
-        let remoteAudioElement = null;
-        let rtcConnected = false;
-        let ws = null;
-        let isPTTActive = false;
-        let currentRoom = "protocol7-base";
-        let reconnectAttempts = 0;
-        let maxReconnectAttempts = 5;
-        let audioContext = null;
-        let mediaStreamSource = null;
-        let levelAnalyser = null;
-        let animationFrameId = null;
-        
-        // DOM elements
-        const recordingStateSpan = document.getElementById("recordingState");
-        const signalingStatusSpan = document.getElementById("signalingStatus");
-        const chunkTimerSpan = document.getElementById("chunkTimer");
-        const chunkCountSpan = document.getElementById("chunkCount");
-        const storageUsageSpan = document.getElementById("storageUsage");
-        const storageLimitSpan = document.getElementById("storageLimit");
-        const storageWarning = document.getElementById("storageWarning");
-        const recordsPanel = document.getElementById("recordsListPanel");
-        const roomInput = document.getElementById("roomId");
-        const joinBtn = document.getElementById("joinBtn");
-        const leaveBtn = document.getElementById("leaveBtn");
-        const pttButton = document.getElementById("pttButton");
-        const rtcLogSpan = document.getElementById("rtcLog");
-        const exportAllBtn = document.getElementById("exportAllBtn");
-        const clearAllBtn = document.getElementById("clearAllRecordsBtn");
-        const pruneOldBtn = document.getElementById("pruneOldBtn");
-        const downloadLatestBtn = document.getElementById("downloadLatestBtn");
-        const transmitLed = document.getElementById("transmitLed");
-        const txStatusSpan = document.getElementById("txStatus");
-        const signalEndpointDisplay = document.getElementById("signalEndpointDisplay");
-        const remoteVolumeSlider = document.getElementById("remoteVolume");
-        const volumeValueSpan = document.getElementById("volumeValue");
-        const voiceVisualizer = document.getElementById("voiceVisualizer");
-        
-        const SIGNALING_SERVER = "wss://your-signal-server.fly.dev";
-        signalEndpointDisplay.textContent = SIGNALING_SERVER;
-        
-        // Browser detection
-        if (!window.MediaRecorder || !window.RTCPeerConnection || !window.indexedDB) {
-            alert("⚠️ Your browser doesn't support required features. Please use modern Chrome, Firefox, or Edge.");
+    // --------------------------------------------------------------
+    // 1. PERPETUAL RECORDER (autonomous, 5-min chunks -> IndexedDB)
+    // --------------------------------------------------------------
+    let mediaStream = null;
+    let mediaRecorder = null;
+    let currentChunks = [];           // blob parts for current recording
+    let chunkStartTime = null;
+    let chunkInterval = 5 * 60 * 1000; // 5 minutes
+    let chunkCounter = 0;
+
+    const DB_NAME = 'Protocol7DB';
+    const STORE_NAME = 'audioChunks';
+    let db = null;
+
+    // UI elements
+    const chunkCounterSpan = document.getElementById('chunkCounter');
+    const pttStateSpan = document.getElementById('pttState');
+    const pttButton = document.getElementById('pttButton');
+    const refreshBtn = document.getElementById('refreshChunksBtn');
+    const clearAllBtn = document.getElementById('clearAllChunksBtn');
+    const chunksListEl = document.getElementById('chunksList');
+    const peerStatusSpan = document.getElementById('peerStatus');
+
+    // ---------- IndexedDB setup ----------
+    function openDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('Protocol7DB', 2);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                db = request.result;
+                resolve(db);
+            };
+            request.onupgradeneeded = (event) => {
+                const dbRef = event.target.result;
+                if (!dbRef.objectStoreNames.contains('audioChunks')) {
+                    dbRef.createObjectStore('audioChunks', { keyPath: 'id' });
+                }
+            };
+        });
+    }
+
+    async function saveChunkToDB(blob, durationSec, startTimestamp) {
+        if (!db) await openDB();
+        const id = `chunk_${startTimestamp}_${Date.now()}`;
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        store.put({ id, blob, durationSec, timestamp: startTimestamp, date: new Date(startTimestamp).toISOString() });
+        return new Promise((resolve) => { transaction.oncomplete = resolve; });
+    }
+
+    async function getAllChunks() {
+        if (!db) await openDB();
+        return new Promise((resolve) => {
+            const tx = db.transaction([STORE_NAME], 'readonly');
+            const store = tx.objectStore(STORE_NAME);
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result.sort((a,b) => a.timestamp - b.timestamp));
+        });
+    }
+
+    async function deleteAllChunks() {
+        if (!db) await openDB();
+        const tx = db.transaction([STORE_NAME], 'readwrite');
+        tx.objectStore(STORE_NAME).clear();
+        return new Promise((resolve) => { tx.oncomplete = resolve; });
+    }
+
+    async function deleteChunkById(id) {
+        if (!db) await openDB();
+        const tx = db.transaction([STORE_NAME], 'readwrite');
+        tx.objectStore(STORE_NAME).delete(id);
+        return new Promise((resolve) => { tx.oncomplete = resolve; });
+    }
+
+    // ---------- Recorder logic (autonomous chunks) ----------
+    async function startPerpetualRecording() {
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            startNewRecorderChunk();
+        } catch (err) {
+            console.error("Microphone access denied:", err);
+            alert("Need microphone for perpetual recording.");
         }
-        
-        // Tab broadcast channel for multi-tab harmony
-        const broadcastChannel = new BroadcastChannel('protocol7_tab');
-        broadcastChannel.onmessage = (e) => {
-            if (e.data.type === 'storage_update') {
-                updateRecordsUI();
+    }
+
+    function startNewRecorderChunk() {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+        currentChunks = [];
+        chunkStartTime = Date.now();
+
+        mediaRecorder = new MediaRecorder(mediaStream, { mimeType: 'audio/webm' });
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) {
+                currentChunks.push(event.data);
             }
         };
-        
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
+        mediaRecorder.onstop = async () => {
+            if (currentChunks.length === 0) return;
+            const fullBlob = new Blob(currentChunks, { type: 'audio/webm' });
+            const duration = (Date.now() - chunkStartTime) / 1000;
+            await saveChunkToDB(fullBlob, duration, chunkStartTime);
+            chunkCounter++;
+            chunkCounterSpan.innerText = chunkCounter;
+            renderChunksList();
+        };
+        mediaRecorder.start(1000); // collect data every sec to avoid big memory
+        // stop & restart after interval
+        setTimeout(() => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                startNewRecorderChunk();  // recursive perpetual
+            }
+        }, chunkInterval);
+    }
+
+    // ---------- Chunks UI management ----------
+    async function renderChunksList() {
+        const chunks = await getAllChunks();
+        if (!chunks.length) {
+            chunksListEl.innerHTML = '<li style="justify-content:center;">📼 no recorded chunks yet</li>';
+            return;
         }
-        
-        // ========================
-        // INDEXEDDB MANAGER (Blob storage - memory efficient)
-        // ========================
-        function initIndexedDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, 2);
-                
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => {
-                    db = request.result;
-                    resolve(db);
-                };
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-                        store.createIndex('timestamp', 'timestamp', { unique: false });
-                    }
-                };
-            });
-        }
-        
-        async function saveChunkToDB(blob, mimeType) {
-            if (!db) await initIndexedDB();
-            
-            const timestamp = Date.now();
-            const id = `${timestamp}_${Math.random().toString(36).substr(2, 9)}`;
-            
-            const chunkRecord = {
-                id: id,
-                timestamp: timestamp,
-                blob: blob,
-                mime: mimeType,
-                size: blob.size
+        chunksListEl.innerHTML = '';
+        for (const chunk of chunks) {
+            const li = document.createElement('li');
+            const audioUrl = URL.createObjectURL(chunk.blob);
+            const audioEl = document.createElement('audio');
+            audioEl.controls = true;
+            audioEl.src = audioUrl;
+            const infoSpan = document.createElement('span');
+            infoSpan.style.fontSize = '0.75rem';
+            infoSpan.innerText = `${new Date(chunk.timestamp).toLocaleTimeString()} (${Math.round(chunk.durationSec)}s)`;
+            const delBtn = document.createElement('button');
+            delBtn.innerText = 'delete';
+            delBtn.classList.add('danger');
+            delBtn.onclick = async () => {
+                await deleteChunkById(chunk.id);
+                URL.revokeObjectURL(audioUrl);
+                renderChunksList();
             };
-            
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.add(chunkRecord);
-                
-                request.onsuccess = () => {
-                    broadcastChannel.postMessage({ type: 'storage_update' });
-                    resolve();
-                };
-                request.onerror = () => reject(request.error);
-            });
-        }
-        
-        async function getAllChunks() {
-            if (!db) await initIndexedDB();
-            
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const index = store.index('timestamp');
-                const request = index.getAll();
-                
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error);
-            });
-        }
-        
-        async function deleteChunkFromDB(id) {
-            if (!db) await initIndexedDB();
-            
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.delete(id);
-                
-                request.onsuccess = () => {
-                    broadcastChannel.postMessage({ type: 'storage_update' });
-                    resolve();
-                };
-                request.onerror = () => reject(request.error);
-            });
-        }
-        
-        async function clearAllChunks() {
-            if (!db) await initIndexedDB();
-            
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.clear();
-                
-                request.onsuccess = () => {
-                    broadcastChannel.postMessage({ type: 'storage_update' });
-                    resolve();
-                };
-                request.onerror = () => reject(request.error);
-            });
-        }
-        
-        async function pruneOldestChunks(count) {
-            const chunks = await getAllChunks();
-            if (chunks.length <= count) return;
-            const oldest = chunks.slice(0, count);
-            for (const chunk of oldest) {
-                await deleteChunkFromDB(chunk.id);
-            }
-            await updateRecordsUI();
-            showToast(`🗑️ Pruned ${count} oldest chunks`);
-        }
-        
-        async function getTotalStorageSize() {
-            const chunks = await getAllChunks();
-            let totalBytes = 0;
-            for (const chunk of chunks) {
-                totalBytes += chunk.size || 0;
-            }
-            return totalBytes;
-        }
-        
-        // ========================
-        // PERPETUAL RECORDER (with Blob storage)
-        // ========================
-        async function initPerpetualRecorder() {
-            try {
-                if (audioStream && audioStream.active) {
-                    if (mediaRecorder && mediaRecorder.state === "recording") return;
-                    await startMediaRecorderFromStream(audioStream);
-                    return;
-                }
-                
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioStream = stream;
-                await startMediaRecorderFromStream(stream);
-                
-                if (!localStreamForCall) {
-                    localStreamForCall = stream;
-                }
-                
-                recordingStateSpan.innerText = "ACTIVE (AUTO)";
-                setupAudioLevelMeter(stream);
-            } catch(err) {
-                console.error("Microphone error", err);
-                recordingStateSpan.innerText = "ERROR: no mic access";
-                showToast("❌ Microphone access denied");
-            }
-        }
-        
-        function setupAudioLevelMeter(stream) {
-            if (audioContext) return;
-            
-            try {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                mediaStreamSource = audioContext.createMediaStreamSource(stream);
-                levelAnalyser = audioContext.createAnalyser();
-                levelAnalyser.fftSize = 256;
-                mediaStreamSource.connect(levelAnalyser);
-                
-                const levelFill = document.getElementById('levelFill');
-                const dataArray = new Uint8Array(levelAnalyser.frequencyBinCount);
-                
-                function updateMeter() {
-                    if (!levelAnalyser || !levelFill) {
-                        if (animationFrameId) cancelAnimationFrame(animationFrameId);
-                        return;
-                    }
-                    levelAnalyser.getByteFrequencyData(dataArray);
-                    let average = 0;
-                    for (let i = 0; i < dataArray.length; i++) {
-                        average += dataArray[i];
-                    }
-                    average = average / dataArray.length;
-                    const percent = Math.min(100, (average / 255) * 100);
-                    levelFill.style.width = percent + '%';
-                    
-                    // Visualizer animation for voice activity
-                    if (voiceVisualizer && percent > 15) {
-                        voiceVisualizer.style.display = 'inline-block';
-                        const spans = voiceVisualizer.querySelectorAll('span');
-                        spans.forEach((span, idx) => {
-                            const height = Math.min(20, 5 + (percent / 100) * 15 * Math.random());
-                            span.style.transform = `scaleY(${height / 20})`;
-                        });
-                    } else if (voiceVisualizer) {
-                        voiceVisualizer.style.display = 'none';
-                    }
-                    
-                    animationFrameId = requestAnimationFrame(updateMeter);
-                }
-                
-                updateMeter();
-            } catch(e) {
-                console.warn('Could not setup level meter:', e);
-            }
-        }
-        
-        async function saveChunk(chunks, mimeType) {
-            const blob = new Blob(chunks, { type: mimeType });
-            const sizeMB = blob.size / (1024 * 1024);
-            
-            const currentSize = await getTotalStorageSize();
-            const currentMB = currentSize / (1024 * 1024);
-            
-            if (currentMB + sizeMB > MAX_STORAGE_MB) {
-                await pruneOldestChunks(3);
-                storageWarning.style.display = 'block';
-                setTimeout(() => {
-                    storageWarning.style.display = 'none';
-                }, 3000);
-            }
-            
-            await saveChunkToDB(blob, mimeType);
-            await updateRecordsUI();
-        }
-        
-        async function startMediaRecorderFromStream(stream) {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                try {
-                    mediaRecorder.stop();
-                } catch(e) {}
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-            
-            const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/wav';
-            mediaRecorder = new MediaRecorder(stream, { mimeType });
-            let chunks = [];
-            
-            mediaRecorder.ondataavailable = (e) => {
-                if (e.data && e.data.size > 0) {
-                    chunks.push(e.data);
-                }
+            const downloadBtn = document.createElement('button');
+            downloadBtn.innerText = '⬇️';
+            downloadBtn.onclick = () => {
+                const a = document.createElement('a');
+                a.href = audioUrl;
+                a.download = `protocol7_${chunk.id}.webm`;
+                a.click();
             };
-            
-            mediaRecorder.onstop = async () => {
-                if (chunks.length > 0) {
-                    await saveChunk(chunks, mimeType);
-                    chunks = [];
-                }
-            };
-            
-            mediaRecorder.onerror = (e) => {
-                console.error('MediaRecorder error:', e);
-                if (restartTimeout) clearTimeout(restartTimeout);
-                restartTimeout = setTimeout(() => restartRecorder(), 1000);
-            };
-            
-            mediaRecorder.start(CHUNK_DURATION_MS);
-            mediaRecorderActive = true;
-            currentRecordingStartTime = Date.now();
-            
-            if (chunkInterval) clearInterval(chunkInterval);
-            startChunkTimer();
+            li.appendChild(audioEl);
+            li.appendChild(infoSpan);
+            li.appendChild(downloadBtn);
+            li.appendChild(delBtn);
+            chunksListEl.appendChild(li);
         }
+    }
+
+    // ---------- WebRTC PTT Part (simplified with placeholder peer connection) ----------
+    let peerConnection = null;
+    let remoteAudioElement = null;
+    let pttActive = false;
+    let pttStreamSender = null;
+
+    async function initWebRTC() {
+        // Create a hidden audio element to play remote stream
+        remoteAudioElement = new Audio();
+        remoteAudioElement.autoplay = true;
+        const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+        peerConnection = new RTCPeerConnection(config);
         
-        function startChunkTimer() {
-            chunkInterval = setInterval(() => {
-                if (!mediaRecorderActive || mediaRecorder?.state !== "recording") return;
-                const elapsed = Date.now() - currentRecordingStartTime;
-                const remaining = Math.max(0, CHUNK_DURATION_MS - elapsed);
-                const secs = Math.floor(remaining / 1000);
-                const mins = Math.floor(secs / 60);
-                const secsRem = secs % 60;
-                chunkTimerSpan.innerText = `${mins.toString().padStart(2,'0')}:${secsRem.toString().padStart(2,'0')}`;
-                
-                if (remaining <= 500) {
-                    currentRecordingStartTime = Date.now();
-                }
-            }, 200);
+        // Add local mic track when PTT is pressed (dynamic)
+        peerConnection.ontrack = (event) => {
+            remoteAudioElement.srcObject = event.streams[0];
+        };
+
+        // Generate offer/answer signaling - need fly.io signaling server
+        // For demo we only show connected mock
+        peerStatusSpan.innerText = 'mock (no signaling)';
+    }
+
+    // PTT control
+    async function startPTTStream() {
+        if (!peerConnection) await initWebRTC();
+        if (!mediaStream) {
+            alert("Wait for mic permission from perpetual recorder.");
+            return;
         }
-        
-        async function restartRecorder() {
-            if (audioStream && audioStream.active) {
-                await startMediaRecorderFromStream(audioStream);
-            } else {
-                await initPerpetualRecorder();
-            }
-        }
-        
-        // ========================
-        // RECORDS MANAGEMENT UI
-        // ========================
-        async function updateRecordsUI() {
-            const chunks = await getAllChunks();
-            const sortedChunks = chunks.sort((a,b) => a.timestamp - b.timestamp);
-            chunkCountSpan.innerText = sortedChunks.length;
-            
-            const totalBytes = await getTotalStorageSize();
-            const totalKB = (totalBytes / 1024).toFixed(1);
-            const totalMB = (totalBytes / (1024 * 1024)).toFixed(2);
-            storageUsageSpan.innerText = `${totalKB} (${totalMB} MB)`;
-            storageLimitSpan.innerText = `${MAX_STORAGE_MB} MB`;
-            
-            if (totalBytes / (1024 * 1024) > MAX_STORAGE_MB * 0.9) {
-                storageWarning.style.display = 'block';
-            } else {
-                storageWarning.style.display = 'none';
-            }
-            
-            if (!recordsPanel) return;
-            if (sortedChunks.length === 0) {
-                recordsPanel.innerHTML = `<div class="small-note">🎧 no recorded chunks yet — recording active, waiting for 5min slices</div>`;
-                return;
-            }
-            
-            let html = '';
-            sortedChunks.slice().reverse().forEach(chunk => {
-                const date = new Date(chunk.timestamp).toLocaleString();
-                const sizeKB = (chunk.size / 1024).toFixed(1);
-                const audioUrl = URL.createObjectURL(chunk.blob);
-                html += `<div class="record-item">
-                            <div><strong>⏲️ ${date}</strong><br>📦 ${sizeKB} KB</div>
-                            <audio controls src="${audioUrl}" style="max-width:180px;" preload="none"></audio>
-                            <div class="record-actions">
-                                <button class="download-chunk" data-id="${chunk.id}" data-url="${audioUrl}" data-name="${chunk.id}">⬇️ DL</button>
-                                <button class="delete-chunk danger" data-id="${chunk.id}">🗑️ DEL</button>
-                            </div>
-                         </div>`;
-            });
-            recordsPanel.innerHTML = html;
-            
-            document.querySelectorAll('.download-chunk').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const url = btn.getAttribute('data-url');
-                    const name = btn.getAttribute('data-name');
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `${name}.webm`;
-                    a.click();
-                    setTimeout(() => URL.revokeObjectURL(url), 100);
-                });
-            });
-            
-            document.querySelectorAll('.delete-chunk').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const id = btn.getAttribute('data-id');
-                    await deleteChunkFromDB(id);
-                    await updateRecordsUI();
-                    showToast('Chunk deleted');
-                });
-            });
-        }
-        
-        async function exportAllAsZip() {
-            const chunks = await getAllChunks();
-            if (chunks.length === 0) { alert("no chunks to export"); return; }
-            
-            // Dynamic import for JSZip
-            const JSZip = window.JSZip;
-            if (!JSZip) {
-                alert("Loading ZIP library... please try again in a moment.");
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-                document.head.appendChild(script);
-                script.onload = () => exportAllAsZip();
-                return;
-            }
-            
-            const zip = new JSZip();
-            for (const chunk of chunks) {
-                const blob = chunk.blob;
-                const filename = `chunk_${chunk.timestamp}.webm`;
-                zip.file(filename, blob);
-            }
-            const content = await zip.generateAsync({ type: "blob" });
-            const url = URL.createObjectURL(content);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `protocol7_export_${Date.now()}.zip`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast(`Exported ${chunks.length} chunks as ZIP`);
-        }
-        
-        async function downloadLatestChunk() {
-            const chunks = await getAllChunks();
-            if (chunks.length === 0) { alert("No chunks available"); return; }
-            const latest = chunks.sort((a,b) => b.timestamp - a.timestamp)[0];
-            const url = URL.createObjectURL(latest.blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `latest_chunk_${latest.timestamp}.webm`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast("Downloading latest chunk");
-        }
-        
-        async function clearAllRecords() {
-            if(confirm("⚠️ DANGER: erase ALL autonomous recorded chunks? This is permanent.")) {
-                await clearAllChunks();
-                await updateRecordsUI();
-                showToast("All recordings wiped");
-            }
-        }
-        
-        // ========================
-        // WEBRTC + SIGNALING (Fixed, true PTT)
-        // ========================
-        function setPTTVisual(active) {
-            if (active) {
-                pttButton.classList.add('ptt-active');
-                pttButton.textContent = '🔴 TALKING';
-                transmitLed.classList.add('active');
-                txStatusSpan.innerText = 'TRANSMITTING';
-                rtcLogSpan.innerText = "🎙️ TRANSMITTING (release to stop)";
-            } else {
-                pttButton.classList.remove('ptt-active');
-                pttButton.textContent = '🎤 HOLD';
-                transmitLed.classList.remove('active');
-                txStatusSpan.innerText = 'IDLE';
-                rtcLogSpan.innerText = "📡 listening mode";
-            }
-        }
-        
-        function setPTT(active) {
-            if (!peerConnection || !localStreamForCall || !rtcConnected) {
-                if (active) rtcLogSpan.innerText = "⚠️ join channel first";
-                return;
-            }
-            const audioTrack = localStreamForCall.getAudioTracks()[0];
+        // add local track if not already added
+        const senders = peerConnection.getSenders();
+        const hasAudio = senders.some(s => s.track?.kind === 'audio');
+        if (!hasAudio && mediaStream) {
+            const audioTrack = mediaStream.getAudioTracks()[0];
             if (audioTrack) {
-                audioTrack.enabled = active;
-                setPTTVisual(active);
+                pttStreamSender = peerConnection.addTrack(audioTrack, mediaStream);
             }
         }
-        
-        // True hold-to-talk
-        pttButton.addEventListener("mousedown", (e) => {
-            e.preventDefault();
-            if (rtcConnected && peerConnection) {
-                setPTT(true);
-            } else {
-                rtcLogSpan.innerText = "⚠️ join channel first";
-            }
-        });
-        
-        pttButton.addEventListener("mouseup", () => setPTT(false));
-        pttButton.addEventListener("mouseleave", () => setPTT(false));
-        pttButton.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            if (rtcConnected) setPTT(true);
-        });
-        pttButton.addEventListener("touchend", () => setPTT(false));
-        
-        // Remote volume control
-        remoteVolumeSlider.addEventListener("input", (e) => {
-            const val = e.target.value;
-            volumeValueSpan.textContent = val + "%";
-            if (remoteAudioElement) {
-                remoteAudioElement.volume = val / 100;
-            }
-        });
-        
-        async function joinWalkieTalkie(roomName) {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                await leaveWalkieTalkie();
-            }
-            
-            if (!localStreamForCall) {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    localStreamForCall = stream;
-                    if (!audioStream) audioStream = stream;
-                } catch(e) { 
-                    rtcLogSpan.innerText = "❌ mic access failed";
-                    signalingStatusSpan.innerText = "MIC ERROR";
-                    return;
-                }
-            }
-            
-            try {
-                ws = new WebSocket(SIGNALING_SERVER);
-                
-                ws.onopen = () => {
-                    signalingStatusSpan.innerText = `CONNECTED (${roomName})`;
-                    ws.send(JSON.stringify({ type: "join", room: roomName }));
-                    rtcLogSpan.innerText = "🔌 signaling joined, creating peer...";
-                    createPeerConnection(roomName);
-                    reconnectAttempts = 0;
-                };
-                
-                ws.onmessage = async (ev) => {
-                    try {
-                        const msg = JSON.parse(ev.data);
-                        if (!peerConnection) return;
-                        
-                        if (msg.type === "offer") {
-                            await peerConnection.setRemoteDescription(new RTCSessionDescription(msg));
-                            const answer = await peerConnection.createAnswer();
-                            await peerConnection.setLocalDescription(answer);
-                            ws.send(JSON.stringify({ type: "answer", answer: peerConnection.localDescription, room: roomName }));
-                        } else if (msg.type === "answer") {
-                            await peerConnection.setRemoteDescription(new RTCSessionDescription(msg.answer));
-                        } else if (msg.type === "ice-candidate") {
-                            if (msg.candidate) await peerConnection.addIceCandidate(new RTCIceCandidate(msg.candidate));
-                        }
-                    } catch(e) {
-                        console.error('WS message error:', e);
-                    }
-                };
-                
-                ws.onclose = () => {
-                    signalingStatusSpan.innerText = "OFFLINE";
-                    rtcConnected = false;
-                    setPTTVisual(false);
-                    
-                    if (reconnectAttempts < maxReconnectAttempts) {
-                        reconnectAttempts++;
-                        rtcLogSpan.innerText = `⚠️ disconnected, reconnecting in ${reconnectAttempts}s...`;
-                        setTimeout(() => {
-                            if (currentRoom) joinWalkieTalkie(currentRoom);
-                        }, reconnectAttempts * 1000);
-                    } else {
-                        rtcLogSpan.innerText = "❌ connection failed, manual rejoin needed";
-                    }
-                };
-                
-                ws.onerror = () => {
-                    signalingStatusSpan.innerText = "ERROR";
-                    rtcLogSpan.innerText = "❌ signaling error";
-                };
-                
-            } catch(e) {
-                console.error('WebSocket error:', e);
-                signalingStatusSpan.innerText = "CONNECTION FAILED";
-                rtcLogSpan.innerText = "❌ cannot reach signaling server";
-            }
+        pttActive = true;
+        pttStateSpan.innerText = '🔴 LIVE TRANSMIT';
+    }
+
+    function stopPTTStream() {
+        if (pttStreamSender && peerConnection) {
+            peerConnection.removeTrack(pttStreamSender);
+            pttStreamSender = null;
         }
-        
-        function createPeerConnection(roomName) {
-            const config = { 
-                iceServers: [
-                    { urls: "stun:stun.l.google.com:19302" },
-                    { urls: "stun:stun1.l.google.com:19302" }
-                ] 
-            };
-            peerConnection = new RTCPeerConnection(config);
-            
-            if (localStreamForCall) {
-                localStreamForCall.getTracks().forEach(track => {
-                    peerConnection.addTrack(track, localStreamForCall);
-                });
-            }
-            
-            remoteAudioElement = new Audio();
-            remoteAudioElement.autoplay = true;
-            remoteAudioElement.volume = remoteVolumeSlider.value / 100;
-            
-            peerConnection.ontrack = (event) => {
-                if (remoteAudioElement.srcObject !== event.streams[0]) {
-                    remoteAudioElement.srcObject = event.streams[0];
-                    rtcLogSpan.innerText = "🔊 remote audio streaming";
-                }
-            };
-            
-            peerConnection.onicecandidate = (e) => {
-                if (e.candidate && ws && ws.readyState === WebSocket.OPEN) {
-                    ws.send(JSON.stringify({ type: "ice-candidate", candidate: e.candidate, room: roomName }));
-                }
-            };
-            
-            peerConnection.onconnectionstatechange = () => {
-                if (peerConnection.connectionState === 'connected') {
-                    rtcConnected = true;
-                    rtcLogSpan.innerText = "✅ peer connected";
-                    signalingStatusSpan.innerText = `CONNECTED + PEER (${roomName})`;
-                } else if (peerConnection.connectionState === 'disconnected') {
-                    rtcConnected = false;
-                    rtcLogSpan.innerText = "⚠️ peer disconnected";
-                } else if (peerConnection.connectionState === 'failed') {
-                    rtcConnected = false;
-                    rtcLogSpan.innerText = "❌ peer connection failed";
-                    peerConnection.restartIce();
-                }
-            };
+        pttActive = false;
+        pttStateSpan.innerText = 'OFF AIR';
+    }
+
+    // Button events (mouse / touch)
+    pttButton.addEventListener('mousedown', startPTTStream);
+    pttButton.addEventListener('mouseup', stopPTTStream);
+    pttButton.addEventListener('mouseleave', stopPTTStream);
+    pttButton.addEventListener('touchstart', startPTTStream);
+    pttButton.addEventListener('touchend', stopPTTStream);
+
+    refreshBtn.onclick = renderChunksList;
+    clearAllBtn.onclick = async () => {
+        if (confirm('Delete ALL recorded chunks?')) {
+            await deleteAllChunks();
+            renderChunksList();
         }
-        
-        async function leaveWalkieTalkie() {
-            setPTT(false);
-            if (peerConnection) {
-                peerConnection.close();
-                peerConnection = null;
-            }
-            if (ws) {
-                ws.close();
-                ws = null;
-            }
-            if (remoteAudioElement) {
-                remoteAudioElement.srcObject = null;
-            }
-            rtcConnected = false;
-            signalingStatusSpan.innerText = "OFFLINE";
-            rtcLogSpan.innerText = "⚡ left channel";
-            reconnectAttempts = 0;
-        }
-        
-        // ========================
-        // EVENT HANDLERS
-        // ========================
-        joinBtn.addEventListener("click", async () => {
-            currentRoom = roomInput.value.trim() || "protocol7-base";
-            await joinWalkieTalkie(currentRoom);
-        });
-        
-        leaveBtn.addEventListener("click", leaveWalkieTalkie);
-        exportAllBtn.addEventListener("click", exportAllAsZip);
-        clearAllBtn.addEventListener("click", clearAllRecords);
-        pruneOldBtn.addEventListener("click", async () => {
-            await pruneOldestChunks(5);
-            await updateRecordsUI();
-        });
-        downloadLatestBtn.addEventListener("click", downloadLatestChunk);
-        
-        // ========================
-        // INITIALIZATION
-        // ========================
-        async function init() {
-            await initIndexedDB();
-            await initPerpetualRecorder();
-            await updateRecordsUI();
-            
-            setInterval(async () => {
-                if ((!mediaRecorder || mediaRecorder.state !== "recording") && audioStream && audioStream.active) {
-                    console.log("Recorder died, restarting...");
-                    await startMediaRecorderFromStream(audioStream);
-                } else if (!audioStream || !audioStream.active) {
-                    await initPerpetualRecorder();
-                }
-                await updateRecordsUI();
-            }, 15000);
-            
-            console.log("⚡ PROTOCOL-7 ADVANCED active: perpetual recorder + WebRTC walkie-talkie with Blob storage");
-            showToast("PROTOCOL-7 ONLINE");
-        }
-        
-        init().catch(console.error);
+    };
+
+    // Connect signaling mock
+    document.getElementById('connectWebRTC').onclick = () => {
+        peerStatusSpan.innerText = 'signaling required → edit ws endpoint';
+        alert('To enable cross-device PTT, implement WebSocket signaling to Fly.io');
+        initWebRTC();
+    };
+
+    // INITIALIZE: perpetual recorder on load
+    (async () => {
+        await openDB();
+        await startPerpetualRecording();
+        renderChunksList();
+        // dummy peer connection prepped
+        await initWebRTC();
     })();
 </script>
 </body>
