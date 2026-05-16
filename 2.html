@@ -1,10 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="en">
+    
 <head>
+    
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SANDF PROTOCOL-2 | REAL-TIME COMMS (P2P)</title>
+    
+    <title>2</title>
+    
     <style>
+        
         * {
             margin: 0;
             padding: 0;
@@ -225,9 +232,9 @@
     <div class="chat-area">
         <div class="messages" id="messageLog">
             <div class="message received">
-                <small>SYSTEM</small>
-                [SANDF PROTOCOL-2] Real-time text channel ready.<br>
-                Share your Comms ID above. Enter target ID to connect.
+                <small>ENGINE</small>
+                [SANDF Protocol-2]<br>
+                Share your Comms ID above, via . Enter target ID to connect.
             </div>
         </div>
         <div class="input-area">
@@ -237,20 +244,18 @@
     </div>
 
     <div class="footer">
-        ⚡ PROTOCOL-2 · P2P COMMUNICATION · NO DATA STORED · END-TO-END BROWSER DIRECT ⚡
+        SECURED.
     </div>
 </div>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    
 <script>
-    // PROTOCOL-2: FRONT-END REAL-TIME TEXT COMMUNICATION
-    // Uses PeerJS (WebRTC) - works on GitHub Pages, no backend needed
     
     let peer = null;
-    let currentConnection = null;  // active peer connection
+    let currentConnection = null;
     let myPeerId = null;
     
-    // DOM elements
     const myIdSpan = document.getElementById('myPeerId');
     const remoteIdInput = document.getElementById('remoteIdInput');
     const connectBtn = document.getElementById('connectBtn');
@@ -259,7 +264,6 @@
     const messageInput = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
     
-    // Helper: add message to chat
     function addMessage(text, type = 'received', sender = null) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${type}`;
@@ -269,13 +273,11 @@
         messageLog.appendChild(msgDiv);
         messageLog.scrollTop = messageLog.scrollHeight;
         
-        // auto-clean if too many messages (keep last 100)
         while (messageLog.children.length > 100) {
             messageLog.removeChild(messageLog.firstChild);
         }
     }
     
-    // simple escape to prevent XSS
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -288,13 +290,11 @@
         });
     }
     
-    // update status with visual indicator
     function setStatus(text, isError = false) {
         statusDiv.innerHTML = isError ? `⚠️ ${text}` : `📡 ${text}`;
         statusDiv.style.color = isError ? '#e89f6e' : '#8ab0c0';
     }
     
-    // enable/disable messaging UI
     function setMessagingEnabled(enabled) {
         messageInput.disabled = !enabled;
         sendBtn.disabled = !enabled;
@@ -305,7 +305,6 @@
         }
     }
     
-    // send message through active connection
     function sendMessage() {
         if (!currentConnection || currentConnection.open === false) {
             addMessage('[SYSTEM] No active connection. Establish link first.', 'received', 'PROTOCOL');
@@ -316,19 +315,16 @@
         const msgText = messageInput.value.trim();
         if (!msgText) return;
         
-        // send via WebRTC data channel
         currentConnection.send(msgText);
         addMessage(msgText, 'sent', 'YOU');
         messageInput.value = '';
         messageInput.focus();
         
-        // log transmission
         console.log('[PROTOCOL-2] Message sent:', msgText);
     }
     
-    // Initialize PeerJS
     function initPeer() {
-        // Generate random ID for this session (front-end only)
+
         const randomId = 'sandf-' + Math.random().toString(36).substring(2, 10) + '-' + Date.now().toString(36);
         
         peer = new Peer(randomId, {
@@ -373,9 +369,8 @@
         });
     }
     
-    // handle established connection (both incoming and outgoing)
     function handleConnection(conn) {
-        // close existing connection if any
+
         if (currentConnection && currentConnection !== conn && currentConnection.open) {
             currentConnection.close();
             addMessage('[SYSTEM] Previous connection closed.', 'received', 'PROTOCOL');
@@ -391,7 +386,7 @@
         });
         
         conn.on('data', (data) => {
-            // receive text message
+
             const receivedText = typeof data === 'string' ? data : JSON.stringify(data);
             addMessage(receivedText, 'received', conn.peer.substring(0, 12));
         });
@@ -415,7 +410,6 @@
         });
     }
     
-    // initiate connection to remote peer
     function connectToRemote() {
         const remoteId = remoteIdInput.value.trim();
         if (!remoteId) {
@@ -430,7 +424,6 @@
         
         setStatus(`Connecting to ${remoteId}...`);
         
-        // close existing connection before new one
         if (currentConnection && currentConnection.open) {
             currentConnection.close();
             addMessage('[SYSTEM] Closed existing link to establish new connection.', 'received', 'PROTOCOL');
@@ -443,7 +436,6 @@
         
         handleConnection(newConn);
         
-        // timeout feedback
         setTimeout(() => {
             if (newConn && newConn.open === false && newConn.peerConnection?.iceConnectionState !== 'connected') {
                 setStatus(`Connection timeout. Ensure remote peer is online.`, true);
@@ -452,7 +444,6 @@
         }, 10000);
     }
     
-    // event listeners
     connectBtn.addEventListener('click', connectToRemote);
     sendBtn.addEventListener('click', sendMessage);
     messageInput.addEventListener('keypress', (e) => {
@@ -462,10 +453,8 @@
         }
     });
     
-    // initialize everything
     initPeer();
     
-    // clean up on page unload (optional)
     window.addEventListener('beforeunload', () => {
         if (currentConnection && currentConnection.open) {
             currentConnection.close();
@@ -475,8 +464,51 @@
         }
     });
     
-    // additional manual reconnect helper
-    console.log('PROTOCOL-2 · Front-end real-time communicator loaded');
+    console.log('Protocol-2 · Front-end real-time communicator loaded');
+    
 </script>
+    
 </body>
+    
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
