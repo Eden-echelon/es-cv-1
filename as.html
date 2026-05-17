@@ -1,10 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="en">
+    
 <head>
+    
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>PROTOCOL-7 · Perpetual Recorder + PTT Walkie-Talkie</title>
+    
+    <title>Protocol-2</title>
+    
     <style>
+        
         * {
             box-sizing: border-box;
             user-select: none;
@@ -251,37 +258,44 @@
     }
 
     function startNewRecorderChunk() {
-        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-            mediaRecorder.stop();
-        }
-        currentChunks = [];
-        chunkStartTime = Date.now();
-
-        mediaRecorder = new MediaRecorder(mediaStream, { mimeType: 'audio/webm' });
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data && event.data.size > 0) {
-                currentChunks.push(event.data);
-            }
-        };
-        mediaRecorder.onstop = async () => {
-            if (currentChunks.length === 0) return;
-            const fullBlob = new Blob(currentChunks, { type: 'audio/webm' });
-            const duration = (Date.now() - chunkStartTime) / 1000;
-            await saveChunkToDB(fullBlob, duration, chunkStartTime);
-            chunkCounter++;
-            chunkCounterSpan.innerText = chunkCounter;
-            renderChunksList();
-        };
-        mediaRecorder.start(1000); // collect data every sec to avoid big memory
-        // stop & restart after interval
-        setTimeout(() => {
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-                mediaRecorder.stop();
-                startNewRecorderChunk();  // recursive perpetual
-            }
-        }, chunkInterval);
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        // Don't start new chunk yet - wait for this one to finish
+        return;
     }
+    
+    currentChunks = [];
+    chunkStartTime = Date.now();
 
+    mediaRecorder = new MediaRecorder(mediaStream, { mimeType: 'audio/webm' });
+    mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+            currentChunks.push(event.data);
+        }
+    };
+    mediaRecorder.onstop = async () => {
+        if (currentChunks.length === 0) return;
+        
+        // Important: Combine ALL chunks including the final one
+        const fullBlob = new Blob(currentChunks, { type: 'audio/webm' });
+        const duration = (Date.now() - chunkStartTime) / 1000;
+        await saveChunkToDB(fullBlob, duration, chunkStartTime);
+        chunkCounter++;
+        chunkCounterSpan.innerText = chunkCounter;
+        renderChunksList();
+        
+        // Start next chunk ONLY after saving is complete
+        startNewRecorderChunk();
+    };
+    
+    mediaRecorder.start(1000);
+    
+    // Schedule next chunk stop
+    setTimeout(() => {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop(); // This triggers onstop above
+        }
+    }, chunkInterval);
+}
     // ---------- Chunks UI management ----------
     async function renderChunksList() {
         const chunks = await getAllChunks();
