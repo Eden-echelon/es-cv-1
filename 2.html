@@ -13,12 +13,15 @@
     <style>
         
         * {
+
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+
         }
 
         body {
+
             background: #0a0f1a;
             font-family: 'Courier New', 'Fira Code', monospace;
             padding: 20px;
@@ -26,9 +29,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+
         }
 
         .comms-terminal {
+
             max-width: 900px;
             width: 100%;
             background: #0e1422;
@@ -36,27 +41,35 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
         }
 
         .header {
+
             background: #0a101c;
             padding: 20px;
             border-bottom: 1px solid #1e4a5a;
+
         }
 
         .header h1 {
+
             color: #6abf9e;
             font-size: 1.2rem;
             letter-spacing: 2px;
             margin-bottom: 8px;
+
         }
 
         .header p {
+
             color: #8aaec0;
             font-size: 0.75rem;
+
         }
 
         .connection-panel {
+
             padding: 20px;
             background: #0c1120;
             border-bottom: 1px solid #1e3a44;
@@ -64,37 +77,47 @@
             flex-wrap: wrap;
             gap: 15px;
             align-items: center;
+
         }
 
         .my-id {
+
             flex: 2;
             background: #01050e;
             padding: 10px 14px;
             border-radius: 8px;
             border-left: 3px solid #6abf9e;
+
         }
 
         .my-id label {
+
             font-size: 0.65rem;
             color: #6b8f9e;
             display: block;
             margin-bottom: 5px;
+
         }
 
         .my-id code {
+
             color: #c0e0ff;
             font-size: 0.8rem;
             word-break: break-all;
+
         }
 
         .remote-connect {
+
             flex: 3;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+
         }
 
         .remote-connect input {
+
             flex: 2;
             background: #01050e;
             border: 1px solid #2a5a6a;
@@ -102,9 +125,11 @@
             font-family: monospace;
             color: #c0e0ff;
             border-radius: 6px;
+
         }
 
         button {
+
             background: #1e3a44;
             border: 1px solid #4a8a9a;
             padding: 10px 20px;
@@ -114,26 +139,34 @@
             cursor: pointer;
             border-radius: 6px;
             transition: all 0.1s;
+
         }
 
         button:active {
+
             transform: scale(0.97);
             background: #0e2a34;
+
         }
 
         .status {
+
             padding: 8px 20px;
             font-size: 0.7rem;
             background: #0a1020;
             color: #8ab0c0;
             border-bottom: 1px solid #1e4a5a;
+
         }
 
         .chat-area {
+
             padding: 20px;
+
         }
 
         .messages {
+
             background: #050a14;
             height: 350px;
             overflow-y: auto;
@@ -141,43 +174,55 @@
             border-radius: 8px;
             margin-bottom: 15px;
             border: 1px solid #1e4a5a;
+
         }
 
         .message {
+
             margin-bottom: 12px;
             padding: 8px 12px;
             border-radius: 8px;
             max-width: 80%;
             word-wrap: break-word;
             font-size: 0.85rem;
+
         }
 
         .message.sent {
+
             background: #1e3a4a;
             margin-left: auto;
             color: #d0f0ff;
             border-right: 2px solid #6abf9e;
+
         }
 
         .message.received {
+
             background: #111a28;
             border-left: 2px solid #e89f6e;
             color: #c0d8e8;
+
         }
 
         .message small {
+
             display: block;
             font-size: 0.6rem;
             color: #7a9ab0;
             margin-bottom: 4px;
+
         }
 
         .input-area {
+
             display: flex;
             gap: 10px;
+
         }
 
         .input-area input {
+
             flex: 1;
             background: #01050e;
             border: 1px solid #2a5a6a;
@@ -185,33 +230,42 @@
             font-family: monospace;
             color: #e0f0ff;
             border-radius: 6px;
+
         }
 
         .input-area input:disabled {
+
             opacity: 0.5;
+
         }
 
         .footer {
+
             padding: 15px 20px;
             background: #0a101c;
             border-top: 1px solid #1e4a5a;
             font-size: 0.65rem;
             color: #5a8090;
             text-align: center;
+
         }
 
         @media (max-width: 700px) {
+
             .connection-panel { flex-direction: column; align-items: stretch; }
             .message { max-width: 95%; }
+
         }
+
     </style>
+
 </head>
+
 <body>
 
 <div class="comms-terminal">
     <div class="header">
-        <h1>📡 PROTOCOL-2 · REAL-TIME COMMS TERMINAL</h1>
-        <p>PEER-TO-PEER ENCRYPTED CHANNEL | NO DATABASE | FRONT-END ONLY</p>
+        <h1>📡 General Emergency Evacuation Protocol-2</h1>
     </div>
 
     <div class="connection-panel">
@@ -221,12 +275,12 @@
         </div>
         <div class="remote-connect">
             <input type="text" id="remoteIdInput" placeholder="PASTE TARGET COMMS ID">
-            <button id="connectBtn">🔗 ESTABLISH LINK</button>
+            <button id="connectBtn">🔗 ESTABLISH Protocol-2</button>
         </div>
     </div>
 
     <div class="status" id="statusMsg">
-        ⚡ AWAITING CONNECTION · PROTOCOL-2 STANDBY
+        ⚡ AWAITING CONNECTION · Protocol-2 STANDBY
     </div>
 
     <div class="chat-area">
