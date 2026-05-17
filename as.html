@@ -8,29 +8,36 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     
-    <title>Protocol-2</title>
+    <title>7</title>
     
     <style>
         
         * {
+            
             box-sizing: border-box;
             user-select: none;
+            
         }
 
         body {
+            
             background: #0a0f1e;
             color: #cfd8dc;
             font-family: 'Courier New', monospace;
             margin: 0;
             padding: 20px;
+            
         }
 
         .container {
+            
             max-width: 800px;
             margin: 0 auto;
+            
         }
 
         .status-bar {
+            
             background: #000000aa;
             backdrop-filter: blur(8px);
             border-radius: 2rem;
@@ -42,9 +49,11 @@
             gap: 10px;
             font-weight: bold;
             border: 1px solid #2c3e66;
+            
         }
 
         .recording-led {
+            
             display: inline-block;
             width: 14px;
             height: 14px;
@@ -53,6 +62,7 @@
             box-shadow: 0 0 6px #e74c3c;
             animation: pulse 1.2s infinite;
             margin-right: 8px;
+            
         }
 
         @keyframes pulse {
@@ -61,6 +71,7 @@
         }
 
         .ptt-button {
+            
             background: #2c3e66;
             border: none;
             color: white;
@@ -74,29 +85,37 @@
             font-family: monospace;
             letter-spacing: 2px;
             margin: 20px 0;
+            
         }
 
         .ptt-button:active {
+            
             background: #e67e22;
             transform: scale(0.97);
+            
         }
 
         .panel {
+            
             background: #11161f;
             border-radius: 24px;
             padding: 16px;
             margin-top: 20px;
             border: 1px solid #2c3e66;
+            
         }
 
         .chunk-list {
+            
             max-height: 320px;
             overflow-y: auto;
             list-style: none;
             padding: 0;
+            
         }
 
         .chunk-list li {
+            
             background: #0f121b;
             margin: 8px 0;
             padding: 12px;
@@ -107,9 +126,11 @@
             flex-wrap: wrap;
             gap: 8px;
             border-left: 4px solid #3b5e8b;
+            
         }
 
         button {
+            
             background: #1e2a3a;
             border: none;
             color: #bbd9ff;
@@ -117,31 +138,44 @@
             border-radius: 40px;
             cursor: pointer;
             font-family: monospace;
+            
         }
 
         button.danger {
+            
             background: #5a1e2a;
             color: #ffaaae;
+            
         }
 
         audio {
+            
             max-width: 160px;
             height: 32px;
+            
         }
 
         .webrtc-badge {
+            
             font-size: 0.75rem;
             background: #00000066;
             padding: 4px 8px;
             border-radius: 32px;
+            
         }
 
         hr {
+            
             border-color: #2c3e66;
+            
         }
+        
     </style>
+    
 </head>
+    
 <body>
+    
 <div class="container">
     <div class="status-bar">
         <span><span class="recording-led"></span> PERPETUAL RECORDER</span>
@@ -172,9 +206,7 @@
 </div>
 
 <script>
-    // --------------------------------------------------------------
-    // 1. PERPETUAL RECORDER (autonomous, 5-min chunks -> IndexedDB)
-    // --------------------------------------------------------------
+
     let mediaStream = null;
     let mediaRecorder = null;
     let currentChunks = [];           // blob parts for current recording
@@ -427,6 +459,19 @@ function startNewRecorderChunk() {
         // dummy peer connection prepped
         await initWebRTC();
     })();
+    
 </script>
+    
 </body>
+    
 </html>
+
+
+
+
+
+
+
+
+
+
