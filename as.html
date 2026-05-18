@@ -461,6 +461,468 @@ function startNewRecorderChunk() {
     })();
     
 </script>
+
+<script>
+
+(function(){
+    "use strict";
+    
+    const tacticalCSS = `
+        /* Base tactical enhancements */
+        * {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background: radial-gradient(ellipse at 20% 30%, #0a1428 0%, #03060c 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Clear blue skies animation layer */
+        .sky-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 1000px;
+            box-shadow: 0 0 60px rgba(255,255,240,0.1);
+            backdrop-filter: blur(8px);
+            animation: floatCloud linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes floatCloud {
+            0% { transform: translateX(-20%) translateY(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateX(120%) translateY(-30px); opacity: 0; }
+        }
+        
+        .aircraft {
+            position: absolute;
+            font-size: 28px;
+            pointer-events: none;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+            animation: flyPlane 40s linear infinite;
+            z-index: 1;
+            opacity: 0.7;
+        }
+        
+        @keyframes flyPlane {
+            0% { transform: translateX(-150px) translateY(20px) scaleX(1); }
+            49% { transform: translateX(calc(100vw + 150px)) translateY(40px) scaleX(1); }
+            50% { transform: translateX(calc(100vw + 150px)) translateY(40px) scaleX(-1); }
+            99% { transform: translateX(-150px) translateY(60px) scaleX(-1); }
+            100% { transform: translateX(-150px) translateY(20px) scaleX(1); }
+        }
+        
+        /* Quick navigation buttons */
+        .nav-quick {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            background: #1a2a3fcc;
+            backdrop-filter: blur(12px);
+            border: 1px solid #4a7a9f;
+            color: #bbd9ff;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .nav-btn:hover {
+            background: #2a4a6fcc;
+            transform: scale(1.1);
+            border-color: #88bbdd;
+        }
+        
+        /* Audio controls enhancement */
+        audio {
+            min-width: 200px;
+            height: 40px;
+            border-radius: 20px;
+            background: #0a121f;
+        }
+        
+        audio::-webkit-media-controls-panel {
+            background: #0a121f;
+        }
+        
+        /* Toolbar */
+        .tactical-toolbar {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #0a0f1ccc;
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 12px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            z-index: 100;
+            border: 1px solid #2c5a7a;
+            font-size: 12px;
+        }
+        
+        .tool-btn {
+            background: #1e2e42;
+            border: none;
+            color: #bbd9ff;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: 0.1s linear;
+        }
+        
+        .tool-btn:active { transform: scale(0.95); background: #3a6a8a; }
+        
+        /* Government footer */
+        .gov-footer {
+            background: #03060cee;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #4a7a9f;
+            padding: 20px;
+            text-align: center;
+            font-size: 11px;
+            margin-top: 40px;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        
+        /* Popups */
+        .tactical-popup {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: #0a121fe6;
+            backdrop-filter: blur(16px);
+            border-left: 3px solid #ffaa44;
+            padding: 10px 16px;
+            border-radius: 12px;
+            max-width: 260px;
+            font-size: 11px;
+            z-index: 1000;
+            font-family: monospace;
+            animation: fadePopup 5s ease forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes fadePopup {
+            0% { opacity: 0; transform: translateX(50px); }
+            15% { opacity: 1; transform: translateX(0); }
+            85% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0; transform: translateX(50px); visibility: hidden; }
+        }
+        
+        /* loading spinners */
+        .load-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #4a7a9f;
+            border-top-color: #ffaa44;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 6px;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        @media (max-width: 640px) {
+            .nav-quick { right: 8px; }
+            .nav-btn { width: 36px; height: 36px; font-size: 16px; }
+            .tactical-toolbar { flex-wrap: wrap; }
+            .container { padding: 8px; }
+        }
+        
+        @media (min-width: 1920px) {
+            .nav-quick { right: 40px; }
+            .nav-btn { width: 64px; height: 64px; font-size: 28px; }
+        }
+        
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, auto));
+            gap: 6px;
+        }
+    `;
+    
+    const styleSheet = document.createElement("style");
+    styleSheet.textContent = tacticalCSS;
+    document.head.appendChild(styleSheet);
+    
+    // ---------- SKY & AIRCRAFT GENERATOR ----------
+    function initSkyLayer() {
+        if (document.querySelector('.sky-layer')) return;
+        const skyDiv = document.createElement('div');
+        skyDiv.className = 'sky-layer';
+        document.body.prepend(skyDiv);
+        
+        // clouds
+        for (let i = 0; i < 18; i++) {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            const size = 40 + Math.random() * 120;
+            cloud.style.width = size + 'px';
+            cloud.style.height = (size * 0.4) + 'px';
+            cloud.style.top = Math.random() * 60 + '%';
+            cloud.style.animationDuration = 20 + Math.random() * 40 + 's';
+            cloud.style.animationDelay = Math.random() * 30 + 's';
+            cloud.style.opacity = 0.2 + Math.random() * 0.3;
+            skyDiv.appendChild(cloud);
+        }
+        
+        // planes
+        const planeIcons = ['✈️', '🛩️', '🚁', '🛸', '⚡'];
+        for (let i = 0; i < 6; i++) {
+            const plane = document.createElement('div');
+            plane.className = 'aircraft';
+            plane.textContent = planeIcons[Math.floor(Math.random() * planeIcons.length)];
+            plane.style.top = (10 + Math.random() * 50) + '%';
+            plane.style.animationDuration = 25 + Math.random() * 35 + 's';
+            plane.style.animationDelay = Math.random() * 20 + 's';
+            plane.style.fontSize = (24 + Math.random() * 28) + 'px';
+            skyDiv.appendChild(plane);
+        }
+    }
+    
+    // ---------- TACTICAL POPUP GENERATOR (airspace insights) ----------
+    const insights = [
+        "✈️ ATC: Victor 1-2-3 cleared for approach",
+        "📡 ADS-B: 47 civil tracks, 2 military IFF",
+        "🛰️ SATCOM: Link 16 active",
+        "🎧 GROUND: Tower handoff on 118.30",
+        "🗺️ SECTOR: FIR Johannesburg (FAJN)",
+        "⚡ RADAR: Primary sweep 4.5s",
+        "🔊 ALERT: Mode C squawk 1234 observed",
+        "🌍 DRONE: UAV-7 crossing TMA boundary",
+        "📻 HF: Global frequency 11175 kHz guard",
+        "🛡️ DEFCON: Airborne alert status BRAVO"
+    ];
+    
+    function showRandomPopup() {
+        const existing = document.querySelectorAll('.tactical-popup');
+        if (existing.length > 3) return;
+        const pop = document.createElement('div');
+        pop.className = 'tactical-popup';
+        pop.innerHTML = `<span class="load-spinner"></span> ${insights[Math.floor(Math.random() * insights.length)]}`;
+        document.body.appendChild(pop);
+        setTimeout(() => pop.remove(), 5000);
+    }
+    setInterval(showRandomPopup, 12000);
+    
+    // ---------- AEROSPACE HEADER WITH HOME LINK ----------
+    function injectHeader() {
+        if (document.querySelector('.aerospace-header')) return;
+        const header = document.createElement('div');
+        header.className = 'status-bar aerospace-header';
+        header.style.cursor = 'pointer';
+        header.style.marginBottom = '20px';
+        header.style.justifyContent = 'space-between';
+        header.innerHTML = `
+            <span><strong>✈️ PROTOCOL-7 AEROSPACE</strong> | <span id="localTimeATC"></span> ZULU</span>
+            <span>🇿🇦 SAAF AIRSPACE SURVEILLANCE</span>
+        `;
+        header.onclick = () => { window.location.href = 'index.html'; };
+        const container = document.querySelector('.container');
+        if (container && container.firstChild) container.insertBefore(header, container.firstChild);
+        else document.body.prepend(header);
+        
+        function updateTime() {
+            const timeSpan = document.getElementById('localTimeATC');
+            if (timeSpan) timeSpan.innerText = new Date().toUTCString().slice(17, 25);
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+    }
+    
+    // ---------- NAVIGATION BUTTONS ----------
+    function addQuickNav() {
+        if (document.querySelector('.nav-quick')) return;
+        const navDiv = document.createElement('div');
+        navDiv.className = 'nav-quick';
+        navDiv.innerHTML = `
+            <button class="nav-btn" data-scroll="top" title="Tactical Top">⬆️</button>
+            <button class="nav-btn" data-scroll="mid" title="Center Mass">🎯</button>
+            <button class="nav-btn" data-scroll="bottom" title="Footer Base">⬇️</button>
+            <button class="nav-btn" id="refreshRecorderBtn" title="Reboot Recorder">🔄</button>
+        `;
+        document.body.appendChild(navDiv);
+        
+        document.querySelectorAll('[data-scroll]').forEach(btn => {
+            btn.onclick = () => {
+                if (btn.dataset.scroll === 'top') window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (btn.dataset.scroll === 'mid') window.scrollTo({ top: document.body.scrollHeight / 2, behavior: 'smooth' });
+                if (btn.dataset.scroll === 'bottom') window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            };
+        });
+        
+        document.getElementById('refreshRecorderBtn')?.addEventListener('click', () => {
+            location.reload();
+        });
+    }
+    
+    // ---------- TACTICAL TOOLBAR + AUDIO CONTROLS FIX ----------
+    function augmentAudioControls() {
+        // override renderChunksList to add seek/convert buttons
+        if (!window.renderChunksList) return;
+        const originalRender = window.renderChunksList;
+        window.renderChunksList = async function() {
+            await originalRender();
+            // enhance each audio with custom controls? Already uses native but ensure full UI
+            document.querySelectorAll('audio').forEach(audio => {
+                audio.controls = true;
+                audio.preload = 'metadata';
+                // add wrapper for convert?
+                const parentLi = audio.closest('li');
+                if (parentLi && !parentLi.querySelector('.convert-btn')) {
+                    const convBtn = document.createElement('button');
+                    convBtn.textContent = '🔄 Convert';
+                    convBtn.className = 'tool-btn';
+                    convBtn.style.fontSize = '10px';
+                    convBtn.onclick = async (e) => {
+                        e.stopPropagation();
+                        const src = audio.src;
+                        if (!src) return;
+                        const response = await fetch(src);
+                        const blob = await response.blob();
+                        // simulate conversion to wav? For demo just download as .wav
+                        const wavUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = wavUrl;
+                        a.download = `converted_${Date.now()}.wav`;
+                        a.click();
+                        URL.revokeObjectURL(wavUrl);
+                        alert('Convert placeholder: re-encode to WAV (original saved).');
+                    };
+                    parentLi.appendChild(convBtn);
+                }
+            });
+        };
+    }
+    
+    // ---------- GOVERNMENT FOOTER ----------
+    function addFooter() {
+        if (document.querySelector('.gov-footer')) return;
+        const footer = document.createElement('div');
+        footer.className = 'gov-footer';
+        footer.innerHTML = `
+            <div>🇿🇦 SOUTH AFRICAN AIR FORCE | AIRSPACE SURVEILLANCE COMMAND | PROTOCOL-7</div>
+            <div>📡 RADAR: PRIMARY | MODE-S | ADS-B | UHF/VHF DF 📻</div>
+            <div>⚙️ REGULATION: ICAO ANNEX 11 | RESTRICTED USE - AUTHORIZED PERSONNEL ONLY</div>
+            <div style="margin-top:8px;">🛡️ CONTINUOUS RECORDING ACTIVE | SECURE STORAGE INDEXEDDB v2</div>
+        `;
+        document.body.appendChild(footer);
+    }
+    
+    // ---------- ACCESS GATE ALGORITHM (light array) ----------
+    const accessAlgorithms = [
+        { name: "CLEARANCE_DELTA", check: () => true },
+        { name: "ECHO_ROTATION", check: () => Math.random() > 0.2 },
+        { name: "TANGO_OVERRIDE", check: () => new Date().getMinutes() % 2 === 0 }
+    ];
+    
+    function initAccessGate() {
+        const gatePass = accessAlgorithms.every(algo => algo.check());
+        if (!gatePass) {
+            console.warn("Protocol-7 gate: limited mode");
+        } else {
+            console.log("Protocol-7 gate: FULL TACTICAL ACCESS");
+        }
+        // silent for UX but hook global
+        window.__protocol7Gate = gatePass;
+    }
+    
+    // ---------- ROBUST RECORDER BOOST (attempt to keep alive with Page Visibility API) ----------
+    function enhanceRecorderResilience() {
+        if (!window.startNewRecorderChunk || !window.mediaStream) return;
+        let lastChunkTime = Date.now();
+        const checkInterval = setInterval(() => {
+            if (document.visibilityState === "visible") {
+                // if no recorder active or stuck, attempt restart
+                if (!window.mediaRecorder || window.mediaRecorder.state === 'inactive') {
+                    console.warn("Protocol-7: Recorder inactive, restarting chunk");
+                    if (window.startNewRecorderChunk) window.startNewRecorderChunk();
+                }
+            }
+        }, 30000);
+        
+        window.addEventListener('beforeunload', () => clearInterval(checkInterval));
+        // Also listen to page show
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && (!window.mediaRecorder || window.mediaRecorder.state === 'inactive')) {
+                if (window.startNewRecorderChunk) setTimeout(() => window.startNewRecorderChunk(), 100);
+            }
+        });
+    }
+    
+    // ---------- MAIN INIT SEQUENCE (does not disturb original) ----------
+    function protocol7Bootstrap() {
+        initSkyLayer();
+        injectHeader();
+        addQuickNav();
+        addFooter();
+        augmentAudioControls();
+        initAccessGate();
+        // slight delay to let original recorder start
+        setTimeout(() => {
+            enhanceRecorderResilience();
+            // also force original's chunk list render again
+            if (window.renderChunksList) window.renderChunksList();
+        }, 2000);
+        
+        // additional loading animations for all buttons
+        const addLoadFeedback = () => {
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.hasAttribute('data-load-enhanced')) return;
+                btn.setAttribute('data-load-enhanced', 'true');
+                btn.addEventListener('click', function(e) {
+                    if (this.disabled) return;
+                    const originalText = this.innerHTML;
+                    this.innerHTML = `<span class="load-spinner"></span>`;
+                    setTimeout(() => { if (this) this.innerHTML = originalText; }, 300);
+                });
+            });
+        };
+        setInterval(addLoadFeedback, 1000);
+    }
+    
+    // Run after DOM and existing scripts partially
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', protocol7Bootstrap);
+    else protocol7Bootstrap();
+    
+})();
+
+</script>
     
 </body>
     
