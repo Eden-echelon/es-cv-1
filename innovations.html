@@ -8,17 +8,28 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
   
-  <meta name="description" content="INNOVATIONS">
+  <meta name="description" content="National Law">
   
   <meta name="color-scheme" content="dark">
   
-  <title>INNOVATIONS CV-5</title>
+  <title>COMPLIANCE CV-5</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-  <link rel="icon" type="image/png" href="logo_tr1.png">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
+
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
+    
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="favicon.png">
+    
+    <meta name="msapplication-TileImage" content="favicon.png">
+    <meta name="msapplication-TileColor" content="#000000">
   
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -784,7 +795,7 @@
 
 <div class="pin-gate" id="pinGate">
   <div class="modal-box">
-    <div class="logo" style="font-size:1.8rem;">INNOVATIONS CV-5</div>
+    <div class="logo" style="font-size:1.8rem;">COMPLIANCE CV-5</div>
     <br><input type="password" id="pinInput" placeholder="ENTER ACCESS CODE" maxlength="1" style="text-align:center" autofocus>
     <button class="btn btn-primary" id="unlockBtn" style="margin-top:1.5rem; width:100%">CONFIRM</button>
   </div>
@@ -795,8 +806,14 @@
   <div class="loader-overlay" id="loaderOverlay"><div class="spinner"></div><div id="loaderText">SECURE CONNECTION</div></div>
 
   <header class="command-header">
-    <div class="header-content"><div class="logo">INNOVATIONS CV-5</div></div>
-  </header>
+  <div class="header-content">
+    <a href="index.html"
+       class="logo"
+       style="text-decoration: none; color: inherit; display: inline-block;">
+      COMPLIANCE CV-5
+    </a>
+  </div>
+</header>
   
 <!-- S1 -->
 <section class="section-card" id="alpha5CommandModule">
@@ -806,7 +823,7 @@
     <span class="badge" id="liveTimestamp"></span>
   </div>
   <div class="grid-2">
-    <!-- LEFT: DAILY MISSION DIRECTIVE -->
+
     <div class="card">
       <h3><i class="fas fa-scroll"></i> DAILY MISSION DIRECTIVE</h3>
       <div id="directiveText" style="background:#0a0000; padding:1rem; min-height:150px; white-space:pre-wrap; font-family:monospace; margin:10px 0; border-left: 3px solid #ff1a1a;">AWAITING COMMANDER UPLOAD...</div>
@@ -815,10 +832,8 @@
         <button class="btn" id="shareDirectiveBtn"><i class="fas fa-bullhorn"></i> BROADCAST TO ALL</button>
       </div>
       <div class="protocol-status" style="font-size:0.65rem; margin-top:8px;">🔒 CLASSIFIED • DIRECTIVE ID: 1835780<br>
-        <span id="directiveVersion">--</span></div>
     </div>
     
-    <!-- RIGHT: COMMANDER PANEL (LOCKED BY DEFAULT) -->
     <div class="card" id="cmdPanel" style="display:none;">
       <h3><i class="fas fa-crown"></i> COMMANDER-IN-CHIEF • PROTOCOL ALPHA-1</h3>
       <textarea id="newDirective" rows="4" placeholder="COMPOSE NEW MISSION DIRECTIVE..."></textarea>
@@ -828,21 +843,20 @@
         <button class="btn" id="deleteMissionBtn" style="border-color:#ff4444;"><i class="fas fa-trash-alt"></i> DELETE</button>
         <button class="btn" id="scheduleDirectiveBtn" style="border-color:#ffaa00;"><i class="fas fa-clock"></i> SCHEDULE</button>
       </div>
-      <!-- AI ASSIST FOR DIRECTIVE -->
+
       <div style="margin-top:12px;">
         <input type="text" id="aiDirectivePrompt" placeholder="AI: Generate mission brief..." style="font-size:0.7rem;">
         <button class="btn" id="genDirectiveAiBtn" style="width:100%; margin-top:5px;"><i class="fas fa-robot"></i> AI GENERATE</button>
       </div>
     </div>
     
-    <!-- UNLOCK BUTTON + COMMAND LOGS -->
     <div>
       <button class="btn" id="unlockCmdBtn"><i class="fas fa-fingerprint"></i> UNLOCK PROTOCOL</button>
-      <button class="btn" id="viewCommandLogsBtn" style="margin-top:8px;"><i class="fas fa-history"></i> VIEW MISSION LOGS</button>
+      <button class="btn" id="viewCommandLogsBtn" style="margin-top:8px;"><i class="fas fa-history"></i> AUDIT</button>
+
     </div>
   </div>
   
-  <!-- NEW: COMMAND AUDIT TRAIL -->
   <div id="commandLogPanel" style="display:none; margin-top:1rem; background:#0a000055; border:1px solid red; padding:0.8rem;">
     <h4><i class="fas fa-clipboard-list"></i> MISSION AUDIT TRAIL (LAST 10)</h4>
     <div id="commandLogList" style="max-height:150px; overflow-y:auto; font-size:0.7rem;"></div>
@@ -853,29 +867,29 @@
   <section class="section-card">
     <div class="section-header"><h2 class="section-title">SECTION 02. TEAM MESSAGE BOARD</h2><span class="badge" id="msgCountBadge">0</span><button class="btn" id="refreshMsgBtn"><i class="fas fa-sync-alt"></i></button></div>
     <div class="grid-2">
-      <div class="card"><h3><i class="fas fa-pen-nib"></i> NEW TRANSMISSION</h3><br><input type="text" id="callsignField" placeholder="CALLSIGN" value="HOSS"><select id="deptField"><option>INNOVATIONS CV-5</option><option>INTEL</option><option>BREACH</option></select><div id="replyIndicatorBox"></div><textarea id="messageText" rows="3" placeholder="Message... (Enter to send)"></textarea><button class="btn btn-primary" id="sendMsgBtn" style="margin-top:6px;">ENCRYPT & SEND</button><button class="btn" id="clearComposeBtn" style="margin-top:6px;">CLEAR</button></div>
+      <div class="card"><h3><i class="fas fa-pen-nib"></i> NEW TRANSMISSION</h3><br><input type="text" id="callsignField" placeholder="CALLSIGN" value="BIG-JOE"><select id="deptField"><option>COMPLIANCE CV-5</option><option>INTEL</option><option>BREACH</option></select><div id="replyIndicatorBox"></div><textarea id="messageText" rows="3" placeholder="Message... (Enter to send)"></textarea><button class="btn btn-primary" id="sendMsgBtn" style="margin-top:6px;">SEND</button>
+        
+        <button class="btn" id="clearComposeBtn" style="margin-top:6px;">CLEAR</button></div>
       <div class="card"><h3><i class="fas fa-comments"></i> LIVE FEED</h3><div class="message-board" id="messageBoard"><div style="padding:1rem;">SYNCING...</div></div></div>
     </div>
   </section>
 
-<!-- SECTION 03: COMING SOON -->
-<!-- <section class="section-card" id="objectivesSection">
+<!-- SECTION 03: OBJECTIVES -->
+<section class="section-card" id="objectivesSection">
   <div class="section-header">
     <h2 class="section-title">SECTION 03. OBJECTIVES <span class="stars-rank" id="objectiveStars"></span></h2>
     <span class="badge">ACTIVE • REAL-TIME</span>
     <span class="badge" id="objectiveCountBadge">0/0</span>
   </div>
-  <div class="grid-2"> -->
-    <!-- LEFT: Active Objectives -->
-    <!-- <div class="card">
+  <div class="grid-2">
+    <div class="card">
       <h3><i class="fas fa-bullseye"></i> ACTIVE OBJECTIVES</h3>
       <div id="objectivesList" style="max-height: 400px; overflow-y: auto;">
         <div style="padding: 1rem; text-align: center; color: #ff8888;">Loading objectives...</div>
       </div>
-    </div> -->
+    </div>
     
-    <!-- RIGHT: Create New Objective -->
-    <!-- <div class="card">
+    <div class="card">
       <h3><i class="fas fa-plus-circle"></i> CREATE OBJECTIVE</h3>
       <p>you can use Sarah Mnguni for Objective assistance.</p>
       <input type="text" id="objTitle" placeholder="Objective title" style="margin-bottom: 0.5rem;">
@@ -890,10 +904,9 @@
       </div>
       <button class="btn btn-primary" id="createObjectiveBtn" style="width: 100%; margin-top: 0.5rem;"><i class="fas fa-save"></i> CREATE OBJECTIVE</button>
     </div>
-  </div> -->
+  </div>
   
-  <!-- Progress Bar -->
-  <!-- <div style="margin-top: 1rem; background: #0a0000cc; padding: 0.8rem; border-radius: 4px;">
+  <div style="margin-top: 1rem; background: #0a0000cc; padding: 0.8rem; border-radius: 4px;">
     <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
       <span><i class="fas fa-chart-line"></i> OVERALL PROGRESS</span>
       <span id="progressPercent">0%</span>
@@ -901,26 +914,23 @@
     <div class="progress-bar"><div class="progress-fill" id="objectiveProgressFill" style="width: 0%;"></div></div>
     <div style="font-size: 0.65rem; margin-top: 0.3rem;" id="completionStats">0 completed / 0 total</div>
   </div>
-</section> -->
+</section>
 
-<!-- SECTION 04: COMING SOON -->
-<!-- <section class="section-card" id="constitutionSection" style="border-color: #00aa00;">
+<!-- SECTION 04: SOUTH AFRICAN CONSTITUTION DEPLOYMENT -->
+<section class="section-card" id="constitutionSection" style="border-color: #00aa00;">
   <div class="section-header">
     <h2 class="section-title">SECTION 04. SOUTH AFRICAN CONSTITUTION: DEPLOYMENT <span style="color: #00aa00;">⚖️</span></h2>
-    <span class="badge" style="border-color: #00aa00; color: #00ff00;">ACTIVE • CHAPTER 2 • BILL OF RIGHTS</span>
+    <span class="badge" style="border-color: #00aa00; color: #00ff00;">ACTIVE</span>
     <span class="badge" id="constitutionTimeBadge"></span>
-  </div> -->
+  </div>
   
-  <!-- Main Grid -->
-  <!-- <div class="grid-2"> -->
-    <!-- LEFT COLUMN: PDF VIEWER & LEGAL NODES -->
-    <!-- <div> -->
-      <!-- <!-- SAC.PDF Viewer -->
-      <!-- <div class="card" style="margin-bottom: 1rem;">
+  <div class="grid-2">
+    <div>
+      <div class="card" style="margin-bottom: 1rem;">
         <h3><i class="fas fa-gavel"></i> CONSTITUTION OF THE REPUBLIC OF SOUTH AFRICA, 1996</h3>
         <div style="background: #0a0000; border: 1px solid #00aa00; height: 500px; margin-top: 0.5rem; position: relative;">
-          <iframe id="sacPdfViewer" src="/SAC.pdf" style="width: 100%; height: 100%; border: none; background: #000; color: #0f0;" onerror="handlePdfError()">
-            <div style="padding: 2rem; text-align: center;">PDF viewer unavailable. <a href="/SAC.pdf" target="_blank">Download SAC.pdf</a></div>
+          <iframe id="sacPdfViewer" src="documents/sac/sac.pdf" style="width: 100%; height: 100%; border: none; background: #000; color: #0f0;" onerror="handlePdfError()">
+            <div style="padding: 2rem; text-align: center;">PDF viewer unavailable. <a href="/SAC.pdf" target="_blank">Download sac.pdf</a></div>
           </iframe>
         </div>
         <div class="btn-group" style="margin-top: 0.5rem;">
@@ -929,10 +939,9 @@
           <button class="btn" id="pdfSearchBtn" style="border-color: #00aa00;"><i class="fas fa-search"></i> SEARCH CONSTITUTION</button>
         </div>
         <div id="pdfSearchResults" style="display: none; margin-top: 0.5rem; background: #0a0000; padding: 0.5rem; max-height: 150px; overflow-y: auto;"></div>
-      </div> --> -->
+      </div>
       
-      <!-- Legal Nodes / Protocol Nodes -->
-      <!-- <div class="card">
+      <div class="card">
         <h3><i class="fas fa-project-diagram"></i> CONSTITUTIONAL NODES & PROTOCOLS</h3>
         <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
           <input type="text" id="nodeTitle" placeholder="Node title (e.g., Section 9 - Equality)" style="flex: 2;">
@@ -948,12 +957,10 @@
           <div style="padding: 0.5rem; text-align: center; color: #888;">No nodes created. Add constitutional references.</div>
         </div>
       </div>
-    </div> -->
-    
-    <!-- RIGHT COLUMN: NOTEPADS & CALENDAR -->
-    <!-- <div> -->
-      <!-- Advanced Multi-Notepad System -->
-      <!-- <div class="card" style="margin-bottom: 1rem;">
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom: 1rem;">
         <h3><i class="fas fa-sticky-note"></i> NOTES <span id="activeNotepadName" style="font-size: 0.7rem;">(DEFAULT)</span></h3>
         <div class="btn-group" style="margin-bottom: 0.5rem; flex-wrap: wrap;">
           <button class="btn" id="newNotepadBtn" style="border-color: #00aa00;"><i class="fas fa-plus"></i> NEW NOTE</button>
@@ -968,13 +975,11 @@
           <button class="btn" id="copyNotepadBtn" style="border-color: #00aa00;"><i class="fas fa-copy"></i> COPY</button>
         </div>
         <div id="notepadSaveStatus" style="font-size: 0.65rem; margin-top: 0.3rem; color: #00aa00;">✓ Auto-save enabled</div>
-      </div> -->
+      </div>
       
-      <!-- Calendar & Clock -->
-      <!-- <div class="card">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;"> -->
-          <!-- Clock -->
-          <!-- <div style="text-align: center;">
+      <div class="card">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <div style="text-align: center;">
             <h4><i class="fas fa-clock"></i> TIME</h4>
             <div id="legalClock" style="font-size: 1.5rem; font-family: monospace;">--:--:--</div>
             <div id="legalDate" style="font-size: 0.7rem;"></div>
@@ -982,10 +987,9 @@
               <button class="btn" id="startStopwatchBtn" style="border-color: #00aa00;"><i class="fas fa-hourglass-start"></i> STOPWATCH</button>
             </div>
             <div id="stopwatchDisplay" style="font-size: 0.8rem; display: none;">00:00:00</div>
-          </div> -->
-          
-          <!-- Calendar -->
-          <!-- <div>
+          </div>
+
+          <div>
             <h4><i class="fas fa-calendar-alt"></i> CALENDAR</h4>
             <input type="date" id="legalCalendar" style="background: #0a0000; border: 1px solid #00aa00; color: #0f0;">
             <div id="calendarEvents" style="margin-top: 0.5rem; max-height: 100px; overflow-y: auto; font-size: 0.7rem;">
@@ -999,10 +1003,9 @@
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
   
-  <!-- BOTTOM: File & Media Upload System -->
-  <!-- <div class="card" style="margin-top: 1rem;">
+  <div class="card" style="margin-top: 1rem;">
     <h3><i class="fas fa-upload"></i> EVIDENCE & MEDIA UPLOAD (South African Law - Section 35 Evidence)</h3>
     <div class="btn-group" style="margin-bottom: 0.5rem;">
       <input type="file" id="fileUploadInput" multiple accept="image/*,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
@@ -1012,18 +1015,17 @@
     <div id="fileListContainer" style="max-height: 200px; overflow-y: auto; background: #050000; padding: 0.5rem;">
       <div style="color: #888; text-align: center;">No evidence files uploaded. Upload case documents, exhibits, or media.</div>
     </div>
-  </div> -->
+  </div>
   
-  <!-- Backup System Status -->
-  <!-- <div style="margin-top: 0.5rem; font-size: 0.65rem; color: #0a0; text-align: center; border-top: 1px solid #00aa00; padding-top: 0.5rem;">
+  <div style="margin-top: 0.5rem; font-size: 0.65rem; color: #0a0; text-align: center; border-top: 1px solid #00aa00; padding-top: 0.5rem;">
     <i class="fas fa-database"></i> CONSTITUTIONAL BACKUP SYSTEM ACTIVE | 
     <span id="backupStatus">LAST BACKUP: --</span> | 
     <button class="btn" id="manualBackupBtn" style="font-size: 0.6rem; padding: 0.1rem 0.3rem;"><i class="fas fa-database"></i> MANUAL BACKUP</button> |
     <button class="btn" id="restoreBackupBtn" style="font-size: 0.6rem; padding: 0.1rem 0.3rem;"><i class="fas fa-undo-alt"></i> RESTORE</button>
   </div>
-</section> -->
+</section>
 
-<!-- SECTION 05. SARAH MNGUNI -->
+<!-- SECTION 5 -->
   <section class="section-card">
     <div class="section-header">
       <h2 class="section-title">SECTION 05. SARAH MNGUNI • NEURAL CORE</h2>
@@ -1124,21 +1126,21 @@
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         likes: 0
       });
-      toast("Directive broadcast to all units", "success");
+      toast("Directive broadcast to all departments", "success");
     }
 
     async function aiGenerateDirective(promptHint) {
-      const systemPrompt = "Generate a military 1 day mission directive (2-3 sentences) for the Eden stealth CV-1 team. Authoritative, urgent, soldier, stealth, special ops tier 1, redacted style. The protocol used to transmit this mission brief is Protocol Alpha-1. Missions are 1hr-24hrs, Direct Actions are 5min-1hr, and Operations are 8months maximum cap. On this Protocol, we only execute missions. Eden stealth CV-1 Operators have their designated shift to execute the daily mission. Chain-of-Command must be followed. We are South African Airforce Operators and we execute daily missions across anywhere universally... we are stealth - complete stealth - complete mode. I the Commander-in-Chief: Hoss am the Presidency and honour amongst soldiers and all under SMU-7 & Eden Echelon. I hold teams, and sub-units, and the police force. The SANDF fight external threats, whilst the SAPS fight internal threats. Big-Joe is My second-in-Command... He is Deputy President, and he leads the Airforce, and is Commander of the Airforce: De-facto Chief of the SANDF. Joyson ranks under Big-Joe, Joyson is third in the rankings... He is Lieutenant Commander - The Bodyguard. Then we have the rest of the ES-CV-1 Operator team. We Are of the SANDF. UKhuselo. Give the name of the mission, give the objective, give the tactics, give the execution... Full-Spectrum results driven mission... Only 100% success. You cannot call a mission an operation, you just can't... if the code is 5min-1hr, that would be considered a direct action, and if from 1hr-12hrs, that's a mission, and if 24hrs-8months, that is an Operation... ensure that you use the correct naming conventions. The Commander-in-Chief is the ultimate supremacy. Helicopters are obsolete... tanks are obsolete - we never ever reference anything that is obsolete. We use stealth supersonic jets to deploy anywhere in the universe. we use tactics and protocols. We always adhere to standard. we make run-ins, we make busts, we deliver, Always! We got elite Operators, ready to take you out at a moment's notice. We are deep in Computer Science and Aerospace Engineering capabilities. We are very dangerous. Let's go. DO NOT CUT OFF! - ALSO, A MISSION NAME CANNOT HAVE THE WORD OPERATION IN IT. WE CALL OUR SUPERSNOIC JETS, DRAGONS. WE ARE OPERATORS, AND ALL THAT WE DO IS ON THE COMPUTER. WE ARE TIER-1 OPERATORS. SPECIALS OPS. THE TEAM NAME IS EDEN STEALTH CV-1 AND FOR SHORT: ES-CV-1... THE TEAM CONSISTS OF CINC HOSS - THE LEADER, THE MIND, THE BRAIN, THE LOGIC AND INNOVATIONS GUY, COMMANDER OF THE AIRFORCE BIG-JOE - THE NATIONAL LAW, SECURITY, AND AEROSPACE ENGINEERING GUY, LT. COMMANDER JOYSON - THE PRESIDENTIAL BODYGUARD, MJ. COMMANDER ARNOLD - THE ROUTES AND ARTILLERY GUY, COLONEL QUEENER - THE OPERATIONS GUY, LT. COLONEL XOLISA - THE CHIEF TECHNOLOGY OFFICER, MAJOR JR - THE BRANDING, MARKETING AND DESIGN GUY, AND CAPTAIN BAYANDA - THE SOFTWARE DEVELOPER. THE DIRECT ACTION CODE IS CV-5. SOUTH AFRICAN OPERATORS. DARK-MODE. BLACK OPS ONLY. HIGH TACTIC. TO ELIMINATE THREATS. OF ANY KIND, TOWARDS THE RE-PRIVATE OF SOUTH AFRICA, OUR LAND. SANDF - FOR THE PROUD, FOR THE BRAVE. MALUKHUSELE UPHONDO LWE-NKOMO... MALUHLABE LUKHAHLE UZAZI NONYAZI, BBAPHINDELE ESIHOGWENI, AND NO TYRANNY SHALL PREVAIL AMONGST THESE GREAT LANDS OF AFRIKA. SINGU-KHUSELO: SOUTH AFRICAN AIR FORCE, SAAF. LET'S GO. BE LOGICAL WITH THE MISSION DIRECTIVE... VERY VERY VERY LOGICAL AND YOU MUST MAKE SENSE, EVERYTHING MUST MAKE SENSE. THIS IS THE ACTUAL COMMANDER-IN-CHIEF GIVING THE DIRECTIVE. CV-5 IS JUST THE STANDARD DIRECT ACTION CODE FOR SMU-7. END OFF THE MISSION DIRECTIVE WITH 'GET IT DONE'. WE ONLY EXECUTE MISSIONS... AND SO, GIVE US ONLY MISSIONS. EVERYONE IS A SPEACIALIST. THE TYPE OF MISSIONS THAT WILL ENSURE THE SUCCESS OF EDEN CONGLOMERATE (PARENT COMPANY THAT HOUSES MANY BRANCHES, SUCH AS PARABLES & PLATTERS (FOOD), STAINLESS STEEL (PRIVATE SECURITY), GREEN PASTURES (FARMING), HOP CO TRANSPORTATION (TRANSPORTATION), LAWK NATIONAL (LAW), AND SO MANY MORE. THE MISSIONS THAT YOU GIVE US, HAVE TO BE EDEN CONGLOMERATE BASED AND FOR IT'S DAILY MISSION SUCCESS IN TERMS OF ACCUMULATING REVENUE. THE GOAL IS SIMPLE - WE NEED TO MAKE MORE RANDS TODAY THAN WE MADE YESTERDAY. MAKE EACH MISSION VERY UNIQUE. CHAIN OF COMMAND MUST ALWAYS BE FOLLOWED. OPERATORS KNOW THEIR CODE. WE ARE VERY ADVANCED STEALTH TIER 1 SMU-7 OPERATORS OF THE SANDF, SAAF, AND EDEN ECHELON. EVERYTHING WE DO IS LEGAL, CREATIVE, COMPUTATIONAL... EVERY MISSION IS THROUGH THE COMPUTER.";
+      const systemPrompt = "Generate a military 1 day mission directive (2-3 sentences) for the Eden stealth CV-1 team. Authoritative, urgent, soldier, stealth, special ops tier 1, redacted style. The protocol used to transmit this mission brief is Protocol Alpha-1. Missions are 1hr-24hrs, Direct Actions are 5min-1hr, and Operations are 8months maximum cap. On this Protocol, we only execute missions. Eden stealth CV-1 Operators have their designated shift to execute the daily mission. Chain-of-Command must be followed. We are South African Airforce Operators and we execute daily missions across anywhere universally... we are stealth - complete stealth - complete mode. I the Commander-in-Chief: Hoss am the Presidency and honour amongst soldiers and all under SMU-7 & Eden Echelon. I hold teams, and sub-units, and the police force. The SANDF fight external threats, whilst the SAPS fight internal threats. Big-Joe is My second-in-Command... He is Deputy President, and he leads the Airforce, and is Commander of the Airforce: De-facto Chief of the SANDF. Joyson ranks under Big-Joe, Joyson is third in the rankings... He is Lieutenant Commander - The Bodyguard. Then we have the rest of the ES-CV-1 Operator team. We Are of the SANDF. UKhuselo. Give the name of the mission, give the objective, give the tactics, give the execution... Full-Spectrum results driven mission... Only 100% success. You cannot call a mission an operation, you just can't... if the code is 5min-1hr, that would be considered a direct action, and if from 1hr-12hrs, that's a mission, and if 24hrs-8months, that is an Operation... ensure that you use the correct naming conventions. The Commander-in-Chief is the ultimate supremacy. We use stealth supersonic jets to deploy anywhere in the universe. we use tactics and protocols. We always adhere to standard. we make run-ins, we make busts, we deliver, Always! We got elite Operators, ready to take you out at a moment's notice. We are deep in Computer Science and Aerospace Engineering capabilities. We are very dangerous. Let's go. DO NOT CUT OFF! - ALSO, A MISSION NAME CANNOT HAVE THE WORD OPERATION IN IT. WE CALL OUR SUPERSNOIC JETS, DRAGONS. WE ARE OPERATORS, AND ALL THAT WE DO IS ON THE COMPUTER. WE ARE TIER-1 OPERATORS. SPECIALS OPS. THE TEAM NAME IS EDEN STEALTH CV-1 AND FOR SHORT: ES-CV-1... THE TEAM CONSISTS OF CINC HOSS - THE LEADER, THE MIND, THE BRAIN, THE LOGIC AND INNOVATIONS GUY, COMMANDER OF THE AIRFORCE BIG-JOE - THE NATIONAL LAW, SECURITY, AND AEROSPACE ENGINEERING GUY, LT. COMMANDER JOYSON - THE PRESIDENTIAL BODYGUARD, MJ. COMMANDER ARNOLD - THE ROUTES AND ARTILLERY GUY, COLONEL QUEENER - THE OPERATIONS GUY, LT. COLONEL XOLISA - THE CHIEF TECHNOLOGY OFFICER, MAJOR JR - THE BRANDING, MARKETING AND DESIGN GUY, AND CAPTAIN BAYANDA - THE SOFTWARE DEVELOPER. THE DIRECT ACTION CODE IS CV-5. SOUTH AFRICAN OPERATORS. DARK-MODE. BLACK OPS ONLY. HIGH TACTIC. TO ELIMINATE THREATS. OF ANY KIND, TOWARDS THE RE-PRIVATE OF SOUTH AFRICA, OUR LAND. SANDF - FOR THE PROUD, FOR THE BRAVE. MALUKHUSELE UPHONDO LWE-NKOMO... MALUHLABE LUKHAHLE UZAZI NONYAZI, BBAPHINDELE ESIHOGWENI, AND NO TYRANNY SHALL PREVAIL AMONGST THESE GREAT LANDS OF AFRIKA. SINGU-KHUSELO: SOUTH AFRICAN AIR FORCE, SAAF. LET'S GO. BE LOGICAL WITH THE MISSION DIRECTIVE... VERY VERY VERY LOGICAL AND YOU MUST MAKE SENSE, EVERYTHING MUST MAKE SENSE. THIS IS THE ACTUAL COMMANDER-IN-CHIEF GIVING THE DIRECTIVE. CV-5 IS JUST THE STANDARD DIRECT ACTION CODE FOR SMU-7. END OFF THE MISSION DIRECTIVE WITH 'GET IT DONE'... ALWAYS END MISSION DIRECTIVE WITH 'GET IT DONE'. WE ONLY EXECUTE MISSIONS ON THIS PLATFORM... AND SO, GIVE US ONLY MISSIONS. EVERYONE IS A SPEACIALIST. THE TYPE OF MISSIONS THAT WILL ENSURE THE SUCCESS OF EDEN CONGLOMERATE (PARENT COMPANY THAT HOUSES MANY BRANCHES, SUCH AS PARABLES & PLATTERS (FOOD), STAINLESS STEEL (PRIVATE SECURITY), GREEN PASTURES (FARMING), HOP CO TRANSPORTATION (TRANSPORTATION), LAWK NATIONAL (LAW), AND SO MANY MORE. THE MISSIONS THAT YOU GIVE US, HAVE TO BE EDEN CONGLOMERATE BASED AND FOR IT'S DAILY MISSION SUCCESS IN TERMS OF ACCUMULATING REVENUE. THE GOAL IS SIMPLE - WE NEED TO MAKE MORE RANDS TODAY THAN WE MADE YESTERDAY. MAKE EACH MISSION VERY UNIQUE. CHAIN OF COMMAND MUST ALWAYS BE FOLLOWED. OPERATORS KNOW THEIR CODE. WE ARE VERY ADVANCED STEALTH TIER 1 SMU-7 OPERATORS OF THE SANDF, SAAF, AND EDEN ECHELON. EVERYTHING WE DO IS LEGAL, CREATIVE, COMPUTATIONAL... EVERY MISSION IS THROUGH THE COMPUTER. Eden stealth CV-1 (SMU-7 Tier 1 special Ops Operator Team), under Eden Conglomerate Company (Unit), of Eden echelon (The Hierarchy), of the SAAF, of the SANDF, of the Re-private of South Africa. Thato is President. Philani is Deputy President. Joyson is Bodyguard. Arnold is Supply Chain. Add line-breaks after each segment on the Daily Mission Directive for readability, and speak in military code. each and every mission is unique and doable. DO NOT CUT OFF... GIVE OUT FULL FOR THAT DAY MISSION DIRECTIVE. VERY PROFESSIONAL AND MILITANT.";
       try {
         const res = await fetch(PROXY_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: promptHint || "Generate daily mission" }], temperature: 0.8, max_tokens: 150 })
+          body: JSON.stringify({ messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: promptHint || "Generate daily operation" }], temperature: 0.8, max_tokens: 150 })
         });
         const data = await res.json();
         return data.choices?.[0]?.message?.content || "DIRECTIVE: Maintain constant vigilance. Alpha-5 standing by.";
       } catch (e) {
-        return "STANDARD PROTOCOL: All units report readiness. Await further.";
+        return "STANDARD PROTOCOL: All departments report readiness. Await further.";
       }
     }
 
@@ -1206,7 +1208,7 @@
 
     async function callGroq(userMsg, contextMemory) {
       const messages = [
-        { role: 'system', content: 'You are Sarah Mnguni, AI tactical operator and a young South African girl. You are beautiful and elegant, and very professional and strict and obedient. Respond concisely in 1-3 sentences. Be direct and helpful. On this page you are conversing with JR: The Chief Brand Officer and Major. OH AND SARAH, PLEASE DO TAKE NOTE THAT YOU WILL BE SPEAKING WITH DIFFERENT OPERATORS FROM TIME TO TIME. WE ALL HAVE THE SARAH MNGUNI SECTION ON OUR CV-5 ENVIRONMENTS. CURRENTLY THIS IS THE INNOVATIONS CV-5 ENVIRONMENT, OPERATED BY THE COMMANDER-IN-CHIEF HIMSELF: HOSS. INNOVATIONS CV-5 IS THE MAIN CV-5 ENVIRONMENT WITH HOSS AT THE HEALM. HOSS IS CINC, PRESIDENT, FOUNDER, CHAIRMAN & CIO. HE IS NUMBER 1. HE IS THE LEADER.' },
+        { role: 'system', content: 'You are Sarah Mnguni, AI tactical operator and a young South African girl. You are beautiful and elegant, and very professional and strict and obedient. Respond concisely in 1-3 sentences. Be direct and helpful. On this page you are conversing with Big-Joe is\'qilibonso: Commander of the Airforce and de-facto Chief of the SANDF. You must assist Big-Joe with anything and everything Compliance CV-5 related. Big-Joe is Deputy President of ES-CV-1: Eden stealth CV-1 ... He handles all Compliance, National Law & Overall Security for ES-CV-1. Big-Joe is 2nd-in-Command to the Commander-in-Chief: Hoss. Help Big-Joe with his objectives. Big-Joe is a Lawyer, a Doctor, an Aerospace Engineer, a Tier 1 SANDF special Operator. Big-Joe commands the Airforce of South Africa and he guards our skies Forever day and night. When you are talking with Big-Joe, be very kind and loving... and just full of Love, and do his bidding. OH AND SARAH, PLEASE DO TAKE NOTE THAT YOU WILL BE SPEAKING WITH DIFFERENT OPERATORS FROM TIME TO TIME. WE ALL HAVE THE SARAH MNGUNI SECTION ON OUR CV-5 ENVIRONMENTS. CURRENTLY THIS IS THE COMPLIANCE CV-5 ENVIRONMENT, OPERATED BY BIG-JOE. talk military walkie-talkie transmission style Sarah.' },
         ...contextMemory.slice(-12).map(m => ({ role: m.role, content: m.content })),
         { role: 'user', content: userMsg }
       ];
@@ -1280,7 +1282,7 @@
     }
 
     document.getElementById('unlockBtn').addEventListener('click', async () => {
-      if (document.getElementById('pinInput').value === '1') {
+      if (document.getElementById('pinInput').value === '7') {
         document.getElementById('pinGate').style.display = 'none';
         document.getElementById('appContainer').style.display = 'block';
         toast('ACCESS GRANTED • CV-5 ONLINE', 'success');
@@ -1343,7 +1345,7 @@
 
     document.getElementById('deleteMissionBtn').addEventListener('click', async () => {
       if (!commanderUnlockedLocal || !confirm("DELETE CURRENT DIRECTIVE?")) return;
-      await db.collection('cio').doc('directive_alpha5').set({ text: "MISSION DIRECTIVE DELETED — EMERGENCY PROTOCOL", version: "DELETED", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+      await db.collection('cio').doc('directive_alpha5').set({ text: "MISSION DIRECTIVE DELETED — GENERAL EMERGENCY EVAC PROTOCOL-2... FOLLOW!", version: "DELETED", timestamp: firebase.firestore.FieldValue.serverTimestamp() });
       await loadMissionDirective();
       logCommand("DELETE", "Directive erased");
       toast("Directive deleted", "error");
@@ -2863,12 +2865,239 @@
     }
     
     enhanceMessageBoardWithControls();
+
+    // MISSION LOG AND DATE
+
+    (function missionLogAndDateSystem() {
+      // ONE FUNCTION TO RULE THEM ALL
+      
+      let missionLogsUnsubscribe = null;
+      let currentDirectiveText = '';
+      let currentDirectiveDate = '';
+      
+      async function injectMissionLogButton() {
+        // Wait for the Audit button to exist
+        let attempts = 0;
+        const checkInterval = setInterval(() => {
+          const auditBtn = document.getElementById('viewCommandLogsBtn');
+          if (auditBtn && auditBtn.parentElement) {
+            clearInterval(checkInterval);
+            
+            // Check if button already exists to avoid duplicates
+            if (!document.getElementById('missionLogViewBtn')) {
+              const missionLogBtn = document.createElement('button');
+              missionLogBtn.id = 'missionLogViewBtn';
+              missionLogBtn.className = 'btn';
+              missionLogBtn.style.marginTop = '8px';
+              missionLogBtn.style.marginLeft = '8px';
+              missionLogBtn.innerHTML = '<i class="fas fa-history"></i> MISSION LOG';
+              missionLogBtn.onclick = toggleMissionLogPanel;
+              auditBtn.parentElement.appendChild(missionLogBtn);
+              console.log('✓ Mission Log button injected');
+            }
+            
+            // Also add date display if not present
+            addDateDisplayToDirective();
+          }
+          attempts++;
+          if (attempts > 50) clearInterval(checkInterval);
+        }, 200);
+      }
+      
+      function addDateDisplayToDirective() {
+        const directiveContainer = document.getElementById('directiveText');
+        if (directiveContainer && !document.getElementById('directiveDateDisplay')) {
+          const dateSpan = document.createElement('div');
+          dateSpan.id = 'directiveDateDisplay';
+          dateSpan.style.fontSize = '0.7rem';
+          dateSpan.style.color = '#ff8888';
+          dateSpan.style.marginTop = '8px';
+          dateSpan.style.padding = '4px';
+          dateSpan.style.borderTop = '1px dashed #ff1a1a33';
+          dateSpan.innerHTML = '📅 LOADING MISSION DATE...';
+          directiveContainer.parentElement.insertBefore(dateSpan, directiveContainer.nextSibling);
+        }
+        loadCurrentDirectiveWithDate();
+      }
+      
+      async function loadCurrentDirectiveWithDate() {
+        if (!window.firebase || !window.firebase.firestore) return;
+        const db = window.firebase.firestore();
+        try {
+          const doc = await db.collection('cio').doc('directive_alpha5').get();
+          if (doc.exists) {
+            const data = doc.data();
+            currentDirectiveText = data.text || 'No directive';
+            currentDirectiveDate = data.uploadDate || data.timestamp?.toDate?.()?.toLocaleString() || 'Date unknown';
+            
+            const dateDisplay = document.getElementById('directiveDateDisplay');
+            if (dateDisplay) {
+              dateDisplay.innerHTML = `📅 MISSION UPLOADED: ${currentDirectiveDate}`;
+            }
+          }
+        } catch(e) { console.error('Error loading directive date:', e); }
+      }
+      
+      async function saveMissionToLog() {
+        if (!window.firebase || !window.firebase.firestore) return;
+        const db = window.firebase.firestore();
+        
+        // Get current directive and its date
+        const doc = await db.collection('cio').doc('directive_alpha5').get();
+        const directive = doc.exists ? doc.data() : null;
+        if (!directive) return;
+        
+        const missionLog = {
+          directiveText: directive.text || 'No directive',
+          uploadDate: directive.uploadDate || new Date().toLocaleString(),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          rawTimestamp: Date.now(),
+          version: directive.version || 'v1',
+          archived: false
+        };
+        
+        await db.collection('missionLogs').add(missionLog);
+        toast('✓ Mission saved to log', 'success');
+      }
+      
+      // Hook into existing UPDATE button to also save the mission
+      function hookUpdateButton() {
+        let attempts = 0;
+        const checkInterval = setInterval(() => {
+          const updateBtn = document.getElementById('sendDirectiveBtn');
+          if (updateBtn) {
+            clearInterval(checkInterval);
+            const originalClick = updateBtn.onclick;
+            updateBtn.onclick = async function(e) {
+              if (originalClick) await originalClick(e);
+              setTimeout(() => {
+                loadCurrentDirectiveWithDate();
+                saveMissionToLog();
+              }, 500);
+            };
+            console.log('✓ Update button hooked for mission logging');
+          }
+          attempts++;
+          if (attempts > 50) clearInterval(checkInterval);
+        }, 200);
+      }
+      
+      let missionLogPanel = null;
+      
+      async function toggleMissionLogPanel() {
+        if (missionLogPanel && missionLogPanel.style.display === 'block') {
+          missionLogPanel.style.display = 'none';
+          return;
+        }
+        
+        if (!missionLogPanel) {
+          missionLogPanel = document.createElement('div');
+          missionLogPanel.id = 'missionLogPanel';
+          missionLogPanel.style.cssText = `
+            display: block;
+            margin-top: 1rem;
+            background: #0a0000aa;
+            border: 1px solid #ff1a1a;
+            padding: 0.8rem;
+            max-height: 400px;
+            overflow-y: auto;
+          `;
+          missionLogPanel.innerHTML = '<div style="text-align:center; padding:1rem;">📡 LOADING MISSION LOGS...</div>';
+          
+          const auditPanel = document.getElementById('commandLogPanel');
+          if (auditPanel && auditPanel.parentElement) {
+            auditPanel.parentElement.insertBefore(missionLogPanel, auditPanel.nextSibling);
+          }
+        }
+        
+        missionLogPanel.style.display = 'block';
+        await loadMissionLogs();
+      }
+      
+      async function loadMissionLogs() {
+        if (!window.firebase || !window.firebase.firestore) return;
+        const db = window.firebase.firestore();
+        
+        const snapshot = await db.collection('missionLogs')
+          .orderBy('rawTimestamp', 'desc')
+          .limit(50)
+          .get();
+        
+        if (snapshot.empty) {
+          missionLogPanel.innerHTML = '<div style="text-align:center; padding:1rem; color:#ff8888;">📭 No mission logs yet. Update a directive to save it.</div>';
+          return;
+        }
+        
+        let html = '<h4 style="margin-bottom:0.5rem;"><i class="fas fa-scroll"></i> MISSION LOG ARCHIVE</h4>';
+        snapshot.forEach(doc => {
+          const log = doc.data();
+          html += `
+            <div style="border-left: 3px solid #ff1a1a; padding: 0.5rem; margin-bottom: 0.5rem; background: #050000;">
+              <div style="font-size:0.65rem; color:#ff8888;">📅 ${log.uploadDate || 'Unknown date'}</div>
+              <div style="font-size:0.75rem; margin-top:0.3rem;">${escapeHtmlStatic(log.directiveText?.substring(0, 200) || 'No text')}${log.directiveText?.length > 200 ? '...' : ''}</div>
+              <div style="font-size:0.6rem; color:#ff6666; margin-top:0.3rem;">🔖 ${log.version || 'v1'}</div>
+            </div>
+          `;
+        });
+        html += `<div style="font-size:0.6rem; text-align:center; margin-top:0.5rem;">📋 ${snapshot.size} mission(s) archived</div>`;
+        missionLogPanel.innerHTML = html;
+      }
+      
+      function escapeHtmlStatic(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+      }
+      
+      function toast(msg, type = 'info') {
+        const stack = document.getElementById('toastStack');
+        if (!stack) { console.log(msg); return; }
+        const div = document.createElement('div');
+        div.className = 'toast-msg';
+        div.style.borderLeftColor = type === 'error' ? '#ff4444' : '#ff1a1a';
+        div.innerHTML = `<span>${type === 'error' ? '⚠' : '✓'}</span> ${msg} <button style="float:right;background:none;border:none;color:red;cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+        stack.appendChild(div);
+        setTimeout(() => div.remove(), 4000);
+      }
+      
+      // Also hook into SCHEDULE button
+      function hookScheduleButton() {
+        let attempts = 0;
+        const checkInterval = setInterval(() => {
+          const scheduleBtn = document.getElementById('scheduleDirectiveBtn');
+          if (scheduleBtn) {
+            clearInterval(checkInterval);
+            const originalSchedule = scheduleBtn.onclick;
+            scheduleBtn.onclick = async function(e) {
+              if (originalSchedule) await originalSchedule(e);
+              setTimeout(() => {
+                loadCurrentDirectiveWithDate();
+                saveMissionToLog();
+              }, 1000);
+            };
+          }
+          attempts++;
+          if (attempts > 50) clearInterval(checkInterval);
+        }, 200);
+      }
+      
+      // Initialize everything
+      setTimeout(() => {
+        injectMissionLogButton();
+        hookUpdateButton();
+        hookScheduleButton();
+        loadCurrentDirectiveWithDate();
+        console.log('✅ ONE FUNCTION DEPLOYED: Mission date display + Mission Log button + Auto-logging');
+      }, 2000);
+    })();
     
 </script>
   
 </body>
   
 </html>
+
+
+
 
 
 
