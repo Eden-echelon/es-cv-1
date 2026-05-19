@@ -59,7 +59,7 @@
             height: 14px;
             border-radius: 50%;
             background-color: #e74c3c;
-            box-shadow: 0 0 6px #e74c3c;
+    
             animation: pulse 1.2s infinite;
             margin-right: 8px;
             
@@ -186,7 +186,7 @@
     <button id="pttButton" class="ptt-button">📡 HOLD TO TALK (PTT)</button>
 
     <div class="panel">
-        <strong>🎙️ RECORDS MANAGEMENT</strong> (auto-saved every 5 min)
+        <strong>🎙️ Records management</strong> (auto-saved every 5 min)
         <button id="refreshChunksBtn" style="margin-left: 12px;">⟳ refresh</button>
         <button id="clearAllChunksBtn" class="danger">🗑 delete all chunks</button>
         <ul id="chunksList" class="chunk-list">
@@ -199,8 +199,7 @@
             <summary>🔌 WebRTC / Signaling (Fly.io ready)</summary>
             <div class="webrtc-badge">🔴 Peer status: <span id="peerStatus">disconnected</span></div>
             <button id="connectWebRTC">🔗 Connect to signaling (mock)</button>
-            <p style="font-size:12px;">Replace `ws://your-flyio-app.internal` with real signaling server.<br>
-            This demo includes local recording autonomy + PTT activation for remote stream.</p>
+            <p style="font-size:12px;">Replace `ws://your-flyio-app.internal` with real signaling server.<br></p>
         </details>
     </div>
 </div>
@@ -218,7 +217,6 @@
     const STORE_NAME = 'audioChunks';
     let db = null;
 
-    // UI elements
     const chunkCounterSpan = document.getElementById('chunkCounter');
     const pttStateSpan = document.getElementById('pttState');
     const pttButton = document.getElementById('pttButton');
@@ -227,7 +225,6 @@
     const chunksListEl = document.getElementById('chunksList');
     const peerStatusSpan = document.getElementById('peerStatus');
 
-    // ---------- IndexedDB setup ----------
     function openDB() {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open('Protocol7DB', 2);
@@ -278,14 +275,13 @@
         return new Promise((resolve) => { tx.oncomplete = resolve; });
     }
 
-    // ---------- Recorder logic (autonomous chunks) ----------
     async function startPerpetualRecording() {
         try {
             mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
             startNewRecorderChunk();
         } catch (err) {
-            console.error("Microphone access denied:", err);
-            alert("Need microphone for perpetual recording.");
+            console.error("microphone access denied:", err);
+            alert("need microphone for pr.");
         }
     }
 
@@ -468,7 +464,7 @@ function startNewRecorderChunk() {
     "use strict";
     
     const tacticalCSS = `
-        /* Base tactical enhancements */
+       
         * {
             scroll-behavior: smooth;
         }
@@ -479,7 +475,6 @@ function startNewRecorderChunk() {
             overflow-x: hidden;
         }
         
-        /* Clear blue skies animation layer */
         .sky-layer {
             position: fixed;
             top: 0;
@@ -495,7 +490,6 @@ function startNewRecorderChunk() {
             position: absolute;
             background: rgba(255, 255, 255, 0.15);
             border-radius: 1000px;
-            box-shadow: 0 0 60px rgba(255,255,240,0.1);
             backdrop-filter: blur(8px);
             animation: floatCloud linear infinite;
             pointer-events: none;
@@ -526,7 +520,6 @@ function startNewRecorderChunk() {
             100% { transform: translateX(-150px) translateY(20px) scaleX(1); }
         }
         
-        /* Quick navigation buttons */
         .nav-quick {
             position: fixed;
             right: 20px;
@@ -561,7 +554,6 @@ function startNewRecorderChunk() {
             border-color: #88bbdd;
         }
         
-        /* Audio controls enhancement */
         audio {
             min-width: 200px;
             height: 40px;
@@ -572,8 +564,7 @@ function startNewRecorderChunk() {
         audio::-webkit-media-controls-panel {
             background: #0a121f;
         }
-        
-        /* Toolbar */
+  
         .tactical-toolbar {
             position: fixed;
             bottom: 20px;
@@ -605,7 +596,6 @@ function startNewRecorderChunk() {
         
         .tool-btn:active { transform: scale(0.95); background: #3a6a8a; }
         
-        /* Government footer */
         .gov-footer {
             background: #03060cee;
             backdrop-filter: blur(10px);
@@ -618,7 +608,6 @@ function startNewRecorderChunk() {
             letter-spacing: 1px;
         }
         
-        /* Popups */
         .tactical-popup {
             position: fixed;
             bottom: 90px;
@@ -642,8 +631,7 @@ function startNewRecorderChunk() {
             85% { opacity: 1; transform: translateX(0); }
             100% { opacity: 0; transform: translateX(50px); visibility: hidden; }
         }
-        
-        /* loading spinners */
+ 
         .load-spinner {
             display: inline-block;
             width: 14px;
@@ -680,14 +668,12 @@ function startNewRecorderChunk() {
     styleSheet.textContent = tacticalCSS;
     document.head.appendChild(styleSheet);
     
-    // ---------- SKY & AIRCRAFT GENERATOR ----------
     function initSkyLayer() {
         if (document.querySelector('.sky-layer')) return;
         const skyDiv = document.createElement('div');
         skyDiv.className = 'sky-layer';
         document.body.prepend(skyDiv);
-        
-        // clouds
+  
         for (let i = 0; i < 18; i++) {
             const cloud = document.createElement('div');
             cloud.className = 'cloud';
@@ -701,8 +687,7 @@ function startNewRecorderChunk() {
             skyDiv.appendChild(cloud);
         }
         
-        // planes
-        const planeIcons = ['✈️', '🛩️'];
+        const planeIcons = ['🛩️'];
         for (let i = 0; i < 6; i++) {
             const plane = document.createElement('div');
             plane.className = 'aircraft';
@@ -715,7 +700,6 @@ function startNewRecorderChunk() {
         }
     }
     
-    // ---------- TACTICAL POPUP GENERATOR (airspace insights) ----------
     const insights = [
         "✈️ ATC: Victor 1-2-3 cleared for approach",
         "📡 ADS-B: 47 civil tracks, 2 military IFF",
@@ -740,7 +724,6 @@ function startNewRecorderChunk() {
     }
     setInterval(showRandomPopup, 28000);
     
-    // ---------- AEROSPACE HEADER WITH HOME LINK ----------
     function injectHeader() {
         if (document.querySelector('.aerospace-header')) return;
         const header = document.createElement('div');
@@ -749,7 +732,7 @@ function startNewRecorderChunk() {
         header.style.marginBottom = '20px';
         header.style.justifyContent = 'space-between';
         header.innerHTML = `
-            <span><strong>✈️ PROTOCOL-7 AEROSPACE</strong> | <span id="localTimeATC"></span> ZULU</span>
+            <span><strong>P7</strong> | <span id="localTimeATC"></span> ZULU</span>
             <span>🇿🇦 SAAF Airspace Surveillance</span>
         `;
         header.onclick = () => { window.location.href = 'index.html'; };
@@ -765,7 +748,6 @@ function startNewRecorderChunk() {
         setInterval(updateTime, 1000);
     }
     
-    // ---------- NAVIGATION BUTTONS ----------
     function addQuickNav() {
         if (document.querySelector('.nav-quick')) return;
         const navDiv = document.createElement('div');
@@ -791,7 +773,6 @@ function startNewRecorderChunk() {
         });
     }
     
-    // ---------- TACTICAL TOOLBAR + AUDIO CONTROLS FIX ----------
     function augmentAudioControls() {
         // override renderChunksList to add seek/convert buttons
         if (!window.renderChunksList) return;
@@ -830,13 +811,12 @@ function startNewRecorderChunk() {
         };
     }
     
-    // ---------- GOVERNMENT FOOTER ----------
     function addFooter() {
         if (document.querySelector('.gov-footer')) return;
         const footer = document.createElement('div');
         footer.className = 'gov-footer';
         footer.innerHTML = `
-            <div>🇿🇦 SOUTH AFRICAN AIR FORCE | AIRSPACE SURVEILLANCE COMMAND | PROTOCOL-7</div>
+            <div>🇿🇦 SOUTH AFRICAN AIR FORCE | AIRSPACE SURVEILLANCE Protocol | 7</div>
             <div>📡 RADAR: PRIMARY | MODE-S | ADS-B | UHF/VHF DF 📻</div>
             <div>⚙️ REGULATION: ICAO ANNEX 11 | RESTRICTED USE - AUTHORIZED PERSONNEL ONLY</div>
             <div style="margin-top:8px;">🛡️ CONTINUOUS RECORDING ACTIVE | SECURE STORAGE INDEXEDDB v2</div>
@@ -844,7 +824,6 @@ function startNewRecorderChunk() {
         document.body.appendChild(footer);
     }
     
-    // ---------- ACCESS GATE ALGORITHM (light array) ----------
     const accessAlgorithms = [
         { name: "CLEARANCE_DELTA", check: () => true },
         { name: "ECHO_ROTATION", check: () => Math.random() > 0.2 },
@@ -862,7 +841,6 @@ function startNewRecorderChunk() {
         window.__protocol7Gate = gatePass;
     }
     
-    // ---------- ROBUST RECORDER BOOST (attempt to keep alive with Page Visibility API) ----------
     function enhanceRecorderResilience() {
         if (!window.startNewRecorderChunk || !window.mediaStream) return;
         let lastChunkTime = Date.now();
@@ -885,7 +863,6 @@ function startNewRecorderChunk() {
         });
     }
     
-    // ---------- MAIN INIT SEQUENCE (does not disturb original) ----------
     function protocol7Bootstrap() {
         initSkyLayer();
         injectHeader();
