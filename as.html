@@ -702,7 +702,7 @@ function startNewRecorderChunk() {
         }
         
         // planes
-        const planeIcons = ['✈️', '🛩️', '🚁', '🛸', '⚡'];
+        const planeIcons = ['✈️', '🛩️'];
         for (let i = 0; i < 6; i++) {
             const plane = document.createElement('div');
             plane.className = 'aircraft';
@@ -738,7 +738,7 @@ function startNewRecorderChunk() {
         document.body.appendChild(pop);
         setTimeout(() => pop.remove(), 5000);
     }
-    setInterval(showRandomPopup, 12000);
+    setInterval(showRandomPopup, 28000);
     
     // ---------- AEROSPACE HEADER WITH HOME LINK ----------
     function injectHeader() {
@@ -750,7 +750,7 @@ function startNewRecorderChunk() {
         header.style.justifyContent = 'space-between';
         header.innerHTML = `
             <span><strong>✈️ PROTOCOL-7 AEROSPACE</strong> | <span id="localTimeATC"></span> ZULU</span>
-            <span>🇿🇦 SAAF AIRSPACE SURVEILLANCE</span>
+            <span>🇿🇦 SAAF Airspace Surveillance</span>
         `;
         header.onclick = () => { window.location.href = 'index.html'; };
         const container = document.querySelector('.container');
