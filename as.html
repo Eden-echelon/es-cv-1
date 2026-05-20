@@ -72,7 +72,6 @@
             height: 14px;
             border-radius: 50%;
             background-color: #e74c3c;
-    
             animation: pulse 1.2s infinite;
             margin-right: 8px;
             
@@ -207,6 +206,8 @@
         </ul>
     </div>
 
+    <!-- WebRTC -->
+
     <div class="panel">
         <details>
             <summary>🔌 WebRTC / Signaling (Fly.io ready)</summary>
@@ -215,6 +216,7 @@
             <p style="font-size:12px;">Replace `ws://your-flyio-app.internal` with real signaling server.<br></p>
         </details>
     </div>
+    
 </div>
 
 <script>
@@ -760,6 +762,8 @@ function startNewRecorderChunk() {
         setTimeout(() => pop.remove(), 5000);
     }
     setInterval(showRandomPopup, 28000);
+
+    // HEADER
     
     function injectHeader() {
         if (document.querySelector('.aerospace-header')) return;
@@ -769,8 +773,8 @@ function startNewRecorderChunk() {
         header.style.marginBottom = '20px';
         header.style.justifyContent = 'space-between';
         header.innerHTML = `
-            <span><strong>P7</strong> | <span id="localTimeATC"></span> ZULU</span>
-            <span>🇿🇦 SAAF Airspace Surveillance</span>
+            <span><strong>Protocol-7</strong> | <span id="localTimeATC"></span> ZULU</span>
+            <span>🇿🇦 SAAF Real-Time Live Airspace Surveillance</span>
         `;
         header.onclick = () => { window.location.href = 'index.html'; };
         const container = document.querySelector('.container');
@@ -853,10 +857,7 @@ function startNewRecorderChunk() {
         const footer = document.createElement('div');
         footer.className = 'gov-footer';
         footer.innerHTML = `
-            <div>🇿🇦 SOUTH AFRICAN AIR FORCE | AIRSPACE SURVEILLANCE Protocol | 7</div>
-            <div>📡 RADAR: PRIMARY | MODE-S | ADS-B | UHF/VHF DF 📻</div>
-            <div>⚙️ REGULATION: ICAO ANNEX 11 | RESTRICTED USE - AUTHORIZED PERSONNEL ONLY</div>
-            <div style="margin-top:8px;">CONTINUOUS RECORDING ACTIVE | SECURE STORAGE INDEXEDDB v2</div>
+            <div>🇿🇦 AIRSPACE SURVEILLANCE</div>
         `;
         document.body.appendChild(footer);
     }
