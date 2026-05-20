@@ -773,8 +773,8 @@ function startNewRecorderChunk() {
         header.style.marginBottom = '20px';
         header.style.justifyContent = 'space-between';
         header.innerHTML = `
-            <span><strong>Protocol-7</strong> | <span id="localTimeATC"></span> ZULU</span>
-            <span>🇿🇦 SAAF Real-Time Live Airspace Surveillance</span>
+            <span><strong>Protocol-7</strong> | <span id="localTimeATC">
+            <span>SAAF Real-Time Live Airspace Surveillance</span>
         `;
         header.onclick = () => { window.location.href = 'index.html'; };
         const container = document.querySelector('.container');
@@ -857,7 +857,7 @@ function startNewRecorderChunk() {
         const footer = document.createElement('div');
         footer.className = 'gov-footer';
         footer.innerHTML = `
-            <div>🇿🇦 AIRSPACE SURVEILLANCE</div>
+            <div>🇿🇦</div>
         `;
         document.body.appendChild(footer);
     }
