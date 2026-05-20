@@ -1281,8 +1281,10 @@
       addAIBubble('ai', 'Session cleared.');
     }
 
+    // AAC
+
     document.getElementById('unlockBtn').addEventListener('click', async () => {
-      if (document.getElementById('pinInput').value === '7') {
+      if (document.getElementById('pinInput').value === '2') {
         document.getElementById('pinGate').style.display = 'none';
         document.getElementById('appContainer').style.display = 'block';
         toast('ACCESS GRANTED • CV-5 ONLINE', 'success');
