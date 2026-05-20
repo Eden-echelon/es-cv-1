@@ -7,6 +7,19 @@
     <meta charset="UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <link rel="icon" type="image/png" href="favicon.png" sizes="16x16">
+
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="48x48">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
+    
+    <link rel="apple-touch-icon" href="favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="favicon.png">
+    
+    <meta name="msapplication-TileImage" content="favicon.png">
+    <meta name="msapplication-TileColor" content="#000000">
     
     <title>7</title>
     
@@ -178,7 +191,7 @@
     
 <div class="container">
     <div class="status-bar">
-        <span><span class="recording-led"></span> PERPETUAL RECORDER</span>
+        <span><span class="recording-led"></span> PR</span>
         <span>Saved: <span id="chunkCounter">0</span></span>
         <span>📡 PTT: <span id="pttState">OFF AIR</span></span>
     </div>
@@ -186,9 +199,9 @@
     <button id="pttButton" class="ptt-button">📡 HOLD TO TALK (PTT)</button>
 
     <div class="panel">
-        <strong>🎙️ Records management</strong> (auto-saved every 5 min)
+        <strong>🎙️ audio records management</strong> (auto-saved every 5 min)
         <button id="refreshChunksBtn" style="margin-left: 12px;">⟳ refresh</button>
-        <button id="clearAllChunksBtn" class="danger">🗑 delete all chunks</button>
+        <button id="clearAllChunksBtn" class="danger">🗑 delete all audio recorded chunks</button>
         <ul id="chunksList" class="chunk-list">
             <li style="justify-content:center;">— loading audio chunks —</li>
         </ul>
@@ -208,9 +221,9 @@
 
     let mediaStream = null;
     let mediaRecorder = null;
-    let currentChunks = [];           // blob parts for current recording
+    let currentChunks = [];    
     let chunkStartTime = null;
-    let chunkInterval = 5 * 60 * 1000; // 5 minutes
+    let chunkInterval = 5 * 60 * 1000;
     let chunkCounter = 0;
 
     const DB_NAME = 'Protocol7DB';
@@ -287,14 +300,13 @@
 
 function startNewRecorderChunk() {
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-        // Don't start new chunk yet - wait for this one to finish
+        
         return;
     }
     
     currentChunks = [];
     chunkStartTime = Date.now();
 
-    // Detect supported MIME type
     const mimeType = MediaRecorder.isTypeSupported('audio/webm') 
         ? 'audio/webm' 
         : MediaRecorder.isTypeSupported('audio/mp4') 
@@ -311,7 +323,6 @@ function startNewRecorderChunk() {
     mediaRecorder.onstop = async () => {
         if (currentChunks.length === 0) return;
         
-        // Important: Combine ALL chunks including the final one
         const fullBlob = new Blob(currentChunks, { type: 'audio/webm' });
         const duration = (Date.now() - chunkStartTime) / 1000;
         await saveChunkToDB(fullBlob, duration, chunkStartTime);
@@ -319,20 +330,18 @@ function startNewRecorderChunk() {
         chunkCounterSpan.innerText = chunkCounter;
         renderChunksList();
         
-        // Start next chunk ONLY after saving is complete
         startNewRecorderChunk();
     };
     
     mediaRecorder.start(1000);
-    
-    // Schedule next chunk stop
+
     setTimeout(() => {
         if (mediaRecorder && mediaRecorder.state === 'recording') {
             mediaRecorder.stop(); // This triggers onstop above
         }
     }, chunkInterval);
 }
-    // ---------- Chunks UI management ----------
+
     async function renderChunksList() {
         const chunks = await getAllChunks();
         if (!chunks.length) {
@@ -373,37 +382,32 @@ function startNewRecorderChunk() {
         }
     }
 
-    // ---------- WebRTC PTT Part (simplified with placeholder peer connection) ----------
     let peerConnection = null;
     let remoteAudioElement = null;
     let pttActive = false;
     let pttStreamSender = null;
 
     async function initWebRTC() {
-        // Create a hidden audio element to play remote stream
+
         remoteAudioElement = new Audio();
         remoteAudioElement.autoplay = true;
         const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
         peerConnection = new RTCPeerConnection(config);
-        
-        // Add local mic track when PTT is pressed (dynamic)
+
         peerConnection.ontrack = (event) => {
             remoteAudioElement.srcObject = event.streams[0];
         };
 
-        // Generate offer/answer signaling - need fly.io signaling server
-        // For demo we only show connected mock
         peerStatusSpan.innerText = 'mock (no signaling)';
     }
 
-    // PTT control
     async function startPTTStream() {
         if (!peerConnection) await initWebRTC();
         if (!mediaStream) {
             alert("Wait for mic permission from perpetual recorder.");
             return;
         }
-        // add local track if not already added
+
         const senders = peerConnection.getSenders();
         const hasAudio = senders.some(s => s.track?.kind === 'audio');
         if (!hasAudio && mediaStream) {
@@ -425,7 +429,6 @@ function startNewRecorderChunk() {
         pttStateSpan.innerText = 'OFF AIR';
     }
 
-    // Button events (mouse / touch)
     pttButton.addEventListener('mousedown', startPTTStream);
     pttButton.addEventListener('mouseup', stopPTTStream);
     pttButton.addEventListener('mouseleave', stopPTTStream);
@@ -440,19 +443,16 @@ function startNewRecorderChunk() {
         }
     };
 
-    // Connect signaling mock
     document.getElementById('connectWebRTC').onclick = () => {
         peerStatusSpan.innerText = 'signaling required → edit ws endpoint';
         alert('To enable cross-device PTT, implement WebSocket signaling to Fly.io');
         initWebRTC();
     };
 
-    // INITIALIZE: perpetual recorder on load
     (async () => {
         await openDB();
         await startPerpetualRecording();
         renderChunksList();
-        // dummy peer connection prepped
         await initWebRTC();
     })();
     
@@ -466,16 +466,21 @@ function startNewRecorderChunk() {
     const tacticalCSS = `
        
         * {
+        
             scroll-behavior: smooth;
+            
         }
         
         body {
+        
             background: radial-gradient(ellipse at 20% 30%, #0a1428 0%, #03060c 100%);
             position: relative;
             overflow-x: hidden;
+            
         }
         
         .sky-layer {
+        
             position: fixed;
             top: 0;
             left: 0;
@@ -484,25 +489,31 @@ function startNewRecorderChunk() {
             pointer-events: none;
             z-index: 0;
             overflow: hidden;
+            
         }
         
         .cloud {
+        
             position: absolute;
             background: rgba(255, 255, 255, 0.15);
             border-radius: 1000px;
             backdrop-filter: blur(8px);
             animation: floatCloud linear infinite;
             pointer-events: none;
+            
         }
         
         @keyframes floatCloud {
+        
             0% { transform: translateX(-20%) translateY(0); opacity: 0; }
             10% { opacity: 0.6; }
             90% { opacity: 0.6; }
             100% { transform: translateX(120%) translateY(-30px); opacity: 0; }
+            
         }
         
         .aircraft {
+        
             position: absolute;
             font-size: 28px;
             pointer-events: none;
@@ -510,6 +521,7 @@ function startNewRecorderChunk() {
             animation: flyPlane 40s linear infinite;
             z-index: 1;
             opacity: 0.7;
+            
         }
         
         @keyframes flyPlane {
@@ -521,6 +533,7 @@ function startNewRecorderChunk() {
         }
         
         .nav-quick {
+        
             position: fixed;
             right: 20px;
             top: 50%;
@@ -529,9 +542,11 @@ function startNewRecorderChunk() {
             flex-direction: column;
             gap: 12px;
             z-index: 1000;
+            
         }
         
         .nav-btn {
+        
             background: #1a2a3fcc;
             backdrop-filter: blur(12px);
             border: 1px solid #4a7a9f;
@@ -546,26 +561,34 @@ function startNewRecorderChunk() {
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            
         }
         
         .nav-btn:hover {
+        
             background: #2a4a6fcc;
             transform: scale(1.1);
             border-color: #88bbdd;
+            
         }
         
         audio {
+        
             min-width: 200px;
             height: 40px;
             border-radius: 20px;
             background: #0a121f;
+            
         }
         
         audio::-webkit-media-controls-panel {
+        
             background: #0a121f;
+            
         }
   
         .tactical-toolbar {
+        
             position: fixed;
             bottom: 20px;
             left: 20px;
@@ -581,9 +604,11 @@ function startNewRecorderChunk() {
             z-index: 100;
             border: 1px solid #2c5a7a;
             font-size: 12px;
+            
         }
         
         .tool-btn {
+        
             background: #1e2e42;
             border: none;
             color: #bbd9ff;
@@ -592,11 +617,13 @@ function startNewRecorderChunk() {
             cursor: pointer;
             font-family: monospace;
             transition: 0.1s linear;
+            
         }
         
         .tool-btn:active { transform: scale(0.95); background: #3a6a8a; }
         
         .gov-footer {
+        
             background: #03060cee;
             backdrop-filter: blur(10px);
             border-top: 1px solid #4a7a9f;
@@ -606,9 +633,11 @@ function startNewRecorderChunk() {
             margin-top: 40px;
             font-family: monospace;
             letter-spacing: 1px;
+            
         }
         
         .tactical-popup {
+        
             position: fixed;
             bottom: 90px;
             right: 20px;
@@ -623,6 +652,7 @@ function startNewRecorderChunk() {
             font-family: monospace;
             animation: fadePopup 5s ease forwards;
             pointer-events: none;
+            
         }
         
         @keyframes fadePopup {
@@ -633,6 +663,7 @@ function startNewRecorderChunk() {
         }
  
         .load-spinner {
+        
             display: inline-block;
             width: 14px;
             height: 14px;
@@ -641,15 +672,18 @@ function startNewRecorderChunk() {
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
             margin-right: 6px;
+            
         }
         
         @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (max-width: 640px) {
+        
             .nav-quick { right: 8px; }
             .nav-btn { width: 36px; height: 36px; font-size: 16px; }
             .tactical-toolbar { flex-wrap: wrap; }
             .container { padding: 8px; }
+            
         }
         
         @media (min-width: 1920px) {
@@ -658,10 +692,13 @@ function startNewRecorderChunk() {
         }
         
         .quick-access-grid {
+        
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(80px, auto));
             gap: 6px;
+            
         }
+        
     `;
     
     const styleSheet = document.createElement("style");
@@ -706,11 +743,11 @@ function startNewRecorderChunk() {
         "🛰️ SATCOM: Link 16 active",
         "🎧 GROUND: Tower handoff on 118.30",
         "🗺️ SECTOR: FIR Johannesburg (FAJN)",
-        "⚡ RADAR: Primary sweep 4.5s",
+        "RADAR: Primary sweep 4.5s",
         "🔊 ALERT: Mode C squawk 1234 observed",
         "🌍 DRONE: UAV-7 crossing TMA boundary",
         "📻 HF: Global frequency 11175 kHz guard",
-        "🛡️ DEFCON: Airborne alert status BRAVO"
+        "DEFCON: Airborne alert status BRAVO"
     ];
     
     function showRandomPopup() {
@@ -774,16 +811,16 @@ function startNewRecorderChunk() {
     }
     
     function augmentAudioControls() {
-        // override renderChunksList to add seek/convert buttons
+
         if (!window.renderChunksList) return;
         const originalRender = window.renderChunksList;
         window.renderChunksList = async function() {
             await originalRender();
-            // enhance each audio with custom controls? Already uses native but ensure full UI
+
             document.querySelectorAll('audio').forEach(audio => {
                 audio.controls = true;
                 audio.preload = 'metadata';
-                // add wrapper for convert?
+
                 const parentLi = audio.closest('li');
                 if (parentLi && !parentLi.querySelector('.convert-btn')) {
                     const convBtn = document.createElement('button');
@@ -796,7 +833,7 @@ function startNewRecorderChunk() {
                         if (!src) return;
                         const response = await fetch(src);
                         const blob = await response.blob();
-                        // simulate conversion to wav? For demo just download as .wav
+
                         const wavUrl = URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = wavUrl;
@@ -819,7 +856,7 @@ function startNewRecorderChunk() {
             <div>🇿🇦 SOUTH AFRICAN AIR FORCE | AIRSPACE SURVEILLANCE Protocol | 7</div>
             <div>📡 RADAR: PRIMARY | MODE-S | ADS-B | UHF/VHF DF 📻</div>
             <div>⚙️ REGULATION: ICAO ANNEX 11 | RESTRICTED USE - AUTHORIZED PERSONNEL ONLY</div>
-            <div style="margin-top:8px;">🛡️ CONTINUOUS RECORDING ACTIVE | SECURE STORAGE INDEXEDDB v2</div>
+            <div style="margin-top:8px;">CONTINUOUS RECORDING ACTIVE | SECURE STORAGE INDEXEDDB v2</div>
         `;
         document.body.appendChild(footer);
     }
@@ -837,7 +874,6 @@ function startNewRecorderChunk() {
         } else {
             console.log("Protocol-7 gate: FULL TACTICAL ACCESS");
         }
-        // silent for UX but hook global
         window.__protocol7Gate = gatePass;
     }
     
@@ -846,7 +882,6 @@ function startNewRecorderChunk() {
         let lastChunkTime = Date.now();
         const checkInterval = setInterval(() => {
             if (document.visibilityState === "visible") {
-                // if no recorder active or stuck, attempt restart
                 if (!window.mediaRecorder || window.mediaRecorder.state === 'inactive') {
                     console.warn("Protocol-7: Recorder inactive, restarting chunk");
                     if (window.startNewRecorderChunk) window.startNewRecorderChunk();
@@ -855,7 +890,7 @@ function startNewRecorderChunk() {
         }, 30000);
         
         window.addEventListener('beforeunload', () => clearInterval(checkInterval));
-        // Also listen to page show
+
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible' && (!window.mediaRecorder || window.mediaRecorder.state === 'inactive')) {
                 if (window.startNewRecorderChunk) setTimeout(() => window.startNewRecorderChunk(), 100);
@@ -870,14 +905,13 @@ function startNewRecorderChunk() {
         addFooter();
         augmentAudioControls();
         initAccessGate();
-        // slight delay to let original recorder start
+
         setTimeout(() => {
             enhanceRecorderResilience();
-            // also force original's chunk list render again
             if (window.renderChunksList) window.renderChunksList();
         }, 2000);
         
-        // additional loading animations for all buttons
+
         const addLoadFeedback = () => {
             document.querySelectorAll('button').forEach(btn => {
                 if (btn.hasAttribute('data-load-enhanced')) return;
@@ -893,7 +927,6 @@ function startNewRecorderChunk() {
         setInterval(addLoadFeedback, 1000);
     }
     
-    // Run after DOM and existing scripts partially
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', protocol7Bootstrap);
     else protocol7Bootstrap();
     
