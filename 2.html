@@ -265,40 +265,42 @@
 
 <div class="comms-terminal">
     <div class="header">
-        <h1>📡 General Emergency Evacuation Protocol-2</h1>
+        <h1>General Emergency Evacuation Protocol-2 Activated, as per SANDF guidelines.</h1>
+        <p>p-2 immediate execution upon page landing - p5 engine on immediate pause. de-activate via comms</p>
+        <p>protocol alpha 5 is discontinued </p>
     </div>
 
     <div class="connection-panel">
         <div class="my-id">
-            <label>🔑 YOUR COMMS ID (SHARE THIS)</label>
+            <label>YOUR COMMS ID (SHARE THIS)</label>
             <code id="myPeerId">Initializing...</code>
         </div>
         <div class="remote-connect">
             <input type="text" id="remoteIdInput" placeholder="PASTE TARGET COMMS ID">
-            <button id="connectBtn">🔗 ESTABLISH Protocol-2</button>
+            <button id="connectBtn">Establish Protocol</button>
         </div>
     </div>
 
     <div class="status" id="statusMsg">
-        ⚡ AWAITING CONNECTION · Protocol-2 STANDBY
+        AWAITING CONNECTION · Protocol-2 STANDBY
     </div>
 
     <div class="chat-area">
         <div class="messages" id="messageLog">
             <div class="message received">
                 <small>ENGINE</small>
-                [SANDF Protocol-2]<br>
+                [SANDF HIGH COMMAND Protocol-2]<br>
                 Share your Comms ID above to 6. Enter target ID to connect.
             </div>
         </div>
         <div class="input-area">
             <input type="text" id="messageInput" placeholder="Type your message..." disabled>
-            <button id="sendBtn" disabled>📡 TRANSMIT</button>
+            <button id="sendBtn" disabled>TRANSMIT</button>
         </div>
     </div>
 
     <div class="footer">
-        SECURED.
+        SECURE.🔐
     </div>
 </div>
 
@@ -345,7 +347,7 @@
     }
     
     function setStatus(text, isError = false) {
-        statusDiv.innerHTML = isError ? `⚠️ ${text}` : `📡 ${text}`;
+        statusDiv.innerHTML = isError ? `⚠️ ${text}` : `${text}`;
         statusDiv.style.color = isError ? '#e89f6e' : '#8ab0c0';
     }
     
