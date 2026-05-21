@@ -1,119 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2-Way Web Radio</title>
-    <!-- FIXED: Correct PeerJS library script link -->
-    <script src="https://unpkg.com"></script>
-    <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #222; color: #fff; }
-        button { font-size: 18px; padding: 15px 30px; margin: 10px; cursor: pointer; border-radius: 5px; border: none; }
-        #ptt-btn { background: #666; color: white; width: 200px; height: 100px; font-weight: bold; }
-        #ptt-btn:active { background: #d9534f; }
-        .status { margin: 20px; font-weight: bold; color: #5cb85c; }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PeerJS 2-Way PTT Radio</title>
+
+<!-- PeerJS -->
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+<style>
+    *{
+        box-sizing:border-box;
+        margin:0;
+        padding:0;
+        font-family:Arial,Helvetica,sans-serif;
+    }
+
+    body{
+        background:#0f172a;
+        color:white;
+        min-height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:20px;
+    }
+
+    .app{
+        width:100%;
+        max-width:420px;
+        background:#111827;
+        border-radius:24px;
+        padding:24px;
+        box-shadow:0 0 40px rgba(0,0,0,.5);
+    }
+
+    h1{
+        text-align:center;
+        margin-bottom:20px;
+        font-size:28px;
+    }
+
+    .section{
+        margin-bottom:18px;
+    }
+
+    label{
+        display:block;
+        margin-bottom:8px;
+        color:#cbd5e1;
+    }
+
+    input{
+        width:100%;
+        padding:14px;
+        border:none;
+        border-radius:14px;
+        background:#1e293b;
+        color:white;
+        font-size:16px;
+    }
+
+    button{
+        width:100%;
+        border:none;
+        border-radius:18px;
+        padding:16px;
+        font-size:18px;
+        cursor:pointer;
+        transition:.15s;
+        font-weight:bold;
+    }
+
+    .connect{
+        background:#2563eb;
+        color:white;
+        margin-top:10px;
+    }
+
+    .connect:hover{
+        transform:scale(1.02);
+    }
+
+    .ptt{
+        height:140px;
+        border-radius:30px;
+        margin-top:20px;
+        background:#22c55e;
+        color:white;
+        font-size:28px;
+        user-select:none;
+        touch-action:none;
+    }
+
+    .ptt:active{
+        transform:scale(.98);
+    }
+
+    .talking{
+        background:#ef4444 !important;
+    }
+
+    .status{
+        margin-top:18px;
+        text-align:center;
+        font-size:15px;
+        color:#93c5fd;
+        min-height:22px;
+    }
+
+    .idbox{
+        background:#0b1220;
+        padding:12px;
+        border-radius:14px;
+        margin-bottom:18px;
+        word-break:break-all;
+        text-align:center;
+        border:1px solid #334155;
+    }
+
+    .small{
+        font-size:13px;
+        color:#94a3b8;
+        margin-bottom:6px;
+    }
+</style>
 </head>
+
 <body>
 
-    <h1>2-Way PTT Radio</h1>
-    
-    <div>
-        <p>Your Radio ID: <span id="my-id" style="color: #f0ad4e;">Connecting...</span></p>
-        <input type="text" id="remote-id" placeholder="Enter Friend's Radio ID" style="padding: 10px; width: 200px;">
-        <button onclick="connectToFriend()" style="background: #0275d8; color: white; padding: 10px;">Connect</button>
+<div class="app">
+
+    <h1>📻 2-Way PTT Radio</h1>
+
+    <div class="idbox">
+        <div class="small">Your Radio ID</div>
+        <div id="myId">Connecting...</div>
     </div>
 
-    <div class="status" id="status-text">Status: Offline</div>
+    <div class="section">
+        <label>Friend's Radio ID</label>
+        <input id="remoteId" placeholder="Paste friend's ID"/>
+        <button class="connect" id="connectBtn">Connect</button>
+    </div>
 
-    <button id="ptt-btn" disabled>HOLD TO TALK</button>
+    <button class="ptt" id="pttBtn">
+        HOLD TO TALK
+    </button>
 
-    <script>
-        let peer;
-        let myId;
-        let currentCall;
-        let localStream;
+    <div class="status" id="status">
+        Waiting...
+    </div>
 
-        peer = new Peer();
+</div>
 
-        peer.on('open', (id) => {
-            myId = id;
-            document.getElementById('my-id').innerText = id;
-            document.getElementById('status-text').innerText = "Status: Ready. Share your ID.";
-            setupAudio();
+<script>
+
+let peer;
+let conn;
+let localStream;
+let currentCall = null;
+let connected = false;
+
+const myIdEl = document.getElementById("myId");
+const remoteIdEl = document.getElementById("remoteId");
+const connectBtn = document.getElementById("connectBtn");
+const pttBtn = document.getElementById("pttBtn");
+const statusEl = document.getElementById("status");
+
+const audio = new Audio();
+audio.autoplay = true;
+
+async function initMedia(){
+    localStream = await navigator.mediaDevices.getUserMedia({
+        audio:{
+            noiseSuppression:true,
+            echoCancellation:true,
+            autoGainControl:true
+        },
+        video:false
+    });
+
+    // Start muted
+    localStream.getAudioTracks().forEach(track=>{
+        track.enabled = false;
+    });
+}
+
+function setStatus(text){
+    statusEl.textContent = text;
+}
+
+async function initPeer(){
+
+    peer = new Peer();
+
+    peer.on("open",(id)=>{
+        myIdEl.textContent = id;
+        setStatus("Ready");
+    });
+
+    peer.on("connection",(incomingConn)=>{
+        conn = incomingConn;
+
+        conn.on("open",()=>{
+            connected = true;
+            setStatus("Connected");
+        });
+    });
+
+    peer.on("call",(call)=>{
+
+        currentCall = call;
+
+        call.answer(localStream);
+
+        call.on("stream",(remoteStream)=>{
+            audio.srcObject = remoteStream;
         });
 
-        async function setupAudio() {
-            try {
-                localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-                
-                // FIXED: Safely loop through tracks so it doesn't crash if index 0 is briefly empty
-                localStream.getAudioTracks().forEach(track => track.enabled = false); 
-                
-                setupPTTButton();
-            } catch (err) {
-                alert("Microphone access denied or not supported. Use HTTPS or Localhost.");
-                console.error(err);
-            }
-        }
+        call.on("close",()=>{
+            setStatus("Call ended");
+        });
+    });
 
-        peer.on('call', (call) => {
-            currentCall = call;
-            document.getElementById('status-text').innerText = "Status: Connected!";
-            document.getElementById('ptt-btn').disabled = false;
-            call.answer(localStream);
-            
-            call.on('stream', (remoteStream) => {
-                playRemoteStream(remoteStream);
-            });
+    peer.on("error",(err)=>{
+        console.error(err);
+        setStatus("Error: " + err.type);
+    });
+}
+
+connectBtn.onclick = ()=>{
+
+    const remoteId = remoteIdEl.value.trim();
+
+    if(!remoteId){
+        alert("Enter friend's ID");
+        return;
+    }
+
+    conn = peer.connect(remoteId);
+
+    conn.on("open",()=>{
+
+        connected = true;
+        setStatus("Connected");
+
+        currentCall = peer.call(remoteId, localStream);
+
+        currentCall.on("stream",(remoteStream)=>{
+            audio.srcObject = remoteStream;
         });
 
-        function connectToFriend() {
-            const friendId = document.getElementById('remote-id').value;
-            if (!friendId) return alert("Enter an ID first!");
+    });
 
-            document.getElementById('status-text').innerText = "Connecting...";
-            currentCall = peer.call(friendId, localStream);
+    conn.on("error",(err)=>{
+        console.error(err);
+    });
+};
 
-            currentCall.on('stream', (remoteStream) => {
-                document.getElementById('status-text').innerText = "Status: Connected!";
-                document.getElementById('ptt-btn').disabled = false;
-                playRemoteStream(remoteStream);
-            });
-        }
+function startTalking(){
 
-        function playRemoteStream(stream) {
-            let audio = document.getElementById('remote-audio');
-            if (!audio) {
-                audio = document.createElement('audio');
-                audio.id = 'remote-audio';
-                audio.autoplay = true;
-                document.body.appendChild(audio);
-            }
-            audio.srcObject = stream;
-        }
+    if(!connected) return;
 
-        function setupPTTButton() {
-            const btn = document.getElementById('ptt-btn');
-            btn.addEventListener('mousedown', startTransmitting);
-            btn.addEventListener('mouseup', stopTransmitting);
-            btn.addEventListener('touchstart', (e) => { e.preventDefault(); startTransmitting(); });
-            btn.addEventListener('touchend', (e) => { e.preventDefault(); stopTransmitting(); });
-        }
+    localStream.getAudioTracks().forEach(track=>{
+        track.enabled = true;
+    });
 
-        function startTransmitting() {
-            if (localStream) {
-                localStream.getAudioTracks().forEach(track => track.enabled = true);
-                document.getElementById('status-text').innerText = "Status: TRANSMITTING...";
-            }
-        }
+    pttBtn.classList.add("talking");
+    pttBtn.textContent = "TALKING...";
+    setStatus("Transmitting");
+}
 
-        function stopTransmitting() {
-            if (localStream) {
-                localStream.getAudioTracks().forEach(track => track.enabled = false);
-                document.getElementById('status-text').innerText = "Status: Connected (Listening)";
-            }
-        }
-    </script>
+function stopTalking(){
+
+    if(!localStream) return;
+
+    localStream.getAudioTracks().forEach(track=>{
+        track.enabled = false;
+    });
+
+    pttBtn.classList.remove("talking");
+    pttBtn.textContent = "HOLD TO TALK";
+    setStatus("Listening");
+}
+
+/* Mouse */
+pttBtn.addEventListener("mousedown",startTalking);
+pttBtn.addEventListener("mouseup",stopTalking);
+pttBtn.addEventListener("mouseleave",stopTalking);
+
+/* Touch */
+pttBtn.addEventListener("touchstart",(e)=>{
+    e.preventDefault();
+    startTalking();
+});
+
+pttBtn.addEventListener("touchend",(e)=>{
+    e.preventDefault();
+    stopTalking();
+});
+
+(async()=>{
+    await initMedia();
+    await initPeer();
+})();
+</script>
+
 </body>
-</html>
+            </html>
