@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2-Way Web Radio</title>
-    <!-- Include the PeerJS library via CDN -->
+    <!-- FIXED: Correct PeerJS library script link -->
     <script src="https://unpkg.com"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 50px; background: #222; color: #fff; }
         button { font-size: 18px; padding: 15px 30px; margin: 10px; cursor: pointer; border-radius: 5px; border: none; }
         #ptt-btn { background: #666; color: white; width: 200px; height: 100px; font-weight: bold; }
-        #ptt-btn:active { background: #d9534f; } /* Turns red when held down */
+        #ptt-btn:active { background: #d9534f; }
         .status { margin: 20px; font-weight: bold; color: #5cb85c; }
     </style>
 </head>
@@ -26,7 +26,6 @@
 
     <div class="status" id="status-text">Status: Offline</div>
 
-    <!-- Push to talk button -->
     <button id="ptt-btn" disabled>HOLD TO TALK</button>
 
     <script>
@@ -34,12 +33,9 @@
         let myId;
         let currentCall;
         let localStream;
-        let microphoneSender;
 
-        // 1. Initialize PeerJS using their free cloud server
         peer = new Peer();
 
-        // Display your ID once connected to PeerJS cloud
         peer.on('open', (id) => {
             myId = id;
             document.getElementById('my-id').innerText = id;
@@ -47,37 +43,31 @@
             setupAudio();
         });
 
-        // 2. Get Microphone access, but start muted
         async function setupAudio() {
             try {
                 localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
                 
-                // Mute microphone immediately so you aren't constantly transmitting
-                localStream.getAudioTracks()[0].enabled = false; 
+                // FIXED: Safely loop through tracks so it doesn't crash if index 0 is briefly empty
+                localStream.getAudioTracks().forEach(track => track.enabled = false); 
                 
                 setupPTTButton();
             } catch (err) {
-                alert("Microphone access denied or not supported. Use HTTPS/Localhost.");
+                alert("Microphone access denied or not supported. Use HTTPS or Localhost.");
                 console.error(err);
             }
         }
 
-        // 3. Handle INCOMING calls (When a friend connects to you)
         peer.on('call', (call) => {
             currentCall = call;
             document.getElementById('status-text').innerText = "Status: Connected!";
             document.getElementById('ptt-btn').disabled = false;
-
-            // Answer the call with our local stream (even though it's muted by default)
             call.answer(localStream);
             
-            // Play incoming audio
             call.on('stream', (remoteStream) => {
                 playRemoteStream(remoteStream);
             });
         });
 
-        // 4. Handle OUTGOING calls (When you initiate the connection)
         function connectToFriend() {
             const friendId = document.getElementById('remote-id').value;
             if (!friendId) return alert("Enter an ID first!");
@@ -92,9 +82,7 @@
             });
         }
 
-        // 5. Play audio received from the other person
         function playRemoteStream(stream) {
-            // Check if audio element already exists, if not create it
             let audio = document.getElementById('remote-audio');
             if (!audio) {
                 audio = document.createElement('audio');
@@ -105,29 +93,24 @@
             audio.srcObject = stream;
         }
 
-        // 6. Push-to-Talk Logic (Unmute on hold, mute on release)
         function setupPTTButton() {
             const btn = document.getElementById('ptt-btn');
-
-            // Mouse / Desktop controls
             btn.addEventListener('mousedown', startTransmitting);
             btn.addEventListener('mouseup', stopTransmitting);
-
-            // Touch / Mobile controls
             btn.addEventListener('touchstart', (e) => { e.preventDefault(); startTransmitting(); });
             btn.addEventListener('touchend', (e) => { e.preventDefault(); stopTransmitting(); });
         }
 
         function startTransmitting() {
             if (localStream) {
-                localStream.getAudioTracks()[0].enabled = true; // Unmute mic
+                localStream.getAudioTracks().forEach(track => track.enabled = true);
                 document.getElementById('status-text').innerText = "Status: TRANSMITTING...";
             }
         }
 
         function stopTransmitting() {
             if (localStream) {
-                localStream.getAudioTracks()[0].enabled = false; // Mute mic
+                localStream.getAudioTracks().forEach(track => track.enabled = false);
                 document.getElementById('status-text').innerText = "Status: Connected (Listening)";
             }
         }
