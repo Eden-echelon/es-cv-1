@@ -9,122 +9,460 @@
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 
 <style>
-    *{
-        box-sizing:border-box;
-        margin:0;
-        padding:0;
-        font-family:Arial,Helvetica,sans-serif;
-    }
 
-    body{
-        background:#0f172a;
-        color:white;
-        min-height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        padding:20px;
-    }
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    .app{
-        width:100%;
-        max-width:420px;
-        background:#111827;
-        border-radius:24px;
-        padding:24px;
-        box-shadow:0 0 40px rgba(0,0,0,.5);
-    }
+html {
+    scroll-behavior: smooth;
+}
 
-    h1{
-        text-align:center;
-        margin-bottom:20px;
-        font-size:28px;
-    }
+body {
+    background: radial-gradient(ellipse at 20% 30%, #0a0f1a 0%, #03060c 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: clamp(12px, 3vw, 32px);
+    font-family: 'Share Tech Mono', 'Courier New', 'SF Mono', 'Consolas', monospace;
+    position: relative;
+    overflow-x: hidden;
+}
 
-    .section{
-        margin-bottom:18px;
-    }
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(0deg, 
+            rgba(0, 255, 0, 0.02) 0px, 
+            rgba(0, 255, 0, 0.02) 2px, 
+            transparent 2px, 
+            transparent 8px),
+        repeating-linear-gradient(90deg, 
+            rgba(0, 255, 0, 0.01) 0px, 
+            rgba(0, 255, 0, 0.01) 1px, 
+            transparent 1px, 
+            transparent 10px);
+    pointer-events: none;
+    z-index: 0;
+}
 
-    label{
-        display:block;
-        margin-bottom:8px;
-        color:#cbd5e1;
-    }
+.app {
+    width: 100%;
+    max-width: 560px;
+    background: rgba(8, 14, 23, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(50, 180, 80, 0.3);
+    border-radius: clamp(16px, 5vw, 32px);
+    padding: clamp(20px, 5vw, 36px);
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s ease;
+}
 
-    input{
-        width:100%;
-        padding:14px;
-        border:none;
-        border-radius:14px;
-        background:#1e293b;
-        color:white;
-        font-size:16px;
-    }
+.app::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    border: 1px solid rgba(50, 180, 80, 0.15);
+    border-radius: clamp(12px, 4vw, 28px);
+    pointer-events: none;
+}
 
-    button{
-        width:100%;
-        border:none;
-        border-radius:18px;
-        padding:16px;
-        font-size:18px;
-        cursor:pointer;
-        transition:.15s;
-        font-weight:bold;
-    }
+h1 {
+    text-align: center;
+    font-size: clamp(20px, 6vw, 32px);
+    letter-spacing: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: clamp(20px, 6vw, 32px);
+    color: #8affb5;
+    text-shadow: 0 0 3px rgba(138, 255, 181, 0.5);
+    position: relative;
+    padding-bottom: 12px;
+}
 
-    .connect{
-        background:#2563eb;
-        color:white;
-        margin-top:10px;
-    }
+h1::before {
+    content: '▲';
+    font-size: 12px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+}
 
-    .connect:hover{
-        transform:scale(1.02);
-    }
+h1::after {
+    content: '▼';
+    font-size: 12px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+}
 
-    .ptt{
-        height:140px;
-        border-radius:30px;
-        margin-top:20px;
-        background:#22c55e;
-        color:white;
-        font-size:28px;
-        user-select:none;
-        touch-action:none;
-    }
+.idbox {
+    background: #050a10;
+    border: 1px solid #2a5f3a;
+    border-radius: clamp(10px, 3vw, 20px);
+    padding: clamp(12px, 3vw, 20px);
+    margin-bottom: clamp(20px, 5vw, 28px);
+    position: relative;
+    overflow: hidden;
+}
 
-    .ptt:active{
-        transform:scale(.98);
-    }
+.idbox::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #4aff8c, transparent);
+    animation: radarSweep 4s linear infinite;
+}
 
-    .talking{
-        background:#ef4444 !important;
-    }
+@keyframes radarSweep {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
 
-    .status{
-        margin-top:18px;
-        text-align:center;
-        font-size:15px;
-        color:#93c5fd;
-        min-height:22px;
-    }
+.small {
+    font-size: clamp(10px, 2.5vw, 13px);
+    color: #6a9c78;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 400;
+}
 
-    .idbox{
-        background:#0b1220;
-        padding:12px;
-        border-radius:14px;
-        margin-bottom:18px;
-        word-break:break-all;
-        text-align:center;
-        border:1px solid #334155;
-    }
+#myId {
+    font-size: clamp(14px, 4vw, 20px);
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: #b8ffd0;
+    word-break: break-all;
+    font-family: monospace;
+    background: linear-gradient(135deg, #0a1410 0%, #030807 100%);
+    padding: clamp(8px, 2vw, 12px);
+    border-radius: 8px;
+    border-left: 3px solid #3eff7a;
+}
 
-    .small{
-        font-size:13px;
-        color:#94a3b8;
-        margin-bottom:6px;
+.section {
+    margin-bottom: clamp(20px, 5vw, 28px);
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #8fcb9a;
+    font-size: clamp(11px, 3vw, 14px);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+input {
+    width: 100%;
+    padding: clamp(12px, 3.5vw, 16px);
+    border: 1px solid #2a5f3a;
+    border-radius: clamp(10px, 3vw, 18px);
+    background: #050a0f;
+    color: #ccffdd;
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+    transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+input:focus {
+    outline: none;
+    border-color: #4eff8a;
+    background: #071018;
+    box-shadow: 0 0 0 2px rgba(78, 255, 138, 0.1);
+}
+
+button {
+    width: 100%;
+    border: 1px solid #3a7a50;
+    border-radius: clamp(12px, 4vw, 24px);
+    padding: clamp(12px, 4vw, 18px);
+    font-size: clamp(14px, 4vw, 18px);
+    cursor: pointer;
+    transition: all 0.12s linear;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-family: 'Share Tech Mono', monospace;
+    background: #0f191f;
+    color: #b0ffcc;
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(78, 255, 138, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+button:active::before {
+    width: 200%;
+    height: 200%;
+}
+
+.connect {
+    margin-top: 12px;
+    background: linear-gradient(135deg, #0e2a1a, #07120a);
+    border-color: #3e9e60;
+    color: #b3ffd0;
+}
+
+.connect:hover {
+    background: linear-gradient(135deg, #123a22, #091a0e);
+    border-color: #5eff94;
+}
+
+.ptt {
+    height: clamp(100px, 20vw, 160px);
+    border-radius: clamp(20px, 6vw, 40px);
+    background: #0f2a1c;
+    border: 2px solid #2d8a4a;
+    color: #bbffcc;
+    font-size: clamp(20px, 5vw, 32px);
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-top: clamp(20px, 5vw, 28px);
+    transition: all 0.05s linear;
+    position: relative;
+    cursor: pointer;
+    text-shadow: 0 0 5px rgba(78, 255, 138, 0.5);
+}
+
+.ptt:active {
+    transform: scale(0.97);
+    background: #4aff8c;
+    color: #021005;
+    border-color: #aaffcc;
+}
+
+.talking {
+    background: #ff3355 !important;
+    border-color: #ff88aa !important;
+    color: white !important;
+    animation: alertPulse 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes alertPulse {
+    0% { background: #ff2244; border-color: #ff99bb; }
+    100% { background: #cc0022; border-color: #ff5577; }
+}
+
+.status {
+    margin-top: clamp(20px, 5vw, 28px);
+    text-align: center;
+    font-size: clamp(11px, 2.8vw, 14px);
+    color: #6fcf97;
+    min-height: 48px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    background: #03080e80;
+    padding: 12px;
+    border-radius: 12px;
+    border-left: 3px solid #4aff8c;
+    font-family: monospace;
+    word-break: break-word;
+    backdrop-filter: blur(4px);
+}
+
+/* Responsive: Super small watches */
+@media (max-width: 280px) {
+    body {
+        padding: 8px;
     }
+    .app {
+        padding: 16px;
+    }
+    .ptt {
+        letter-spacing: 2px;
+        font-size: 16px;
+    }
+    button {
+        letter-spacing: 1.5px;
+    }
+    h1::before, h1::after {
+        font-size: 8px;
+    }
+}
+
+/* Landscape phones & small tablets */
+@media (orientation: landscape) and (max-height: 500px) {
+    .app {
+        max-width: 80vw;
+    }
+    .ptt {
+        height: 70px;
+        font-size: 18px;
+    }
+    .idbox {
+        margin-bottom: 12px;
+    }
+    .section {
+        margin-bottom: 12px;
+    }
+}
+
+/* Large screens & TV */
+@media (min-width: 1200px) {
+    .app {
+        max-width: 680px;
+    }
+    body {
+        padding: 48px;
+    }
+    button {
+        transition: all 0.18s cubic-bezier(0.2, 0.9, 0.6, 1.1);
+    }
+    button:hover {
+        transform: scale(1.01);
+        letter-spacing: 3px;
+    }
+    .ptt:hover {
+        filter: brightness(1.08);
+    }
+}
+
+/* Ultra wide / high res */
+@media (min-width: 1920px) {
+    .app {
+        max-width: 780px;
+    }
+    h1 {
+        font-size: 42px;
+    }
+    .small {
+        font-size: 16px;
+    }
+    #myId {
+        font-size: 26px;
+    }
+    .status {
+        font-size: 18px;
+    }
+}
+
+/* Tablet & small desktop */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .app {
+        max-width: 520px;
+    }
+}
+
+/* All touch devices: remove hover effects that cause issues */
+@media (hover: none) {
+    button:hover {
+        transform: none;
+    }
+    .ptt:hover {
+        filter: none;
+    }
+}
+
+/* Print / high contrast fallback */
+@media print {
+    body {
+        background: white;
+    }
+    .app {
+        border: 2px solid black;
+    }
+}
+
+/* Smooth scrollbar for modern browsers */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #03070c;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2a6b3e;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4aff8c;
+}
+
+/* Additional military detail - subtle corner ticks */
+.app {
+    clip-path: polygon(
+        0% 0%,
+        100% 0%,
+        100% 100%,
+        0% 100%
+    );
+}
+
+/* Add tactical crosshair decoration */
+body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, transparent 60%, rgba(78, 255, 138, 0.03) 100%);
+    pointer-events: none;
+    z-index: 999;
+    border-radius: 50%;
+}
+
+/* Animated scanning line effect */
+@keyframes scanMove {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+}
+
+body .scan-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4aff8c, transparent);
+    pointer-events: none;
+    z-index: 9999;
+    animation: scanMove 8s linear infinite;
+    opacity: 0.2;
+   }
+   
 </style>
+   
 </head>
 
 <body>
