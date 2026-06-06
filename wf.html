@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewfit=cover, user-scalable=no, shrink-to-fit=no">
+    <title>WARFIGHTERS · SECTION OBSIDIAN-7 | TIER-1 TACTICAL SIMULATOR</title>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Chakra+Petch:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #000000;
+            overflow: hidden;
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            touch-action: none;
+        }
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+            z-index: 1;
+        }
+        /* NO GLOWS, NO SHADOWS — crisp tactical UI */
+        .hud-container {
+            position: absolute;
+            top: env(safe-area-inset-top, 6px);
+            left: 0;
+            right: 0;
+            z-index: 20;
+            pointer-events: none;
+            padding: 4px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 4px;
+        }
+        .hud-card {
+            background: rgba(0,0,0,0.88);
+            padding: 3px 8px;
+            border-left: 2px solid #c9a03d;
+            font-size: clamp(8px, 3vw, 13px);
+            font-weight: bold;
+            border-radius: 0;
+            white-space: nowrap;
+            color: #e0e0e0;
+        }
+        .hud-value {
+            color: #c9a03d;
+            font-size: clamp(10px, 4.5vw, 20px);
+            margin-left: 4px;
+            font-family: 'Chakra Petch', monospace;
+        }
+        /* MAIN MENU */
+        .menu-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.96);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+        }
+        .menu-container {
+            background: #0a0a0a;
+            border: 1px solid #c9a03d;
+            padding: 16px 18px;
+            max-width: 650px;
+            width: 94%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .menu-title {
+            font-size: 22px;
+            color: #c9a03d;
+            text-align: center;
+            border-bottom: 1px solid #c9a03d;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+        }
+        .option-group {
+            background: #111;
+            padding: 10px;
+            margin-bottom: 14px;
+            border-left: 2px solid #c9a03d;
+        }
+        .option-label {
+            color: #c9a03d;
+            font-size: 11px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .char-selector, .weapon-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .char-option, .weapon-option, .diff-option {
+            background: #1c1c1c;
+            border: 1px solid #3a3a3a;
+            padding: 5px 10px;
+            font-size: 10px;
+            cursor: pointer;
+            color: #bbb;
+        }
+        .char-option.selected, .weapon-option.selected, .diff-option.selected {
+            background: #c9a03d;
+            color: #000;
+            border-color: #c9a03d;
+            font-weight: bold;
+        }
+        .mission-select {
+            background: #1c1c1c;
+            border: 1px solid #c9a03d;
+            color: #c9a03d;
+            padding: 6px;
+            width: 100%;
+            font-family: monospace;
+        }
+        .start-btn {
+            background: #c9a03d;
+            color: #000;
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 6px;
+        }
+        /* RADIO PANEL - mandatory for multiplayer */
+        .radio-panel {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.92);
+            border: 1px solid #c9a03d;
+            padding: 8px 10px;
+            width: min(270px, 42vw);
+            z-index: 35;
+            pointer-events: auto;
+            font-size: 9px;
+        }
+        .ptt-button {
+            background: #222;
+            border: 1px solid #c9a03d;
+            color: #c9a03d;
+            padding: 5px 8px;
+            font-size: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 4px;
+            font-weight: bold;
+        }
+        .kill-feed {
+            position: absolute;
+            top: 70px;
+            right: 12px;
+            width: 210px;
+            z-index: 31;
+            pointer-events: none;
+            font-size: 9px;
+        }
+        .kill-entry {
+            background: #000000dd;
+            border-right: 2px solid #c9a03d;
+            padding: 2px 6px;
+            margin-top: 3px;
+            animation: fadeKill 2.5s forwards;
+            color: #ffdd99;
+        }
+        @keyframes fadeKill {
+            0% { opacity: 1; }
+            80% { opacity: 0.9; }
+            100% { opacity: 0; display: none; }
+        }
+        .mission-status {
+            position: absolute;
+            top: 70px;
+            left: 12px;
+            background: rgba(0,0,0,0.8);
+            padding: 4px 10px;
+            border-left: 2px solid #c9a03d;
+            font-size: 9px;
+            pointer-events: none;
+        }
+        .reload-overlay, .message-overlay {
+            position: absolute;
+            bottom: 32%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #c9a03d;
+            color: black;
+            padding: 5px 18px;
+            font-weight: bold;
+            white-space: nowrap;
+            z-index: 45;
+            pointer-events: none;
+            font-size: 13px;
+        }
+        @media (max-width: 550px) {
+            .radio-panel { width: 180px; padding: 5px; bottom: 6px; right: 6px; }
+            .kill-feed { width: 150px; top: 60px; }
+            .char-option { padding: 3px 6px; font-size: 8px; }
+        }
+        @media (max-width: 380px) {
+            .radio-panel { display: none; } /* extreme small: radio hidden but multiplayer still possible via ID */
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+
+<div class="hud-container">
+    <div class="hud-card"><i class="fas fa-skull"></i> KILL <span id="killCountHud" class="hud-value">0</span></div>
+    <div class="hud-card"><i class="fas fa-bullseye"></i> ACC <span id="accuracyHud" class="hud-value">100</span>%</div>
+    <div class="hud-card"><i class="fas fa-magazine"></i> <span id="currentAmmoHud">0</span>/<span id="maxAmmoHud">0</span></div>
+    <div class="hud-card"><i class="fas fa-stopwatch"></i> <span id="timerHud" class="hud-value">0</span>s</div>
+    <div class="hud-card"><i class="fas fa-user"></i> <span id="opNameHud">BAYANDA</span></div>
+</div>
+
+<div class="mission-status" id="missionStatus">🔻 STANDING BY</div>
+<div class="kill-feed" id="killFeed"></div>
+<div id="globalMessage" class="message-overlay" style="display: none;"></div>
+<div id="reloadPanel" class="reload-overlay" style="display: none;">⟳ RELOADING ⟳</div>
+
+<!-- MAIN MENU -->
+<div id="mainMenu" class="menu-overlay">
+    <div class="menu-container">
+        <div class="menu-title"><i class="fas fa-skull-crossbones"></i> WARFIGHTERS · OBSIDIAN-7</div>
+        <div class="option-group">
+            <div class="option-label"><i class="fas fa-user-secret"></i> OPERATOR (perks)</div>
+            <div id="operatorMenuList" class="char-selector"></div>
+        </div>
+        <div class="option-group">
+            <div class="option-label"><i class="fas fa-gun"></i> WEAPON (realistic ammo)</div>
+            <div id="weaponMenuList" class="weapon-selector"></div>
+        </div>
+        <div class="option-group">
+            <div class="option-label"><i class="fas fa-chart-line"></i> DIFFICULTY</div>
+            <div id="difficultyMenuList" class="char-selector"></div>
+        </div>
+        <div class="option-group">
+            <div class="option-label"><i class="fas fa-map"></i> MISSION THEATER</div>
+            <select id="missionMenuSelect" class="mission-select">
+                <option value="urban_sweep">🏙️ URBAN SWEEP - CQB (8 enemies)</option>
+                <option value="sniper_den">🎯 SNIPER DEN - extreme range (5 enemies)</option>
+                <option value="hostage_rescue">🔫 HOSTAGE RESCUE - precision (6 enemies)</option>
+                <option value="jungle_patrol">🌿 JUNGLE PATROL - moving (7 enemies)</option>
+                <option value="night_raid">🌙 NIGHT RAIDS - stealth (9 enemies)</option>
+            </select>
+        </div>
+        <div class="option-group">
+            <div class="option-label"><i class="fas fa-globe"></i> MULTIPLAYER MODE</div>
+            <select id="multiplayerSelect" class="mission-select">
+                <option value="solo">SOLO (single operator)</option>
+                <option value="coop_required">COOP (requires radio connection)</option>
+            </select>
+        </div>
+        <button id="confirmStartBtn" class="start-btn"><i class="fas fa-play"></i> DEPLOY MISSION</button>
+        <div style="font-size: 8px; text-align: center; margin-top: 8px; color:#666;">[R] reload | [SHIFT] hold breath | Click/Tap to fire</div>
+    </div>
+</div>
+
+<!-- RADIO PANEL - PTT, mandatory for multiplayer -->
+<div class="radio-panel">
+    <div><i class="fas fa-broadcast-tower"></i> TACSAT <span id="radioStatus">OFFLINE</span></div>
+    <input type="text" id="peerIdInput" placeholder="Your Radio ID" value="OBS7" style="width:100%; background:#111; border:1px solid #c9a03d; color:#c9a03d; font-size:9px; padding:3px; margin:3px 0;">
+    <button id="connectRadioBtn" class="ptt-button"><i class="fas fa-plug"></i> INITIALIZE RADIO</button>
+    <input type="text" id="remoteIdInput" placeholder="Squadmate Radio ID" style="width:100%; background:#111; border:1px solid #444; margin:3px 0; padding:3px; font-size:9px;">
+    <button id="pttVoiceBtn" class="ptt-button" style="background:#2a2000;"><i class="fas fa-microphone-alt"></i> HOLD TO TALK (PTT)</button>
+    <div id="voiceLog" style="font-size:7px; color:#c9a03d; margin-top:4px;"></div>
+    <div id="multiplayerAlert" style="font-size:7px; color:#aa8866;"></div>
+</div>
+
+<script>
+    (function(){
+        // ---------- ADVANCED TACTICAL CORE ----------
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let enemies = [];
+        let kills = 0, shotsFired = 0, hits = 0, currentAmmo = 0, maxAmmo = 12;
+        let gameActive = false;
+        let missionSeconds = 0, timerInterval = null;
+        let longestShot = 0;
+        let currentBreath = 100, isHoldingBreath = false;
+        let swayX = 0, swayY = 0, mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+        let isReloading = false, reloadTimer = null;
+        let recoilIntensity = 0, hitMarker = 0;
+        let animationFrame = null;
+        let currentMission = "urban_sweep";
+        let difficulty = "hard";
+        let gameOverFlag = false;
+        let multiplayerMode = "solo";
+        let radioConnected = false;      // mandatory for coop
+        let peer = null, conn = null, localStream = null;
+        let radioInitialized = false;
+
+        // ---------- OPERATORS (SECTION OBSIDIAN-7) ----------
+        const OPERATORS = [
+            { name: "HOSS", role: "C-in-C", perk: "command precision", accuracyBonus: 0.09, breathBonus: 0 },
+            { name: "BIG-JOE", role: "Sergeant", perk: "iron will", recoilReduce: 0.18, breathBonus: 5 },
+            { name: "Q", role: "Specialist", perk: "quick hands", reloadSpeed: 0.55, accuracyBonus: 0.02 },
+            { name: "JUNIOR", role: "Corporal", perk: "tactical awareness", swayReduce: 0.22 },
+            { name: "BAYANDA", role: "Rifleman", perk: "battle-hardened", damageBuff: 1.06 },
+            { name: "VUYO", role: "Recon", perk: "steady lungs", breathRegen: 1.3 },
+            { name: "MASIYA", role: "Gunner", perk: "heavy calibre", rangeBonus: 55 }
+        ];
+        let currentOperator = OPERATORS[4];
+
+        // REALISTIC WEAPONS (ammo counts based on real magazines)
+        const WEAPONS = {
+            "AR-15": { damage: 44, ammo: 12, maxAmmo: 12, recoil: 0.78, range: 420, reloadTime: 950, caliber: "5.56mm" },
+            "R4 Rifle": { damage: 48, ammo: 10, maxAmmo: 10, recoil: 0.82, range: 460, reloadTime: 980, caliber: "5.56mm" },
+            "AK-47": { damage: 56, ammo: 8, maxAmmo: 8, recoil: 1.05, range: 430, reloadTime: 1020, caliber: "7.62mm" },
+            "M1911": { damage: 42, ammo: 7, maxAmmo: 7, recoil: 0.62, range: 210, reloadTime: 850, caliber: ".45 ACP" },
+            "Glock 17": { damage: 39, ammo: 9, maxAmmo: 9, recoil: 0.58, range: 195, reloadTime: 820, caliber: "9mm" },
+            "PPSh-41": { damage: 43, ammo: 10, maxAmmo: 10, recoil: 0.88, range: 270, reloadTime: 1100, caliber: "7.62 Tokarev" }
+        };
+        let currentWeapon = WEAPONS["R4 Rifle"];
+
+        // MISSIONS with unique formations
+        const MISSIONS = {
+            urban_sweep: { name: "URBAN SWEEP", enemyCount: 8, moveSpeed: 0.72, windFactor: 0.55, bgTint: "#1a100c", formation: "scattered" },
+            sniper_den: { name: "SNIPER DEN", enemyCount: 5, moveSpeed: 0.18, windFactor: 1.48, bgTint: "#0a121f", formation: "stationary" },
+            hostage_rescue: { name: "HOSTAGE RESCUE", enemyCount: 6, moveSpeed: 0.35, windFactor: 0.68, bgTint: "#1a1a08", formation: "guarding" },
+            jungle_patrol: { name: "JUNGLE PATROL", enemyCount: 7, moveSpeed: 0.98, windFactor: 0.85, bgTint: "#0a1a0a", formation: "patrolling" },
+            night_raid: { name: "NIGHT RAID", enemyCount: 9, moveSpeed: 0.52, windFactor: 0.48, bgTint: "#050808", formation: "alert" }
+        };
+
+        // ENEMY COMBATANT (advanced AI movement)
+        class EnemyCombatant {
+            constructor(x, y, distance, missionConf) {
+                this.x = x; this.y = y; this.distance = distance; this.alive = true;
+                let baseRad = Math.max(10, 33 - Math.floor(distance / 48));
+                this.radius = Math.min(27, Math.max(9, baseRad));
+                if(difficulty === "extreme") this.radius -= 2.5;
+                if(difficulty === "easy") this.radius += 3;
+                this.radius = Math.min(28, Math.max(8, this.radius));
+                this.movePhase = Math.random() * Math.PI * 2;
+                this.speed = missionConf.moveSpeed * (0.65 + Math.random() * 0.85);
+                this.headshotFlag = false;
+                this.patrolRadius = 35 + Math.random() * 30;
+                this.originX = x; this.originY = y;
+            }
+            update() {
+                if(!this.alive) return;
+                if(currentMission === "jungle_patrol" || currentMission === "urban_sweep") {
+                    this.movePhase += 0.032;
+                    this.x = this.originX + Math.sin(this.movePhase) * this.patrolRadius * 0.6;
+                    this.y = this.originY + Math.cos(this.movePhase * 0.85) * this.patrolRadius * 0.5;
+                } else if(currentMission === "sniper_den") {
+                    // minimal movement
+                    this.x += (Math.random() - 0.5) * 0.7;
+                    this.y += (Math.random() - 0.5) * 0.5;
+                } else {
+                    this.movePhase += 0.028;
+                    this.x += Math.sin(this.movePhase) * this.speed;
+                    this.y += Math.cos(this.movePhase * 0.7) * this.speed;
+                }
+                this.x = Math.min(Math.max(this.x, 30), canvas.width - 30);
+                this.y = Math.min(Math.max(this.y, 45), canvas.height - 55);
+            }
+            draw(ctx, offX, offY) {
+                if(!this.alive) return;
+                let drawX = this.x + offX * 0.16;
+                let drawY = this.y + offY * 0.11;
+                ctx.beginPath(); ctx.arc(drawX, drawY, this.radius, 0, Math.PI*2);
+                ctx.fillStyle = "#2c241a"; ctx.fill();
+                ctx.strokeStyle = "#c9a03d"; ctx.lineWidth = 1.2; ctx.stroke();
+                ctx.fillStyle = "#c9a03dcc";
+                ctx.font = `${Math.floor(this.radius * 0.7)}px "Font Awesome 6 Free"`;
+                ctx.fillText("\uf1b2", drawX - 8, drawY + 4);
+                ctx.font = "bold 7px monospace"; ctx.fillStyle = "#c9a03d";
+                ctx.fillText(`${this.distance}m`, drawX - 9, drawY - this.radius - 2);
+            }
+            checkHit(aimX, aimY, offX, offY, stability, wind, weaponRange, op) {
+                if(!this.alive) return false;
+                let rangePenalty = Math.max(0.72, 1 - (this.distance / weaponRange) * 0.28);
+                let instabilityX = (Math.random() - 0.5) * 11 * (1 - stability) * rangePenalty;
+                let instabilityY = (Math.random() - 0.5) * 10 * (1 - stability);
+                let windDrift = wind * 2.1;
+                let finalX = aimX + offX + instabilityX + windDrift;
+                let finalY = aimY + offY + instabilityY;
+                let distToCenter = Math.hypot(finalX - this.x, finalY - this.y);
+                let diffMod = difficulty === "easy" ? 1.12 : (difficulty === "extreme" ? 0.77 : 0.93);
+                let accBoost = 1 + (op.accuracyBonus || 0);
+                let finalRadius = this.radius * diffMod * (0.82 + (1-stability)*0.22) / accBoost;
+                if(distToCenter <= finalRadius) {
+                    let headSize = this.radius * 0.23;
+                    if(Math.abs(finalY - (this.y - this.radius*0.18)) <= headSize && Math.abs(finalX - this.x) <= headSize) this.headshotFlag = true;
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        // Core gameplay functions
+        function spawnMissionEnemies() {
+            enemies = [];
+            const mission = MISSIONS[currentMission];
+            const w = canvas.width, h = canvas.height;
+            let count = mission.enemyCount;
+            for(let i=0; i<count; i++) {
+                let x = 55 + Math.random() * (w - 110);
+                let y = 60 + Math.random() * (h - 120);
+                let dist = (currentMission === "sniper_den") ? 320 + Math.random() * 280 : 100 + Math.random() * 420;
+                enemies.push(new EnemyCombatant(x, y, Math.floor(dist), mission));
+            }
+            updateMissionUI();
+        }
+
+        function updateMissionUI() {
+            let alive = enemies.filter(e=>e.alive).length;
+            document.getElementById("missionStatus").innerHTML = `🎯 ${MISSIONS[currentMission].name}  |  HOSTILES: ${alive}`;
+            if(alive === 0 && gameActive && !gameOverFlag) {
+                gameActive = false;
+                gameOverFlag = true;
+                if(timerInterval) clearInterval(timerInterval);
+                showMessage("✔️ MISSION SUCCESS! EXFILTRATION APPROVED", true);
+                if(conn && conn.open) conn.send({ type: "mission", status: "win", kills: kills });
+                setTimeout(()=> returnToMenu(), 2600);
+            }
+            if(gameActive && kills > 0 && multiplayerMode === "coop_required" && conn && conn.open) {
+                conn.send({ type: "stats", kills: kills, accuracy: shotsFired? Math.floor((hits/shotsFired)*100):100 });
+            }
+        }
+
+        function showMessage(msg, isSuccess) {
+            let div = document.getElementById("globalMessage");
+            div.style.display = "block";
+            div.innerText = msg;
+            div.style.background = isSuccess ? "#1a3a1a" : "#3a1a1a";
+            div.style.color = "#c9a03d";
+            setTimeout(()=> { if(div) div.style.display = "none"; }, 2300);
+        }
+
+        function returnToMenu() {
+            gameActive = false;
+            if(animationFrame) cancelAnimationFrame(animationFrame);
+            document.getElementById("mainMenu").style.display = "flex";
+            gameOverFlag = false;
+            kills = 0; shotsFired = 0; hits = 0;
+            updateStatsUI();
+        }
+
+        // MANUAL RELOAD with realistic timing
+        function manualReload() {
+            if(!gameActive || isReloading) return;
+            if(currentAmmo === maxAmmo) return;
+            isReloading = true;
+            let reloadDiv = document.getElementById("reloadPanel");
+            reloadDiv.style.display = "block";
+            let reloadDuration = currentWeapon.reloadTime;
+            if(currentOperator.name === "Q") reloadDuration *= 0.6;
+            if(reloadTimer) clearTimeout(reloadTimer);
+            reloadTimer = setTimeout(() => {
+                currentAmmo = maxAmmo;
+                isReloading = false;
+                reloadDiv.style.display = "none";
+                updateStatsUI();
+                if(conn && conn.open && multiplayerMode==="coop_required") conn.send({ type: "reload", status: "ready" });
+            }, reloadDuration);
+        }
+
+        // FIRE WEAPON with realistic ballistics
+        function fireWeapon(cx, cy) {
+            if(!gameActive || isReloading || gameOverFlag) { if(isReloading) addKillFeed("RELOADING...", false); return; }
+            if(currentAmmo <= 0) {
+                document.getElementById("reloadPanel").style.display = "block";
+                document.getElementById("reloadPanel").innerText = "⚠️ EMPTY MAGAZINE ⚠️";
+                setTimeout(()=>{ if(document.getElementById("reloadPanel")) document.getElementById("reloadPanel").style.display = "none"; }, 700);
+                return;
+            }
+            let stability = isHoldingBreath ? Math.max(0.42, currentBreath/100) : 0.54;
+            let windEffect = (0.6 + Math.random() * 1.3) * MISSIONS[currentMission].windFactor;
+            shotsFired++;
+            recoilIntensity = 11 + currentWeapon.recoil * 3.5;
+            let hitOccurred = false, hitDist = 0, isHead = false;
+            for(let enemy of enemies) {
+                if(!enemy.alive) continue;
+                if(enemy.checkHit(cx, cy, swayX, swayY, stability, windEffect, currentWeapon.range, currentOperator)) {
+                    hitOccurred = true; hitDist = enemy.distance; enemy.alive = false;
+                    hits++; kills++;
+                    isHead = enemy.headshotFlag;
+                    if(hitDist > longestShot) longestShot = hitDist;
+                    addKillFeed(`${hitDist}m ${isHead ? "HEADSHOT" : "CENTER MASS"}`, isHead);
+                    updateStatsUI(); updateMissionUI();
+                    hitMarker = 15;
+                    // play audio (Web Audio API - no external files)
+                    playGunSound();
+                    break;
+                }
+            }
+            if(!hitOccurred) {
+                addKillFeed(`MISS (WIND ${Math.floor(windEffect*9)}%)`, false);
+                playGunSound();
+            }
+            currentAmmo--;
+            updateStatsUI();
+            swayX += (Math.random()-0.5)*15; swayY += (Math.random()-0.5)*12;
+            swayX = Math.minmax(swayX, -42, 42); swayY = Math.minmax(swayY, -34, 34);
+            drawScene();
+            if(currentAmmo === 0 && gameActive) manualReload();
+        }
+
+        // Simple gunshot sound using Web Audio
+        let audioCtx = null;
+        function playGunSound() {
+            try {
+                if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.frequency.value = 180;
+                gain.gain.value = 0.12;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+                osc.stop(audioCtx.currentTime + 0.25);
+            } catch(e) {}
+        }
+
+        function updateBreathSway() {
+            if(isHoldingBreath && gameActive && !isReloading) {
+                let breathCost = 1.65;
+                if(currentOperator.name === "VUYO") breathCost *= 0.7;
+                if(currentBreath > 0) currentBreath -= breathCost;
+                if(currentBreath <= 0) { currentBreath = 0; isHoldingBreath = false; }
+            } else if(currentBreath < 100) currentBreath += (currentOperator.breathRegen || 1.0);
+            let stability = isHoldingBreath ? currentBreath/100 : 0.5;
+            let targetX = (mouseX - window.innerWidth/2) / (window.innerWidth/2) * 19;
+            let targetY = (mouseY - window.innerHeight/2) / (window.innerHeight/2) * 14;
+            targetX *= (1 - stability * 0.75); targetY *= (1 - stability * 0.75);
+            swayX += (targetX - swayX) * 0.11;
+            swayY += (targetY - swayY) * 0.09;
+            if(!isHoldingBreath) { swayX += (Math.random()-0.5)*1.2; swayY += (Math.random()-0.5)*1.0; }
+            if(currentOperator.swayReduce) { swayX *= (1 - currentOperator.swayReduce*0.4); swayY *= (1 - currentOperator.swayReduce*0.4); }
+            swayX = Math.minmax(swayX, -44, 44); swayY = Math.minmax(swayY, -36, 36);
+        }
+
+        function drawScene() {
+            if(!ctx) return;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = MISSIONS[currentMission]?.bgTint || "#0a0a0a";
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.strokeStyle = "#c9a03d1a"; ctx.lineWidth = 0.6;
+            for(let i=0;i<canvas.width;i+=70){ ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+            for(let e of enemies) if(e.alive) e.draw(ctx, swayX, swayY);
+            let breathWobble = 17 * (1 - (isHoldingBreath ? currentBreath/100 : 0.55));
+            ctx.beginPath(); ctx.arc(window.innerWidth/2+swayX, window.innerHeight/2+swayY, breathWobble+2, 0, Math.PI*2);
+            ctx.strokeStyle = "#c9a03daa"; ctx.setLineDash([3,5]); ctx.stroke(); ctx.setLineDash([]);
+            if(recoilIntensity>0){ ctx.fillStyle = `rgba(160,70,15,${recoilIntensity/24})`; ctx.fillRect(0,0,canvas.width,canvas.height); recoilIntensity-=0.7; }
+            if(hitMarker>0){ ctx.fillStyle = `rgba(201,160,61,${hitMarker/20})`; ctx.fillRect(0,0,canvas.width,canvas.height); hitMarker-=0.65; }
+            ctx.font = "7px monospace"; ctx.fillStyle = "#c9a03d99"; ctx.fillText(`${currentOperator.name} | ${Object.keys(WEAPONS).find(k=>WEAPONS[k]===currentWeapon)} | ${currentWeapon.caliber}`, 6, canvas.height-6);
+        }
+
+        function animateGame() {
+            if(!gameActive) return;
+            updateBreathSway();
+            for(let e of enemies) e.update();
+            drawScene();
+            animationFrame = requestAnimationFrame(animateGame);
+        }
+
+        function startGame() {
+            kills=0; shotsFired=0; hits=0; missionSeconds=0; longestShot=0; currentBreath=100;
+            isHoldingBreath=false; isReloading=false; gameOverFlag=false;
+            currentAmmo = maxAmmo;
+            gameActive = true;
+            if(timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(()=>{ if(gameActive && !gameOverFlag){ missionSeconds++; document.getElementById("timerHud").innerText = missionSeconds; } }, 1000);
+            spawnMissionEnemies();
+            updateStatsUI(); updateMissionUI();
+            if(animationFrame) cancelAnimationFrame(animationFrame);
+            animateGame();
+            document.getElementById("mainMenu").style.display = "none";
+            if(multiplayerMode === "coop_required" && !radioConnected) {
+                showMessage("❌ MULTIPLAYER: RADIO NOT CONNECTED! CONNECT FIRST", false);
+                gameActive = false;
+                returnToMenu();
+            }
+        }
+
+        function updateStatsUI() {
+            document.getElementById("killCountHud").innerText = kills;
+            let acc = shotsFired === 0 ? 100 : Math.floor((hits/shotsFired)*100);
+            document.getElementById("accuracyHud").innerText = acc;
+            document.getElementById("currentAmmoHud").innerText = currentAmmo;
+            document.getElementById("maxAmmoHud").innerText = maxAmmo;
+            document.getElementById("timerHud").innerText = missionSeconds;
+            document.getElementById("opNameHud").innerHTML = currentOperator.name;
+        }
+
+        function addKillFeed(msg, head) {
+            let feed = document.getElementById("killFeed");
+            let div = document.createElement("div"); div.className = "kill-entry";
+            div.innerHTML = head ? `⚡ ${msg}` : `🔫 ${msg}`;
+            feed.appendChild(div); setTimeout(()=> div.remove(), 2400);
+        }
+
+        // ---------- RADIO + PEERJS (MANDATORY FOR MULTIPLAYER) ----------
+        function initRadio() {
+            if(peer) peer.destroy();
+            let id = document.getElementById("peerIdInput").value.trim() || "OBS7-"+Math.floor(Math.random()*1000);
+            peer = new Peer(id, {debug: 0});
+            peer.on('open', (pid)=>{
+                radioInitialized = true;
+                document.getElementById("radioStatus").innerHTML = `ONLINE (${pid})`;
+                document.getElementById("voiceLog").innerHTML = `Radio active | ID: ${pid}`;
+                radioConnected = true;
+            });
+            peer.on('connection', (connection)=>{
+                conn = connection;
+                document.getElementById("voiceLog").innerHTML += "<br>+ Squad data link established";
+                setupDataChannel(conn);
+            });
+            peer.on('call', async (call)=>{
+                if(!localStream) localStream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch(()=>null);
+                if(localStream) call.answer(localStream);
+                call.on('stream', (remoteStream)=>{
+                    let audioEl = new Audio(); audioEl.srcObject = remoteStream; audioEl.play();
+                    document.getElementById("voiceLog").innerHTML += "<br>🔊 Voice channel active";
+                });
+            });
+            peer.on('error', (err)=>{ console.warn(err); document.getElementById("voiceLog").innerHTML = "Radio error"; radioConnected=false; });
+        }
+
+        function setupDataChannel(connection) {
+            connection.on('open', ()=>{ document.getElementById("voiceLog").innerHTML += "<br>✅ Data channel ready"; });
+            connection.on('data', (data)=>{
+                if(data.type === "stats") addKillFeed(`[SQUAD] ${data.kills} kills`, false);
+                if(data.type === "mission") showMessage(`Squadmate: ${data.status}`, true);
+            });
+        }
+
+        // UI binding
+        document.getElementById("connectRadioBtn").onclick = ()=>{ initRadio(); };
+        document.getElementById("pttVoiceBtn").addEventListener('mousedown', async ()=>{
+            let remote = document.getElementById("remoteIdInput").value.trim();
+            if(!remote || !peer || !radioInitialized) { document.getElementById("voiceLog").innerHTML = "Start radio & enter partner ID"; return; }
+            if(!localStream) localStream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch(e=>null);
+            if(localStream && peer) {
+                let call = peer.call(remote, localStream);
+                call.on('stream', (s)=>{ let a=new Audio(); a.srcObject=s; a.play(); });
+                document.getElementById("voiceLog").innerHTML = "🔴 PTT TRANSMITTING";
+            }
+        });
+        document.getElementById("pttVoiceBtn").addEventListener('mouseup', ()=>{ document.getElementById("voiceLog").innerHTML = "Radio standby"; });
+
+        // Build menus
+        function buildMenus() {
+            const opDiv = document.getElementById("operatorMenuList");
+            OPERATORS.forEach(op=>{ let btn = document.createElement("div"); btn.className="char-option"; btn.innerText=`${op.name} (${op.role})`; btn.onclick=()=>{ document.querySelectorAll('#operatorMenuList .char-option').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); currentOperator=op; }; if(op.name===currentOperator.name) btn.classList.add('selected'); opDiv.appendChild(btn); });
+            const weapDiv = document.getElementById("weaponMenuList");
+            for(let [name, stats] of Object.entries(WEAPONS)){ let wbtn=document.createElement("div"); wbtn.className="weapon-option"; wbtn.innerText=`${name} (${stats.ammo}rnd)`; wbtn.onclick=()=>{ document.querySelectorAll('#weaponMenuList .weapon-option').forEach(w=>w.classList.remove('selected')); wbtn.classList.add('selected'); currentWeapon=stats; maxAmmo=stats.maxAmmo; currentAmmo=maxAmmo; updateStatsUI(); }; if(currentWeapon===stats) wbtn.classList.add('selected'); weapDiv.appendChild(wbtn); }
+            const diffDiv = document.getElementById("difficultyMenuList");
+            ["easy","hard","extreme"].forEach(d=>{ let dbtn=document.createElement("div"); dbtn.className="diff-option"; dbtn.innerText=d.toUpperCase(); dbtn.onclick=()=>{ document.querySelectorAll('#difficultyMenuList .diff-option').forEach(dd=>dd.classList.remove('selected')); dbtn.classList.add('selected'); difficulty=d; }; if(difficulty===d) dbtn.classList.add('selected'); diffDiv.appendChild(dbtn); });
+            document.getElementById("confirmStartBtn").onclick = ()=>{
+                currentMission = document.getElementById("missionMenuSelect").value;
+                multiplayerMode = document.getElementById("multiplayerSelect").value;
+                if(multiplayerMode === "coop_required" && !radioConnected) { showMessage("⚠️ ESTABLISH RADIO CONNECTION FIRST (click INITIALIZE RADIO)", false); return; }
+                startGame();
+            };
+        }
+
+        // helpers
+        Math.minmax = (v,min,max)=>Math.min(max,Math.max(min,v));
+        window.addEventListener('resize', ()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; drawScene(); });
+        canvas.addEventListener('click', (e)=>{ if(!gameActive) return; let rect=canvas.getBoundingClientRect(); let sx=canvas.width/rect.width, sy=canvas.height/rect.height; let cx=(e.clientX-rect.left)*sx, cy=(e.clientY-rect.top)*sy; fireWeapon(cx,cy); });
+        canvas.addEventListener('touchstart', (e)=>{ e.preventDefault(); if(!gameActive) return; let rect=canvas.getBoundingClientRect(); let t=e.touches[0]; let sx=canvas.width/rect.width, sy=canvas.height/rect.height; let cx=(t.clientX-rect.left)*sx, cy=(t.clientY-rect.top)*sy; fireWeapon(cx,cy); });
+        window.addEventListener('mousemove', (e)=>{ mouseX=e.clientX; mouseY=e.clientY; });
+        window.addEventListener('keydown', (e)=>{ if(e.key === 'r' || e.key === 'R'){ e.preventDefault(); if(gameActive && !isReloading && currentAmmo !== maxAmmo) manualReload(); } if(e.key === 'Shift'){ e.preventDefault(); if(gameActive) isHoldingBreath=true; } });
+        window.addEventListener('keyup', (e)=>{ if(e.key === 'Shift') isHoldingBreath=false; });
+        
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        buildMenus();
+        updateStatsUI();
+        drawScene();
+    })();
+</script>
+</body>
+</html>
