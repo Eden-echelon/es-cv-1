@@ -964,6 +964,60 @@
         }
         main { margin: 0 !important; padding: 0 !important; }
     }
+
+    /* crud */
+
+    /* Tablet Portrait (576px - 767px) */
+    
+    @media (max-width: 768px) {
+        .command-center {
+            min-height: 140px !important;
+            padding: 1rem 1.5rem !important;
+        }
+        
+        .header-emblem {
+            gap: 0.5rem !important;
+        }
+    }
+    
+    /* Mobile Large (425px - 575px) */
+    @media (max-width: 575px) {
+        .command-center {
+            min-height: 120px !important;
+            padding: 0.8rem 1rem !important;
+        }
+        
+        .logo-container {
+            height: 70px !important;
+            width: 70px !important;
+        }
+    }
+    
+    /* Mobile Medium (375px - 424px) */
+    @media (max-width: 424px) {
+        .command-center {
+            min-height: 100px !important;
+            padding: 0.5rem 0.8rem !important;
+        }
+        
+        .logo-container {
+            height: 55px !important;
+            width: 55px !important;
+        }
+    }
+    
+    /* Mobile Small (320px - 374px) */
+    @media (max-width: 374px) {
+        .command-center {
+            min-height: 85px !important;
+            padding: 0.4rem 0.6rem !important;
+        }
+        
+        .logo-container {
+            height: 45px !important;
+            width: 45px !important;
+        }
+    }
       
   </style>
   
@@ -2532,6 +2586,7 @@
     } else {
         forceButtonsDown();
     }
+  
 })();
     
 </script>
