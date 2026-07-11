@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+  <title>OmniIndex • Top 10 Most Powerful Militaries (Bodyguards)</title>
+
+  <!-- Google Fonts + advanced icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Chart.js CDN for dynamic radar (optional visual punch) -->
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(ellipse at 30% 10%, #0a0f1f, #020408);
+      font-family: 'Inter', 'Segoe UI', monospace;
+      color: #eef5ff;
+      line-height: 1.45;
+      scroll-behavior: smooth;
+    }
+
+    /* custom matrix scroll */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070c14;
+      border-radius: 20px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f3a5f;
+      border-radius: 20px;
+      border: 1px solid #2f6080;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3c6e9c;
+    }
+
+    /* main container: quantum drive */
+    .quantum-drive {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 1.8rem 2.2rem 3rem;
+    }
+
+    /* HEADER with tactical folder badge */
+    .tactical-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      backdrop-filter: blur(4px);
+    }
+    .title-matrix h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #ffffff, #7aaef0, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .title-matrix p {
+      font-size: 0.9rem;
+      color: #8da3d0;
+      margin-top: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glowing-badge {
+      background: #0a1424cc;
+      backdrop-filter: blur(12px);
+      border-radius: 60px;
+      padding: 0.4rem 1.2rem;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.75rem;
+      border: 1px solid #3e6d9e;
+    }
+
+    /* filter grid controls */
+    .power-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 2rem;
+      justify-content: space-between;
+      align-items: center;
+      background: #03070f70;
+      border-radius: 60px;
+      padding: 0.5rem 1.2rem;
+      backdrop-filter: blur(8px);
+    }
+    .filter-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: #0f1825;
+      border: 1px solid #2c4568;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #bfd6ff;
+    }
+    .filter-btn.active {
+      background: #1e4a76;
+      border-color: #6ab0ff;
+      color: white;
+      box-shadow: 0 0 8px #2f7bc0;
+    }
+    .filter-btn:hover {
+      background: #1f3450;
+    }
+
+    /* cards grid — ultra advanced neon corners */
+    .military-matrix {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.8rem;
+      margin: 2rem 0 2.5rem;
+    }
+
+    .mil-card {
+      background: rgba(8, 16, 26, 0.7);
+      backdrop-filter: blur(16px);
+      border-radius: 2.5rem;
+      border: 1px solid rgba(56, 120, 200, 0.35);
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+      box-shadow: 0 18px 30px -8px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+    .mil-card:hover {
+      transform: translateY(-10px);
+      border-color: #6bb0ff;
+      box-shadow: 0 30px 40px -12px black;
+      background: rgba(18, 32, 48, 0.85);
+    }
+    .card-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #a855f7, #3b82f6);
+    }
+    .card-rank {
+      display: flex;
+      justify-content: space-between;
+      padding: 1.2rem 1.5rem 0.5rem;
+      font-family: 'Space Grotesk', monospace;
+    }
+    .rank-id {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(145deg, #c0e0ff, #5880c0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .country-code {
+      background: #030a12;
+      border-radius: 40px;
+      padding: 0.2rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border: 1px solid #2e6390;
+    }
+    .mil-title {
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .stats-panel {
+      padding: 1rem 1.5rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      border-bottom: 1px dashed #2a405c;
+      padding-bottom: 6px;
+    }
+    .stat-label i {
+      width: 26px;
+      color: #6ea5ff;
+    }
+    .score-badge {
+      font-family: monospace;
+      background: #00000060;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+    .pill-tag {
+      background: #07121f;
+      border-radius: 30px;
+      padding: 0.4rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      margin-top: 8px;
+    }
+    .weakness {
+      color: #ffb16f;
+      font-size: 0.7rem;
+    }
+
+    /* advanced folder tree + radar section */
+    .deep-analysis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .folder-viz {
+      flex: 2;
+      background: #03070fd9;
+      border-radius: 2rem;
+      padding: 1.3rem;
+      border: 1px solid #2d4b74;
+      backdrop-filter: blur(4px);
+    }
+    .radar-container {
+      flex: 1.2;
+      background: #03070fd9;
+      border-radius: 2rem;
+      padding: 1rem;
+      border: 1px solid #2d4b74;
+    }
+    .tree-lines {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      white-space: pre-wrap;
+      color: #c2dcff;
+    }
+    .glow-text {
+      color: #f5bc70;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.7rem;
+      opacity: 0.7;
+      border-top: 1px solid #1f3448;
+      padding-top: 1.8rem;
+    }
+
+    @media (max-width: 780px) {
+      .quantum-drive { padding: 1rem; }
+      .mil-title { font-size: 1.2rem; }
+    }
+    button {
+      background: none;
+      border: none;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="quantum-drive">
+  <div class="tactical-header">
+    <div class="title-matrix">
+      <h1><i class="fas fa-microchip"></i> OMNI·POWER INDEX <span style="font-size: 1.2rem;">// TOP 10 COMBAT FORCES</span></h1>
+      <p><i class="fas fa-terminal"></i> /mnt/global_power_index/ — methodology: OpSpeed + DefenseHistory + Failures + Deterrence + SelfSufficiency (revised 2026)</p>
+    </div>
+    <div class="glowing-badge"><i class="fas fa-chart-simple"></i> WAR COMPENDIUM v.OLAMA</div>
+  </div>
+
+  <!-- filters & sorting -->
+  <div class="power-controls">
+    <div class="filter-group">
+      <button class="filter-btn active" data-sort="default"><i class="fas fa-ranking-star"></i> Rank (default)</button>
+      <button class="filter-btn" data-sort="score"><i class="fas fa-chart-line"></i> Total Score ↓</button>
+      <button class="filter-btn" data-sort="defense"><i class="fas fa-shield-haltered"></i> Defense 100%</button>
+      <button class="filter-btn" data-sort="deterrence"><i class="fas fa-skull-crossbones"></i> Deterrence</button>
+    </div>
+    <div class="glowing-badge"><i class="fas fa-database"></i> realtime filter • dynamic core</div>
+  </div>
+
+  <!-- military cards grid injected by js -->
+  <div id="militaryGrid" class="military-matrix"></div>
+
+  <!-- advanced interactive folder & radar -->
+  <div class="deep-analysis">
+    <div class="folder-viz">
+      <h3 style="margin-bottom: 1rem; font-family: monospace;"><i class="fas fa-folder-tree glow-text"></i> ~/omni_power_matrix/root</h3>
+      <div class="tree-lines" id="folderTree">
+        <i class="fas fa-folder-open glow-text"></i> <span class="glow-text">/global_defense_index</span><br>
+        ├── <i class="fas fa-folder"></i> <span id="treeHighlight">01_israel</span> &nbsp; ➜ score: 96 (projection+)<br>
+        ├── <i class="fas fa-folder"></i> 02_usa &nbsp; ➜ global reach 20/20<br>
+        ├── <i class="fas fa-folder"></i> 03_switzerland &nbsp; ➜ fortress doctrine<br>
+        ├── <i class="fas fa-folder"></i> 04_north_korea &nbsp; ➜ artillery hostage<br>
+        ├── <i class="fas fa-folder"></i> 05_russia &nbsp; ➜ 76/100 (ukraine drag)<br>
+        ├── <i class="fas fa-folder"></i> 06_china &nbsp; ➜ A2/AD but no combat<br>
+        ├── <i class="fas fa-folder"></i> 07_iran &nbsp; ➜ missile cities<br>
+        ├── <i class="fas fa-folder"></i> 08_pakistan &nbsp; ➜ tactical nukes<br>
+        ├── <i class="fas fa-folder"></i> 09_uk &nbsp; ➜ expeditionary cap<br>
+        └── <i class="fas fa-folder"></i> 10_france &nbsp; ➜ force de frappe<br>
+        <span style="color:#6c8fc7;"><i class="fas fa-file-alt"></i> README.power_index → custom weights: OpSuccess ≤10mo (20) | Defense History (20) | Failures 1914-2026 (20) | Deterrence (20) | Self-Sufficiency (20) + Projection addon</span>
+      </div>
+    </div>
+    <div class="radar-container">
+      <canvas id="radarChart" width="400" height="350" style="width:100%; max-height:350px; background: #02070e40; border-radius: 24px; padding: 8px;"></canvas>
+      <div style="text-align:center; margin-top: 8px; font-size: 0.7rem;"><i class="fas fa-chart-pie"></i> Live Radar: select any card → power pentagon</div>
+      <p id="selectedNationLabel" style="font-size:0.7rem; margin-top:6px; text-align:center;">click on a military card</p>
+    </div>
+  </div>
+
+  <footer>
+    <p><i class="fas fa-crown"></i> SUPREME COMMANDER OLAMA INDEX — revised methodology (Israel #1, USA #2, Switzerland #3 defensive outlier) <i class="fas fa-dragon"></i></p>
+    <p>Data cross-referenced: OpSuccess ≤10mo, historical failures (1914-2026), Self-Sufficiency, Deterrence + modern power projection modifiers</p>
+  </footer>
+</div>
+
+<script>
+  // --------------------------------------------------------------
+  // ULTIMATE MILITARY DATASET (with updated scores + projection)
+  // final ranking: 1. Israel (96), 2. USA (94), 3. Switzerland (82), 4. Russia (88+adjust?), 5. China (88), etc.
+  // but we carefully reflect the analysis: Israel 96, USA 94 (projection 20), Switzerland 82, North Korea 86, Iran 85, Russia 88, China 88, UK 83, France 79, Pakistan 74.
+  // but consistency with original top10? we produce the ultimate list of 10 most powerful according to Olama+projection.
+  // final 10 entries:
+  const militariesData = [
+    { id: 1, name: "Israel Defense Forces", country: "Israel", code: "IL", flag: "🇮🇱", rankOrig: 1,
+      stats: { active: "169k + 465k reserves", special: "Iron Dome, Arrow 3, nuclear ambiguity", budget: "~$24B" },
+      scores: { opSuccess: 18, defenseHistory: 20, failures: 10, deterrence: 20, selfSufficiency: 20, projection: 8 },
+      totalScore: 96, weakness: "Small strategic depth (15km narrow)", strengths: "100% domestic Merkava, Jericho missiles" },
+    { id: 2, name: "U.S. Armed Forces", country: "United States", code: "USA", flag: "🇺🇸", rankOrig: 2,
+      stats: { active: "1.39M active", special: "11 carriers, 5k nukes, global bases", budget: "$886B" },
+      scores: { opSuccess: 14, defenseHistory: 20, failures: 4, deterrence: 20, selfSufficiency: 16, projection: 20 },
+      totalScore: 94, weakness: "Afghanistan/Vietnam failures → long war syndrome", strengths: "Unmatched force projection, 750+ bases" },
+    { id: 3, name: "Swiss Armed Forces", country: "Switzerland", code: "CH", flag: "🇨🇭", rankOrig: 3,
+      stats: { active: "140k (mobilization 650k)", special: "National Redoubt, 26k bunkers", budget: "$6B" },
+      scores: { opSuccess: 20, defenseHistory: 20, failures: 20, deterrence: 14, selfSufficiency: 10, projection: 0 },
+      totalScore: 84, weakness: "No power projection outside Alps", strengths: "Zero wars since 1815, perfect defense" },
+    { id: 4, name: "Russian Armed Forces", country: "Russia", code: "RUS", flag: "🇷🇺", rankOrig: 4,
+      stats: { active: "1.32M active", special: "5,580 nukes, S-500, hypersonics", budget: "$120B" },
+      scores: { opSuccess: 12, defenseHistory: 20, failures: 6, deterrence: 20, selfSufficiency: 18, projection: 12 },
+      totalScore: 88, weakness: "Ukraine war 50+ months, filter fails", strengths: "Nuclear triad, land mass, domestic production" },
+    { id: 5, name: "People's Liberation Army", country: "China", code: "CHN", flag: "🇨🇳", rankOrig: 5,
+      stats: { active: "2M active", special: "A2/AD zone, DF-21D, 500 nukes", budget: "$293B" },
+      scores: { opSuccess: 16, defenseHistory: 18, failures: 13, deterrence: 15, selfSufficiency: 12, projection: 14 },
+      totalScore: 88, weakness: "No combat since 1979 (Vietnam)", strengths: "Shipbuilding, missile forces" },
+    { id: 6, name: "North Korean KPA", country: "North Korea", code: "PRK", flag: "🇰🇵", rankOrig: 6,
+      stats: { active: "1.2M + 7.6M reserves", special: "40-50 nukes, 8,600 artillery", budget: "~$4B est" },
+      scores: { opSuccess: 15, defenseHistory: 20, failures: 14, deterrence: 20, selfSufficiency: 15, projection: 2 },
+      totalScore: 86, weakness: "Tech 1960s level, fuel shortages", strengths: "Seoul hostage, tunnels" },
+    { id: 7, name: "Islamic Republic of Iran Armed Forces", country: "Iran", code: "IRN", flag: "🇮🇷", rankOrig: 7,
+      stats: { active: "610k + IRGC", special: "3,000+ ballistic missiles, drone swarms", budget: "$20B" },
+      scores: { opSuccess: 17, defenseHistory: 18, failures: 11, deterrence: 20, selfSufficiency: 15, projection: 4 },
+      totalScore: 85, weakness: "Aging air force (F-14)", strengths: "Missile cities, asymmetric power" },
+    { id: 8, name: "United Kingdom Armed Forces", country: "UK", code: "GBR", flag: "🇬🇧", rankOrig: 8,
+      stats: { active: "148k active", special: "225 nukes, carrier strike", budget: "$68B" },
+      scores: { opSuccess: 16, defenseHistory: 17, failures: 8, deterrence: 15, selfSufficiency: 15, projection: 12 },
+      totalScore: 83, weakness: "Logistics reliant on USA", strengths: "Global expeditionary, Astute subs" },
+    { id: 9, name: "French Armed Forces", country: "France", code: "FRA", flag: "🇫🇷", rankOrig: 9,
+      stats: { active: "203k active", special: "290 nukes, carrier CDG", budget: "$54B" },
+      scores: { opSuccess: 15, defenseHistory: 17, failures: 7, deterrence: 13, selfSufficiency: 15, projection: 10 },
+      totalScore: 77, weakness: "1940 collapse / Algeria fail", strengths: "Rafale, independent nuclear" },
+    { id: 10, name: "Pakistan Armed Forces", country: "Pakistan", code: "PAK", flag: "🇵🇰", rankOrig: 10,
+      stats: { active: "654k active", special: "170 nukes, JF-17", budget: "$10B" },
+      scores: { opSuccess: 15, defenseHistory: 18, failures: 9, deterrence: 18, selfSufficiency: 10, projection: 4 },
+      totalScore: 74, weakness: "Economy & imports", strengths: "Tactical nukes, mountain warfare" }
+  ];
+  
+  // reorder by totalScore desc for initial? but default "rank" based on original order (Israel #1 etc)
+  let currentSort = "default";
+  
+  function renderGrid() {
+    let sorted = [...militariesData];
+    if (currentSort === "score") {
+      sorted.sort((a,b) => b.totalScore - a.totalScore);
+    } else if (currentSort === "defense") {
+      sorted.sort((a,b) => b.scores.defenseHistory - a.scores.defenseHistory);
+    } else if (currentSort === "deterrence") {
+      sorted.sort((a,b) => b.scores.deterrence - a.scores.deterrence);
+    } else {
+      sorted.sort((a,b) => a.rankOrig - b.rankOrig);
+    }
+    
+    const grid = document.getElementById("militaryGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    sorted.forEach(mil => {
+      const card = document.createElement("div");
+      card.className = "mil-card";
+      card.setAttribute("data-id", mil.id);
+      card.setAttribute("data-total", mil.totalScore);
+      card.innerHTML = `
+        <div class="card-glow"></div>
+        <div class="card-rank">
+          <span class="rank-id">#${mil.rankOrig}</span>
+          <span class="country-code"><i class="fas fa-globe"></i> ${mil.code}</span>
+        </div>
+        <div class="mil-title">
+          <span class="flag-icon" style="font-size: 2rem;">${mil.flag}</span>
+          <span>${mil.name}</span>
+        </div>
+        <div class="stats-panel">
+          <div class="stat-row"><span class="stat-label"><i class="fas fa-users"></i> Active Pers.</span><span class="score-badge">${mil.stats.active}</span></div>
+          <div class="stat-row"><span class="stat-label"><i class="fas fa-shield-virus"></i> Key Assets</span><span class="score-badge">${mil.stats.special}</span></div>
+          <div class="stat-row"><span class="stat-label"><i class="fas fa-chart-simple"></i> Total Power Score</span><span class="score-badge" style="background:#0f2c44;">${mil.totalScore} / 120</span></div>
+          <div class="pill-tag"><span><i class="fas fa-brain"></i> ⚡ Strengths:</span><span>${mil.strengths.substring(0, 50)}</span></div>
+          <div class="pill-tag weakness"><span><i class="fas fa-skull"></i> ⚠️ Weakness:</span><span>${mil.weakness}</span></div>
+          <div class="stat-row"><span class="stat-label"><i class="fas fa-chart-line"></i> OpSuccess | Def | Fail | Deter | SelfSuff | Proj</span><span class="score-badge">${mil.scores.opSuccess}/${mil.scores.defenseHistory}/${mil.scores.failures}/${mil.scores.deterrence}/${mil.scores.selfSufficiency}/${mil.scores.projection}</span></div>
+        </div>
+      `;
+      card.addEventListener("click", () => {
+        updateRadarChart(mil);
+        updateFolderHighlight(mil);
+      });
+      grid.appendChild(card);
+    });
+    // select first by default to show radar
+    if(sorted.length) updateRadarChart(sorted[0]);
+  }
+  
+  let radarChartInstance = null;
+  function updateRadarChart(mil) {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    if (radarChartInstance) radarChartInstance.destroy();
+    const labels = ['OpSuccess ≤10mo', 'Defense History', 'Failures 1914-2026', 'Deterrence', 'Self-Sufficiency', 'Power Projection'];
+    const dataVals = [
+      mil.scores.opSuccess,
+      mil.scores.defenseHistory,
+      mil.scores.failures,
+      mil.scores.deterrence,
+      mil.scores.selfSufficiency,
+      mil.scores.projection || 0
+    ];
+    radarChartInstance = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: `${mil.name} (${mil.code})`,
+          data: dataVals,
+          backgroundColor: 'rgba(59, 130, 246, 0.3)',
+          borderColor: '#3b82f6',
+          borderWidth: 2,
+          pointBackgroundColor: '#a0c4ff',
+          pointBorderColor: '#ffffff',
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: { r: { beginAtZero: true, max: 20, ticks: { stepSize: 5, color: '#bbd4ff' }, grid: { color: '#2c456e' } } },
+        plugins: { legend: { labels: { color: '#eef5ff', font: { size: 9 } } } }
+      }
+    });
+    document.getElementById("selectedNationLabel").innerHTML = `<i class="fas fa-crosshairs"></i> analyzing: ${mil.name} (total ${mil.totalScore})`;
+  }
+  
+  function updateFolderHighlight(mil) {
+    const treeDiv = document.getElementById("folderTree");
+    if (!treeDiv) return;
+    let newHtml = `<i class="fas fa-folder-open glow-text"></i> <span class="glow-text">/global_defense_index</span><br>
+    ├── <i class="fas fa-folder"></i> <span style="color:#f5bc70;">01_israel</span> &nbsp; ➜ score: 96<br>
+    ├── <i class="fas fa-folder"></i> 02_usa &nbsp; ➜ 94 (projection supremacy)<br>
+    ├── <i class="fas fa-folder"></i> 03_switzerland &nbsp; ➜ 84<br>
+    ├── <i class="fas fa-folder"></i> 04_russia &nbsp; ➜ 88<br>
+    ├── <i class="fas fa-folder"></i> 05_china &nbsp; ➜ 88<br>
+    ├── <i class="fas fa-folder"></i> 06_north_korea &nbsp; ➜ 86<br>
+    ├── <i class="fas fa-folder"></i> 07_iran &nbsp; ➜ 85<br>
+    ├── <i class="fas fa-folder"></i> 08_pakistan &nbsp; ➜ 74<br>
+    ├── <i class="fas fa-folder"></i> 09_uk &nbsp; ➜ 83<br>
+    └── <i class="fas fa-folder"></i> 10_france &nbsp; ➜ 77<br>`;
+    if (mil) {
+      let highlightStr = "";
+      if(mil.id === 1) highlightStr = "01_israel";
+      else if(mil.id === 2) highlightStr = "02_usa";
+      else if(mil.id === 3) highlightStr = "03_switzerland";
+      else if(mil.id === 4) highlightStr = "04_russia";
+      else if(mil.id === 5) highlightStr = "05_china";
+      else if(mil.id === 6) highlightStr = "06_north_korea";
+      else if(mil.id === 7) highlightStr = "07_iran";
+      else if(mil.id === 8) highlightStr = "08_pakistan";
+      else if(mil.id === 9) highlightStr = "09_uk";
+      else if(mil.id === 10) highlightStr = "10_france";
+      newHtml = newHtml.replace(new RegExp(highlightStr, 'g'), `<span style="color:#f0a84a; text-shadow:0 0 4px #f0a84a;">${highlightStr}</span>`);
+    }
+    newHtml += `<span style="color:#6c8fc7;"><i class="fas fa-file-alt"></i> README.power_index → custom weights: OpSuccess ≤10mo (20) | Defense History (20) | Failures 1914-2026 (20) | Deterrence (20) | Self-Sufficiency (20) + Projection addon</span>`;
+    treeDiv.innerHTML = newHtml;
+  }
+  
+  // attach filter events
+  function bindFilters() {
+    const btns = document.querySelectorAll('.filter-btn');
+    btns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const sortType = btn.getAttribute('data-sort');
+        if (sortType === 'default') currentSort = 'default';
+        else if (sortType === 'score') currentSort = 'score';
+        else if (sortType === 'defense') currentSort = 'defense';
+        else if (sortType === 'deterrence') currentSort = 'deterrence';
+        renderGrid();
+      });
+    });
+  }
+  
+  renderGrid();
+  bindFilters();
+  // default select first card after render
+  setTimeout(() => {
+    const firstCard = document.querySelector('.mil-card');
+    if(firstCard) firstCard.click();
+  }, 100);
+</script>
+</body>
+</html>
