@@ -1,153 +1,763 @@
-        if (asset) {
-            const price = asset.currentPrice || 0;
-            document.getElementById('selectedAssetDisplay').innerHTML = `${asset.symbol} (${asset.name})`;
-            document.getElementById('selectedPricePreview').innerHTML = `Current Price: ${formatUSD(price)}`;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexTrader Pro - Live Trading Dashboard</title>
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0b0e14;
+            --bg-secondary: #131722;
+            --bg-tertiary: #1e222d;
+            --accent-green: #0ecb81;
+            --accent-red: #f6465d;
+            --text-main: #d1d4dc;
+            --text-muted: #787b86;
+            --border-color: #2a2e39;
+            --primary-blue: #2962ff;
         }
-        calculateOrderEstimate();
-    }
-    
-    function calculateOrderEstimate() {
-        const asset = ASSETS[selectedAssetIndex];
-        if (!asset) return;
-        const price = asset.currentPrice || 0;
-        let qty = parseFloat(document.getElementById('orderQty').value);
-        if (isNaN(qty) || qty <= 0) qty = 0;
-        const total = price * qty;
-        document.getElementById('totalEstimate').value = formatUSD(total);
-    }
-    
-    // Portfolio Calculations
-    function calculateTotalEquity() {
-        let holdingsValue = 0;
-        for (let hold of holdings) {
-            const asset = ASSETS.find(a => a.symbol === hold.symbol);
-            if (asset && asset.currentPrice) {
-                holdingsValue += hold.quantity * asset.currentPrice;
-            }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
         }
-        return cashBalance + holdingsValue;
-    }
-    
-    function calculateAndDisplayTotal() {
-        document.getElementById('cashValue').innerHTML = formatUSD(cashBalance);
-        const equity = calculateTotalEquity();
-        document.getElementById('totalEquity').innerHTML = formatUSD(equity);
-    }
-    
-    function renderHoldings() {
-        const container = document.getElementById('holdingsContainer');
-        if (holdings.length === 0) {
-            container.innerHTML = '<div class="holding-item">📭 No open positions.</div>';
-            return;
+
+        body {
+            background-color: var(--bg-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
-        
-        let html = '';
-        for (let hold of holdings) {
-            const asset = ASSETS.find(a => a.symbol === hold.symbol);
-            const currentPrice = asset ? asset.currentPrice : 0;
-            const marketValue = hold.quantity * currentPrice;
-            const pl = (currentPrice - hold.avgCost) * hold.quantity;
-            const plClass = pl >= 0 ? 'positive' : 'negative';
-            html += `
-                <div class="holding-item">
-                    <div><strong>${hold.symbol}</strong><br><span style="font-size:10px;">Qty: ${hold.quantity.toFixed(4)}</span></div>
-                    <div style="text-align:right;">
-                        <div>${formatUSD(marketValue)}</div>
-                        <div class="${plClass}">${pl >= 0 ? '▲' : '▼'} ${formatUSD(Math.abs(pl))}</div>
+
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            height: 60px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-area h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-area span {
+            color: var(--primary-blue);
+        }
+
+        .account-summary {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .metric-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-weight: 600;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: 1fr 220px;
+            flex: 1;
+            height: calc(100vh - 60px);
+        }
+
+        .panel {
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .watchlist-container {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .watchlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .watchlist-item:hover, .watchlist-item.active {
+            background-color: var(--bg-tertiary);
+        }
+
+        .symbol-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .symbol-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .symbol-price-box {
+            text-align: right;
+        }
+
+        .symbol-price {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .symbol-change {
+            font-size: 0.75rem;
+        }
+
+        .positive { color: var(--accent-green) !important; }
+        .negative { color: var(--accent-red) !important; }
+
+        .chart-panel {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            background-color: var(--bg-primary);
+            position: relative;
+        }
+
+        #tradingview-widget {
+            width: 100%;
+            height: 100%;
+        }
+
+        .trade-panel {
+            grid-column: 3 / 4;
+            grid-row: 1 / 3;
+            border-right: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trade-form {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
+        }
+
+        .tab-group {
+            display: flex;
+            background-color: var(--bg-primary);
+            border-radius: 4px;
+            padding: 2px;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.2s;
+            color: var(--text-muted);
+        }
+
+        .tab.active-buy {
+            background-color: var(--accent-green);
+            color: #000;
+        }
+
+        .tab.active-sell {
+            background-color: var(--accent-red);
+            color: #fff;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        .input-wrapper input {
+            background: transparent;
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .input-wrapper span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .action-btn {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-buy { background-color: var(--accent-green); color: #000; }
+        .btn-sell { background-color: var(--accent-red); color: #fff; }
+
+        .bottom-panel {
+            grid-column: 1 / 3;
+            grid-row: 2 / 3;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-tabs {
+            display: flex;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 1rem;
+        }
+
+        .table-tab {
+            padding: 0.6rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .table-tab.active {
+            border-bottom-color: var(--primary-blue);
+            color: var(--text-main);
+        }
+
+        .table-container {
+            flex: 1;
+            overflow-y: auto;
+            background-color: var(--bg-primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .btn-close-pos {
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .btn-close-pos:hover {
+            background-color: var(--accent-red);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>APEX<span>TRADER</span></h1>
+        </div>
+        <div class="account-summary">
+            <div class="metric-group">
+                <span class="metric-label">Account Balance</span>
+                <span class="metric-value" id="account-balance">$100,000.00</span>
+            </div>
+            <div class="metric-group">
+                <span class="metric-label">Total Equity</span>
+                <span class="metric-value" id="account-equity">$100,000.00</span>
+            </div>
+            <div class="metric-group">
+                <span class="metric-label">Unrealized P/L</span>
+                <span class="metric-value" id="account-pl">$0.00</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Watchlist Panel -->
+        <div class="panel">
+            <div class="panel-header">Watchlist</div>
+            <div class="watchlist-container" id="watchlist">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <!-- Chart Panel -->
+        <div class="chart-panel">
+            <div id="tradingview-widget"></div>
+        </div>
+
+        <!-- Trading Order Panel -->
+        <div class="panel trade-panel">
+            <div class="panel-header">Order Ticket</div>
+            <div class="trade-form">
+                <div class="tab-group">
+                    <div class="tab active-buy" id="tab-buy" onclick="setOrderType('BUY')">Buy / Long</div>
+                    <div class="tab" id="tab-sell" onclick="setOrderType('SELL')">Sell / Short</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Selected Asset</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="order-symbol" readonly value="BTCUSD">
                     </div>
                 </div>
-            `;
+
+                <div class="form-group">
+                    <label>Current Price</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="order-price" readonly value="0.00">
+                        <span>USD</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Quantity / Size</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="order-qty" value="1" min="0.0001" step="any">
+                        <span id="qty-unit">BTC</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Total Value</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="order-total" readonly value="0.00">
+                        <span>USD</span>
+                    </div>
+                </div>
+
+                <button class="action-btn btn-buy" id="execute-btn" onclick="executeTrade()">Execute Buy Order</button>
+            </div>
+        </div>
+
+        <!-- Bottom Panel: Positions & History -->
+        <div class="panel bottom-panel">
+            <div class="table-tabs">
+                <div class="table-tab active" onclick="switchTable('positions')">Open Positions (<span id="pos-count">0</span>)</div>
+                <div class="table-tab" onclick="switchTable('history')">Trade History</div>
+            </div>
+            <div class="table-container" id="table-content-positions">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Side</th>
+                            <th>Size</th>
+                            <th>Entry Price</th>
+                            <th>Market Price</th>
+                            <th>Unrealized P/L</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="positions-body">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-container" id="table-content-history" style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Symbol</th>
+                            <th>Side</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let state = {
+            balance: 100000.00,
+            equity: 100000.00,
+            unrealizedPL: 0.00,
+            currentSymbol: "BINANCE:BTCUSDT",
+            currentTicker: "BTCUSD",
+            currentPrice: 0.00,
+            orderSide: "BUY",
+            assets: [
+                { ticker: "BTCUSD", tvSymbol: "BINANCE:BTCUSDT", name: "Bitcoin", price: 65000, change: 2.45 },
+                { ticker: "ETHUSD", tvSymbol: "BINANCE:ETHUSDT", name: "Ethereum", price: 3500, change: 1.82 },
+                { ticker: "SOLUSD", tvSymbol: "BINANCE:SOLUSDT", name: "Solana", price: 145.50, change: -0.95 },
+                { ticker: "AAPL", tvSymbol: "NASDAQ:AAPL", name: "Apple Inc.", price: 182.30, change: 0.45 },
+                { ticker: "TSLA", tvSymbol: "NASDAQ:TSLA", name: "Tesla Inc.", price: 175.20, change: -3.12 },
+                { ticker: "EURUSD", tvSymbol: "FX:EURUSD", name: "Euro / US Dollar", price: 1.0850, change: 0.05 }
+            ],
+            positions: [],
+            history: []
+        };
+
+        // Initialize TradingView Widget
+        let tvWidget = null;
+        function initChart(symbol) {
+            document.getElementById("tradingview-widget").innerHTML = "";
+            tvWidget = new TradingView.widget({
+                "autosize": true,
+                "symbol": symbol,
+                "interval": "D",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true,
+                "container_id": "tradingview-widget"
+            });
         }
-        container.innerHTML = html;
-    }
-    
-    function showMessage(msg, isError = false) {
-        const el = document.getElementById('tradeMessage');
-        el.innerHTML = msg;
-        el.style.color = isError ? '#F87171' : '#4ADE80';
-        setTimeout(() => {
-            if (el.innerHTML === msg) el.innerHTML = '✔️ Ready';
-        }, 2000);
-    }
-    
-    // --- TRADE LOGIC (Paper Trading with REAL Prices)---
-    function executeTrade(type) {
-        const asset = ASSETS[selectedAssetIndex];
-        if (!asset || !asset.currentPrice || asset.currentPrice <= 0) {
-            showMessage("⚠️ Waiting for live price data...", true);
-            return;
+
+        // Render Watchlist
+        function renderWatchlist() {
+            const container = document.getElementById("watchlist");
+            container.innerHTML = "";
+            state.assets.forEach(asset => {
+                const isSelected = asset.ticker === state.currentTicker;
+                const changeClass = asset.change >= 0 ? "positive" : "negative";
+                const changeSign = asset.change >= 0 ? "+" : "";
+                
+                const div = document.createElement("div");
+                div.className = `watchlist-item ${isSelected ? "active" : ""}`;
+                div.innerHTML = `
+                    <div>
+                        <div class="symbol-name">${asset.ticker}</div>
+                        <div class="symbol-desc">${asset.name}</div>
+                    </div>
+                    <div class="symbol-price-box">
+                        <div class="symbol-price">$${asset.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                        <div class="symbol-change ${changeClass}">${changeSign}${asset.change}%</div>
+                    </div>
+                `;
+                div.onclick = () => selectAsset(asset);
+                container.appendChild(div);
+            });
         }
-        
-        const price = asset.currentPrice;
-        let qty = parseFloat(document.getElementById('orderQty').value);
-        if (isNaN(qty) || qty <= 0) {
-            showMessage("❌ Invalid quantity", true);
-            return;
+
+        // Select Asset from Watchlist
+        function selectAsset(asset) {
+            state.currentTicker = asset.ticker;
+            state.currentSymbol = asset.tvSymbol;
+            state.currentPrice = asset.price;
+            
+            document.getElementById("order-symbol").value = asset.ticker;
+            document.getElementById("order-price").value = asset.price.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById("qty-unit").innerText = asset.ticker.replace("USD", "").replace("/", "");
+            
+            updateOrderTotal();
+            renderWatchlist();
+            initChart(asset.tvSymbol);
         }
-        
-        const totalCost = price * qty;
-        
-        if (type === 'BUY') {
-            if (cashBalance < totalCost) {
-                showMessage(`💰 Insufficient cash! Need ${formatUSD(totalCost)}`, true);
-                return;
-            }
-            // Update holdings
-            const existing = holdings.find(h => h.symbol === asset.symbol);
-            if (existing) {
-                const newQty = existing.quantity + qty;
-                const newAvg = ((existing.avgCost * existing.quantity) + totalCost) / newQty;
-                existing.quantity = newQty;
-                existing.avgCost = newAvg;
+
+        // Switch Order Side (Buy / Sell)
+        function setOrderType(side) {
+            state.orderSide = side;
+            const buyTab = document.getElementById("tab-buy");
+            const sellTab = document.getElementById("tab-sell");
+            const execBtn = document.getElementById("execute-btn");
+
+            if (side === "BUY") {
+                buyTab.className = "tab active-buy";
+                sellTab.className = "tab";
+                execBtn.className = "action-btn btn-buy";
+                execBtn.innerText = "Execute Buy Order";
             } else {
-                holdings.push({ symbol: asset.symbol, quantity: qty, avgCost: price });
+                buyTab.className = "tab";
+                sellTab.className = "tab active-sell";
+                execBtn.className = "action-btn btn-sell";
+                execBtn.innerText = "Execute Sell Order";
             }
-            cashBalance -= totalCost;
-            showMessage(`✅ BOUGHT ${qty} ${asset.symbol} @ ${formatUSD(price)}`);
-        } 
-        else if (type === 'SELL') {
-            const holdingIdx = holdings.findIndex(h => h.symbol === asset.symbol);
-            if (holdingIdx === -1) {
-                showMessage(`❌ You don't own any ${asset.symbol}`, true);
-                return;
-            }
-            const holding = holdings[holdingIdx];
-            if (holding.quantity < qty) {
-                showMessage(`❌ Insufficient balance. You have ${holding.quantity.toFixed(4)}`, true);
-                return;
-            }
-            holding.quantity -= qty;
-            if (holding.quantity < 0.000001) {
-                holdings.splice(holdingIdx, 1);
-            }
-            cashBalance += totalCost;
-            showMessage(`🔻 SOLD ${qty} ${asset.symbol} @ ${formatUSD(price)}`);
         }
-        
-        // Refresh UI after trade
-        calculateAndDisplayTotal();
-        renderHoldings();
-        calculateOrderEstimate();
-    }
-    
-    // Event Listeners
-    document.getElementById('orderQty').addEventListener('input', calculateOrderEstimate);
-    document.getElementById('executeBuy').addEventListener('click', () => executeTrade('BUY'));
-    document.getElementById('executeSell').addEventListener('click', () => executeTrade('SELL'));
-    
-    // Initialization + Auto Refresh (Real API every 10 seconds)
-    async function init() {
-        await fetchLivePrices();
-        // Set up interval for real market data
-        if (priceUpdateInterval) clearInterval(priceUpdateInterval);
-        priceUpdateInterval = setInterval(fetchLivePrices, 10000); // 10 seconds to respect rate limits
-        // Initial UI sync
-        calculateOrderEstimate();
-        calculateAndDisplayTotal();
-    }
-    
-    // Start the engine
-    init();
-</script>
+
+        // Update Order Total calculation
+        function updateOrderTotal() {
+            const qty = parseFloat(document.getElementById("order-qty").value) || 0;
+            const total = qty * state.currentPrice;
+            document.getElementById("order-total").value = total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        document.getElementById("order-qty").addEventListener("input", updateOrderTotal);
+
+        // Execute Simulated Trade
+        function executeTrade() {
+            const qty = parseFloat(document.getElementById("order-qty").value);
+            if (!qty || qty <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            const totalCost = qty * state.currentPrice;
+            if (state.orderSide === "BUY" && totalCost > state.balance) {
+                alert("Insufficient funds for this trade.");
+                return;
+            }
+
+            // Create Position
+            const position = {
+                id: Date.now(),
+                symbol: state.currentTicker,
+                side: state.orderSide,
+                size: qty,
+                entryPrice: state.currentPrice,
+                marketPrice: state.currentPrice
+            };
+
+            state.positions.push(position);
+            
+            // Add to History
+            state.history.unshift({
+                time: new Date().toLocaleTimeString(),
+                symbol: state.currentTicker,
+                side: state.orderSide,
+                size: qty,
+                price: state.currentPrice,
+                total: totalCost
+            });
+
+            if (state.orderSide === "BUY") {
+                state.balance -= totalCost;
+            } else {
+                state.balance += totalCost;
+            }
+
+            updateMetrics();
+            renderPositions();
+            renderHistory();
+        }
+
+        // Close Position
+        function closePosition(id) {
+            const index = state.positions.findIndex(p => p.id === id);
+            if (index !== -1) {
+                const pos = state.positions[index];
+                const pnl = pos.side === "BUY" 
+                    ? (pos.marketPrice - pos.entryPrice) * pos.size
+                    : (pos.entryPrice - pos.marketPrice) * pos.size;
+                
+                const returnAmount = (pos.entryPrice * pos.size) + pnl;
+                state.balance += returnAmount;
+                
+                state.positions.splice(index, 1);
+                updateMetrics();
+                renderPositions();
+            }
+        }
+
+        // Update Account Metrics & Positions Live Simulation
+        function updateMetrics() {
+            let totalUnrealizedPL = 0;
+            
+            state.positions.forEach(pos => {
+                // Simulate slight random price fluctuation for realism
+                const fluctuation = (Math.random() - 0.49) * (pos.marketPrice * 0.001);
+                pos.marketPrice = parseFloat((pos.marketPrice + fluctuation).toFixed(4));
+                
+                const pl = pos.side === "BUY"
+                    ? (pos.marketPrice - pos.entryPrice) * pos.size
+                    : (pos.entryPrice - pos.marketPrice) * pos.size;
+                
+                pos.unrealizedPL = pl;
+                totalUnrealizedPL += pl;
+            });
+
+            state.unrealizedPL = totalUnrealizedPL;
+            state.equity = state.balance + state.unrealizedPL;
+
+            document.getElementById("account-balance").innerText = `$${state.balance.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            document.getElementById("account-equity").innerText = `$${state.equity.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            
+            const plElem = document.getElementById("account-pl");
+            plElem.innerText = `${state.unrealizedPL >= 0 ? '+' : ''}$${state.unrealizedPL.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            plElem.className = `metric-value ${state.unrealizedPL >= 0 ? 'positive' : 'negative'}`;
+
+            if (state.positions.length > 0) {
+                renderPositions();
+            }
+        }
+
+        // Render Positions Table
+        function renderPositions() {
+            const tbody = document.getElementById("positions-body");
+            document.getElementById("pos-count").innerText = state.positions.length;
+            tbody.innerHTML = "";
+
+            if (state.positions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No open positions</td></tr>`;
+                return;
+            }
+
+            state.positions.forEach(pos => {
+                const plClass = pos.unrealizedPL >= 0 ? "positive" : "negative";
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${pos.symbol}</strong></td>
+                    <td class="${pos.side === 'BUY' ? 'positive' : 'negative'}">${pos.side}</td>
+                    <td>${pos.size}</td>
+                    <td>$${pos.entryPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td>$${pos.marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td class="${plClass}">${pos.unrealizedPL >= 0 ? '+' : ''}$${pos.unrealizedPL.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td><button class="btn-close-pos" onclick="closePosition(${pos.id})">Close</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Render History Table
+        function renderHistory() {
+            const tbody = document.getElementById("history-body");
+            tbody.innerHTML = "";
+            state.history.forEach(item => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${item.time}</td>
+                    <td><strong>${item.symbol}</strong></td>
+                    <td class="${item.side === 'BUY' ? 'positive' : 'negative'}">${item.side}</td>
+                    <td>${item.size}</td>
+                    <td>$${item.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td>$${item.total.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Switch Tabs in Bottom Panel
+        function switchTable(tabName) {
+            const tabs = document.querySelectorAll(".table-tab");
+            tabs.forEach(t => t.classList.remove("active"));
+            
+            if (tabName === 'positions') {
+                tabs[0].classList.add("active");
+                document.getElementById("table-content-positions").style.display = "block";
+                document.getElementById("table-content-history").style.display = "none";
+            } else {
+                tabs[1].classList.add("active");
+                document.getElementById("table-content-positions").style.display = "none";
+                document.getElementById("table-content-history").style.display = "block";
+            }
+        }
+
+        // Periodic market updates simulation
+        function simulateMarketData() {
+            state.assets.forEach(asset => {
+                const changeDelta = (Math.random() - 0.48) * (asset.price * 0.0015);
+                asset.price = parseFloat((asset.price + changeDelta).toFixed(2));
+                asset.change = parseFloat((asset.change + (Math.random() - 0.5) * 0.05).toFixed(2));
+                
+                if (asset.ticker === state.currentTicker) {
+                    state.currentPrice = asset.price;
+                    document.getElementById("order-price").value = asset.price.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    updateOrderTotal();
+                }
+            });
+            renderWatchlist();
+            updateMetrics();
+        }
+
+        // Initialization
+        window.onload = () => {
+            renderWatchlist();
+            selectAsset(state.assets[0]);
+            renderPositions();
+            renderHistory();
+            setInterval(simulateMarketData, 2000); // Update market prices every 2s
+        };
+    </script>
 </body>
 </html>
