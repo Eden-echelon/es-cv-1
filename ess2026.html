@@ -187,8 +187,8 @@
     }
     
     .logo-container {
-        height: clamp(100px, 20vh, 130px);
-        width: clamp(100px, 20vh, 130px);
+        height: clamp(95px, 18vh, 128px);
+        width: clamp(95px, 18vh, 128px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -200,8 +200,8 @@
     }
     
     .logo-img {
-        width: 100%;
-        height: 100%;
+        width: 98%;
+        height: 98%;
         object-fit: cover;
         transition: transform 0.2s ease;
         transform: scale(1.4);
@@ -522,7 +522,7 @@
         border-collapse: collapse;
     }
     
-    th, td {
+    th {
         border: 2px solid var(--strike-blue, #1e90ff) !important;
         border-collapse: collapse !important;
         color: var(--text-primary, #ecf7ff);
@@ -1089,7 +1089,7 @@
         
         <tbody id="league-tbody">
           
-          <tr><td style="color: red;">EDEN ALPHA</td><td>10</td>
+          <tr><td style="color: red">EDEN ALPHA</td><td>10</td>
             
             <td>3</td> 
             
@@ -1139,46 +1139,40 @@
         <table><thead><tr><th>DIRECT ACTION</th><th>DATE (14:00)</th><th>LOCATION</th></tr></thead>
         <tbody id="schedule-tbody">
 
-          <tr class="completed-row"><td>DA01</td><td>01 Mar 2026</td><td>HARBOUR</td></tr>
-          <tr class="completed-row"><td>DA02</td><td>08 Mar 2026</td><td>HARBOUR</td></tr>
-          <tr class="completed-row"><td>DA03</td><td>15 Mar 2026</td><td>HARBOUR</td></tr>
-          
-          <tr class="completed-row"><td>DA04</td><td>22 Mar 2026</td><td>HARBOUR</td></tr>
-          <tr class="next-row"><td>DA05</td><td>29 Mar 2026</td><td>HARBOUR</td></tr>
-          <tr class="upcoming-row"><td>DA06</td><td>05 Apr 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA07</td><td>12 Apr 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA08</td><td>19 Apr 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA09</td><td>26 Apr 2026</td><td>TBD</td></tr>
-          
-          <tr class="upcoming-row"><td>DA10</td><td>03 May 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA11</td><td>10 May 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA12</td><td>17 May 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA13</td><td>24 May 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA14</td><td>31 May 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA15</td><td>07 Jun 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA16</td><td>14 Jun 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA17</td><td>21 Jun 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA18</td><td>28 Jun 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA19</td><td>05 Jul 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA20</td><td>12 Jul 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA21</td><td>19 Jul 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA22</td><td>26 Jul 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA23</td><td>02 Aug 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA24</td><td>09 Aug 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA25</td><td>16 Aug 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA26</td><td>23 Aug 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA27</td><td>30 Aug 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA28</td><td>06 Sep 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA29</td><td>13 Sep 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA30</td><td>20 Sep 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA31</td><td>27 Sep 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA32</td><td>04 Oct 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA33</td><td>11 Oct 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA34</td><td>18 Oct 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA35</td><td>25 Oct 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA36</td><td>01 Nov 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA37</td><td>08 Nov 2026</td><td>TBD</td></tr>
-          <tr class="upcoming-row"><td>DA38</td><td>15 Nov 2026</td><td>TBD</td></tr>
+          <tr>
+      <th>CODE</th>
+      <th>DATE</th>
+      <th>VENUE</th>
+      <th>STATUS</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <!-- COMPLETED: 5 games -->
+    <tr class="completed-row"><td>DA01</td><td>01 Mar 2026</td><td>HARBOUR</td><td>✅</td></tr>
+    <tr class="completed-row"><td>DA02</td><td>08 Mar 2026</td><td>HARBOUR</td><td>✅</td></tr>
+    <tr class="completed-row"><td>DA03</td><td>15 Mar 2026</td><td>HARBOUR</td><td>✅</td></tr>
+    <tr class="completed-row"><td>DA04</td><td>22 Mar 2026</td><td>HARBOUR</td><td>✅</td></tr>
+    <tr class="completed-row"><td>DA05</td><td>29 Mar 2026</td><td>HARBOUR</td><td>✅</td></tr>
+
+    <!-- SKIPPED: DA06–DA31 -->
+    <tr class="paused-row"><td colspan="4">⏸️ SEASON PAUSED DUE TO UNFORSEEN CIRCUMSTANCES — DA06 to DA31</td></tr>
+
+    <!-- UPCOMING: 11 games -->
+    <tr class="upcoming-row"><td>DA32</td><td>04 Oct 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA33</td><td>11 Oct 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA34</td><td>18 Oct 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA35</td><td>25 Oct 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA36</td><td>01 Nov 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA37</td><td>08 Nov 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA38</td><td>15 Nov 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA39</td><td>22 Nov 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA40</td><td>29 Nov 2026</td><td>TBD</td><td>⏳</td></tr>
+    <tr class="upcoming-row"><td>DA41</td><td>06 Dec 2026</td><td>TBD</td><td>⏳</td></tr>
+
+    <!-- FINAL: DA42 -->
+    <tr class="final-row"><td><strong>DA42</strong></td><td><strong>13 Dec 2026</strong></td><td><strong>HARBOUR</strong></td><td>🏆 FINAL</td></tr>
+    
         </tbody>
       </table></div>
     </section>
