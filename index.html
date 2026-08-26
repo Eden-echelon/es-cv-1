@@ -2206,6 +2206,28 @@
                     return;
                 }
 
+                if (raw === 'wf') {
+                    printToTerm('PASSING BIOMETRIC...', 'var(--cyan)');
+                    let dots = 0;
+                    const loadingLine = document.createElement('div');
+                    loadingLine.style.color = 'var(--cyan)';
+                    loadingLine.innerHTML = '> AUTHENTICATING';
+                    termOutput.appendChild(loadingLine);
+                    termOutput.scrollTop = termOutput.scrollHeight;
+
+                    const loadingInterval = setInterval(() => {
+                        dots = (dots + 1) % 4;
+                        loadingLine.innerHTML = '> AUTHENTICATING' + '.'.repeat(dots);
+                        termOutput.scrollTop = termOutput.scrollHeight;
+                    }, 400);
+
+                    setTimeout(() => {
+                        clearInterval(loadingInterval);
+                        window.location.href = "wf.html";
+                    }, 2200);
+                    return;
+                }
+
                 if (val === 'help') {
                     printToTerm('Available: clear | status | scan ops | open manifesto');
                 } else if (val === 'clear') {
